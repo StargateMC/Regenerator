@@ -1,5 +1,6 @@
 package com.draksterau.Regenerator;
 
+import com.draksterau.Regenerator.factionsIntegration.factionsIntegration;
 import com.draksterau.Regenerator.tasks.RegenTask;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -9,6 +10,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import org.bukkit.Chunk;
+import org.bukkit.World;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
@@ -24,18 +28,56 @@ public class Plugin extends JavaPlugin {
         
     private Logger log = Logger.getLogger("Minecraft");
     
+    
     @Override
     public void onEnable () {
-        log.info("Loaded Regenerator!");
-        config = loadConfiguration();
-        if (config.getBoolean("general.regeneration.enabled") == true) {
-            log.info("Starting Regenerator v" + getConfig().getString("version") + "...");
-            Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(this, new RegenTask(this));
-        } else {
+            log.info("Loaded Regenerator!");
+            config = loadConfiguration();
+            checkDependencies();
+            if (this.isEnabled()) {
+                if (config.getBoolean("general.regeneration.enabled") == true) {
+                    log.log(Level.INFO, "Starting Regenerator v{0}...", getConfig().getString("version"));
+                    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this, new RegenTask(this), 15 * 20);
+                } else {
+                    this.disablePlugin();
+                }
+            }
+    }
+    
+    
+    public void checkDependencies() {
+        boolean shouldDisable = false;
+        if (Bukkit.getServer().getPluginManager().getPlugin("Factions").isEnabled() != getConfig().getBoolean("integration.regeneration.factions.enabled")) {
+            if (Bukkit.getServer().getPluginManager().getPlugin("Factions").isEnabled()) {
+                log.severe("Factions is enabled, however integration is disabled. For chunks to be properly protected you MUST configure integration.");
+                shouldDisable = true;
+            } else {
+                log.severe("Factions integration is enabled however factions is not installed. Please turn it off before loading the plugin.");
+                shouldDisable = true;
+            }
+        }
+        for (String worldName : getConfig().getStringList("general.regeneration.worlds.definedWorlds")) {
+            if (!(Bukkit.getServer().getWorld(worldName) instanceof World)) {
+                log.log(Level.SEVERE, "Defined world: {0} does not exist. Remove this from the config before proceeding.", worldName);
+                shouldDisable = true;
+            }
+        }
+        if (Bukkit.getServer().getPluginManager().getPlugin("Factions").isEnabled()) {
+            for (String Faction : getConfig().getStringList("integration.regeneration.factions.definedFactions")) {
+                if (!factionsIntegration.factionExists(Faction)) {
+                    log.log(Level.SEVERE, "Defined faction: {0} does not exist. Remove this from the config before proceeding.", Faction);
+                    shouldDisable = true;
+                }
+            }
+        }
+        
+        if (shouldDisable == true) {
+            log.log(Level.SEVERE, "Dependency checks failed.... cannot continue...");
             this.disablePlugin();
+        } else {
+            log.log(Level.INFO, "Dependency checks passed.... continuing...");
         }
     }
-
     public FileConfiguration loadConfiguration() {
         saveDefaultConfig();   
         if (getConfig().get("version").equals(this.getDescription().getVersion())) {
@@ -62,7 +104,6 @@ public class Plugin extends JavaPlugin {
             }
         }
     }
-
     
     @Override
     public void onDisable () {
@@ -78,9 +119,17 @@ public class Plugin extends JavaPlugin {
         getConfig().set("general.regeneration.enabled", true);
 
         // Seconds between Regeneration sweeeps
-        int interval = 15;
-        getConfig().set("general.regeneration.interval", interval);
-
+        int worldInterval = 15;
+        getConfig().set("general.regeneration.worlds.interval", worldInterval);
+        
+        // Offset in seconds between world tasks
+        int offset = 15;
+        getConfig().set("general.regeneration.worlds.offset", offset);
+        
+        // Seconds between Regeneration sweeeps
+        int chunkInterval = 15;
+        getConfig().set("general.regeneration.worlds.chunks.interval", chunkInterval);
+        
         // Teleport players who are still in a chunk to the world spawn?
         getConfig().set("general.regeneration.worlds.teleportOfflineInChunkToWorldSpawn", true);
         
@@ -106,7 +155,7 @@ public class Plugin extends JavaPlugin {
     public void disablePlugin() {
      Bukkit.getServer().getPluginManager().disablePlugin(this);
     }
-        
+    
     public void throwMessage(String type, String message) {
         if (type == "info") {
             log.info(message);
@@ -122,5 +171,20 @@ public class Plugin extends JavaPlugin {
                 }
             }
         }
+    }
+    
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (args.length == 1) {
+            if (args[0].equalsIgnoreCase("Reload")) {
+                if (sender.hasPermission("regenerator.reload") || sender.isOp()) {
+                    Bukkit.getServer().getScheduler().cancelTasks(this);
+                    this.onEnable();
+                    sender.sendMessage("Regenerator has been reloaded. All World Regeneration tasks have been reset.");
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

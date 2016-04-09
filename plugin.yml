@@ -1,7 +1,7 @@
 name: Regenerator
 main: com.draksterau.Regenerator.Plugin
-version: 1.1.0
-depend: [Factions, MassiveCore]
+version: 1.4.0
+softdepend: [Factions, MassiveCore]
 commands:
    regenerator:
       description: Core Regenerator command.

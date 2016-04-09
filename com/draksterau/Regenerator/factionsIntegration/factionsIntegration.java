@@ -32,6 +32,10 @@ public class factionsIntegration {
         return factionAtChunk;
     }
     
+    public static boolean factionExists(String name) {
+        Faction faction = FactionColl.get().getByName(name);
+        return faction instanceof Faction;
+    }
     public static void regenerateChunk(String worldName, int x, int z) {
         World world = Bukkit.getServer().getWorld(worldName); 
         Location location;
