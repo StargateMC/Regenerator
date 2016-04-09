@@ -1,0 +1,32 @@
+#####################################################################################################
+## Regenerator, a Perpetual world plugin that integrates with Multiverse, Multiworld and Factions. ##
+#####################################################################################################
+
+# Version of Regenerator. Do not change this... let the plugin do it for you.
+version: 1.1.0
+general:
+  regeneration:
+    # Is regeneration enabled? Setting this to false will globally disable the plugin from working.
+    enabled: true
+    # Interval, in seconds, between chunk regeneration events.
+    interval: 5
+    worlds:
+    # Shall players be teleported to the spawn of the world they are on if the chunk has been regenerated?
+    # If you do not leave this as true, you might find players log back in and are stuck in a wall.
+      teleportOfflineInChunkToWorldSpawn: true
+      # Define the name of the worlds you wish to DO NOT wish to regenerate. 
+      # Optionally, you can set isBlacklist to false and this becomes a whitelist.
+      definedWorlds:
+      - overworld
+      - nether
+      - end
+      isBlacklist: true
+integration:
+  regeneration:
+    factions:
+      # Is factions integration enabled? This has only been tested with Factions 2.8.6.
+      enabled: true
+      # Define the faction names you wish to regenerate territory for here.
+      definedFactions:
+      - WILDERNESS
+      - WARZONE
