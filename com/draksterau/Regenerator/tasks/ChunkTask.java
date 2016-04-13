@@ -5,14 +5,13 @@
  */
 package com.draksterau.Regenerator.tasks;
 
-import com.draksterau.Regenerator.threads.WorldThread;
-import com.draksterau.Regenerator.threads.ChunkThread;
+import com.draksterau.Regenerator.RegeneratorPlugin;
+import com.draksterau.Regenerator.config.worldConfigHandler;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.World;
+import org.bukkit.generator.BlockPopulator;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -22,40 +21,44 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class ChunkTask extends BukkitRunnable {
     
-    Plugin plugin;
     Chunk chunk;
+    Plugin plugin;
     private Logger log = Logger.getLogger("Minecraft");
-
-
+    
     public ChunkTask (Plugin plugin, Chunk chunk) {
         this.plugin = plugin;
         this.chunk = chunk;
     }
-
+    
+    
     
     @Override
-    public void run() {     
-        if (Bukkit.getServer().getWorld(chunk.getWorld().getName()) instanceof World) {
-            try {
-                log.log(Level.INFO, "Starting Regeneration for Chunk: {0},{1} on world: {2}", new Object[]{chunk.getX(), chunk.getZ(), chunk.getWorld().getName()});
-                Random random = new Random();
-                int randomInt = random.nextInt(10);
-                try {
-                    Thread.sleep(randomInt * 1000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(ChunkTask.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                Thread ChunkThread = new ChunkThread(plugin, chunk);
-                ChunkThread.start();
-                ChunkThread.join();
-                log.log(Level.INFO, "Finished Regeneration for Chunk: {0},{1} on world: {2}", new Object[]{chunk.getX(), chunk.getZ(), chunk.getWorld().getName()});
-                Thread.sleep(plugin.getConfig().getInt("general.regeneration.worlds.chunks.interval") * 1000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(WorldTask.class.getName()).log(Level.SEVERE, null, ex);
+    
+    public void run() {   
+        
+            if (chunk.getWorld().regenerateChunk(chunk.getX(),chunk.getZ())) {
+              //  log.log(Level.INFO, "Chunk regenerated successfully for chunk: {0},{1} on world: {2}", new Object[]{chunk.getX(), chunk.getZ(), chunk.getWorld().getName()});
+            } else {
+                log.log(Level.SEVERE, "Chunk regeneration failed for chunk: {0},{1} on world: {2}", new Object[]{chunk.getX(), chunk.getZ(), chunk.getWorld().getName()});
             }
-        } else {
-            log.log(Level.WARNING, "Regeneration failed for chunk: {0},{1} on world : {2} is no longer loaded.", new Object[]{chunk.getX(), chunk.getZ(), chunk.getWorld().getName()});
-        }
-    }	
+            worldConfigHandler wConfig = new worldConfigHandler((RegeneratorPlugin) plugin,chunk.getWorld());
+            if (wConfig.shouldPopulate()) {
+                        Random random = new Random(chunk.getWorld().getSeed());
+                        // The below code is for testing if a chunk is needing to be populated.
+                        long xRand = random.nextLong() / 2 * 2 + 1;
+                        long zRand = random.nextLong() / 2 * 2 + 1;
+                        random.setSeed((long) chunk.getX() * xRand + (long) chunk.getZ() * zRand ^ chunk.getWorld().getSeed());
+
+                // The below code populates a chunk.
+                for (BlockPopulator pop : chunk.getWorld().getPopulators()) {
+                    pop.populate(chunk.getWorld(),random, chunk);
+                }
+            }
+            if (chunk.getWorld().refreshChunk(chunk.getX(),chunk.getZ())) {
+           //     log.log(Level.INFO, "Chunk refreshed successfully for chunk: {0},{1} on world: {2}", new Object[]{chunk.getX(), chunk.getZ(), chunk.getWorld().getName()});
+            } else {
+                log.log(Level.SEVERE, "Chunk refreshed failed for chunk: {0},{1} on world: {2}", new Object[]{chunk.getX(), chunk.getZ(), chunk.getWorld().getName()});
+            }
+    }
 }
 

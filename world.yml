@@ -1,0 +1,8 @@
+## Default world config file.
+---
+interval: 5
+autoregen: false
+manualregen: false
+lastAction: 0
+skip-radius: 0
+populate-chunks: true

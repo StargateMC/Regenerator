@@ -1,37 +1,31 @@
-#####################################################################################################
-## Regenerator, a Perpetual world plugin that integrates with Multiverse, Multiworld and Factions. ##
-#####################################################################################################
+############################################################################################################################
+## Regenerator, a Perpetual world plugin that integrates with Multiverse, Multiworld and several grief prevention plugins.##
+############################################################################################################################
 
-# Version of Regenerator. Do not change this... let the plugin do it for you.
-version: 1.4.0
-general:
-  regeneration:
-    # Is regeneration enabled? Setting this to false will globally disable the plugin from working.
-    enabled: true
-    worlds:
-      # Interval between regeneration tasks for each world. (I.e a world will stop regeneration for this many seconds, after it competes a round)
-      interval: 300
-      # Offset for World regeneration tasks, in seconds, this ensures that no chunks will regenerate at the same time.
-      offset: 30
-    # Shall players be teleported to the spawn of the world they are on if the chunk has been regenerated?
-    # If you do not leave this as true, you might find players log back in and are stuck in a wall.
-      teleportOfflineInChunkToWorldSpawn: true
-      # Define the name of the worlds you wish to DO NOT wish to regenerate. 
-      # Optionally, you can set isBlacklist to false and this becomes a whitelist.
-      definedWorlds:
-      - overworld
-      - nether
-      - end
-      isBlacklist: true
-      # Interval between regeneration tasks for each chunk of the a world. (I.e Chunks are regenerated one at a time, but will wait this many seconds between)
-      chunks:
-          interval: 10
-integration:
-  regeneration:
-    factions:
-      # Is factions integration enabled? This has only been tested with Factions 2.8.6.
-      enabled: true
-      # Define the faction names you wish to regenerate territory for here.
-      definedFactions:
-      - WILDERNESS
-      - WARZONE
+# The main configuration file no longer stores any data relating to what worlds to handle etc.
+# For integration configuration, please see the /integrations/<plugin>.yml file associated with your grief protection plugin.
+# For world configuration (Such as intervals between chunks), see /worlds/worldname/world.yml.
+
+config-version: 2.0.0-Beta2
+
+# This must be set to true if there are no grief prevention plugins installed and you want the plugin to work.
+# WARNING: This means that the plugin will regnerate chunks that you may wish to remain protected!
+no-grief-run: false
+# Minimum TPS that the server must have to perform regeneration.
+# This suspends regeneration and notifies anyone with the 'regenerator.notify' permission node when it disables/resumes.
+min-tps-regen: 10.0
+# This will cause a regeneration event on a chunk the server is unloading, if the right criteria are met.
+# NOTE: This can cause lag because the server can often unload/load dozens of chunks at a time.
+regen-on-chunk-unload: true
+# This will cause a regeneration event on a chunk the server is loading, if the right criteria are met.
+# NOTE: This can cause lag because the server can often unload/load dozens of chunks at a time.
+regen-on-chunk-load: true
+# This will cause a regeneration event on the chunk a player is leaving, if the criteria are met.
+# NOTE: This can cause lag on larger servers with a lot of players, but it is optimised to only fire when a player changes chunk, cutting this down.
+regen-on-player-change-chunk: true
+# This will cause a regeneration event when a world is loaded. This will lag the server temporarily and notify all players with the regenerator.notify permission node.
+regen-on-world-load: true
+# This will cause a regeneration event when a world is unloaded. This will lag the server temporarily and notify all players with the regenerator.notify permission node.
+regen-on-world-unload: true
+
+

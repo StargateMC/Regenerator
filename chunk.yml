@@ -1,0 +1,10 @@
+## Template chunk config file.
+---
+
+loaded: 0
+unloaded: 0
+lastPlaced: 0
+lastBroken: 0
+lastRegen: 0
+autoregen: true
+manualregen: true

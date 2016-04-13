@@ -1,7 +1,10 @@
 name: Regenerator
-main: com.draksterau.Regenerator.Plugin
-version: 1.4.0
-softdepend: [Factions, MassiveCore]
+main: com.draksterau.Regenerator.RegeneratorPlugin
+version: 2.0.0-Beta2
+softdepend: [ Factions, GriefPrevention, WorldGuard, WorldEdit, RedProtect ]
+description: Regenerator is a perpetual world plugin that supports many grief prevention plugins.
+author: Bysokar
+website: https://www.spigotmc.org/resources/regenerator.21470/
 commands:
    regenerator:
       description: Core Regenerator command.
