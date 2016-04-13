@@ -22,6 +22,7 @@ import org.bukkit.event.Listener;
 import com.draksterau.Regenerator.integration.Integration;
 import com.draksterau.Regenerator.listeners.integrationListener;
 import com.draksterau.Regenerator.tasks.lagTask;
+import org.bukkit.plugin.Plugin;
 
 public class RegeneratorPlugin extends JavaPlugin implements Listener {
     
@@ -30,7 +31,7 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
         
     private Logger log = Logger.getLogger("Minecraft");
 
-    public List<String> availableIntergrations = new ArrayList<String>();
+    public List<List<String>> availableIntergrations = new ArrayList<List<String>>();
     
     List<Integration> loadedIntegrations = new ArrayList<Integration>();
     
@@ -64,13 +65,33 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
     }
     
     public void initAvailableIntegrations() {
-        availableIntergrations.add("Factions");
-        availableIntergrations.add("GriefPrevention");
-        availableIntergrations.add("WorldGuard");
-        availableIntergrations.add("RedProtect");
-        availableIntergrations.add("FactionsUUID");
-        for (String name : availableIntergrations) {
-            throwMessage("info", name + " integration module initialised.");
+        List<String> FactionsUUID = new ArrayList<String>();
+        FactionsUUID.add("Factions");
+        FactionsUUID.add("1.6");
+        FactionsUUID.add("FactionsUUIDIntegration");
+        availableIntergrations.add(FactionsUUID);
+        List<String> GriefPrevention = new ArrayList<String>();
+        GriefPrevention.add("GriefPrevention");
+        GriefPrevention.add("14");
+        GriefPrevention.add("GriefPreventionIntegration");
+        availableIntergrations.add(GriefPrevention);
+        List<String> WorldGuard = new ArrayList<String>();
+        WorldGuard.add("WorldGuard");
+        WorldGuard.add("6");
+        WorldGuard.add("WorldGuardIntegration");
+        availableIntergrations.add(WorldGuard);
+        List<String> RedProtect = new ArrayList<String>();
+        RedProtect.add("RedProtect");
+        RedProtect.add("6.5");
+        RedProtect.add("RedProtectIntegration");
+        availableIntergrations.add(RedProtect);
+        List<String> Factions = new ArrayList<String>();
+        Factions.add("Factions");
+        Factions.add("2.8");
+        Factions.add("FactionsIntegration");
+        availableIntergrations.add(Factions);
+        for (List<String> module : availableIntergrations) {
+            throwMessage("info", module.get(2) + " integration module initialised.");
         }
     }
     
@@ -98,20 +119,25 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
         return null;
     }
     
-    public void loadIntegrationFor(String plugin) {
+    public void loadIntegrationFor(List<String> plugin) {
+        String[] module = plugin.toArray(new String[plugin.size()]);
         try {
-            if (Bukkit.getPluginManager().isPluginEnabled(plugin)) {
-                Class<?> integrationClass = Class.forName("com.draksterau.Regenerator.integration." + plugin + "Integration");
-                if (Integration.class.isAssignableFrom(integrationClass)) {
-                    Integration integration = (Integration) integrationClass.newInstance();
-                    integration.plugin = plugin;
-                    integration.RegeneratorPlugin = this;
-                    integration.validateConfig();
-                    loadedIntegrations.add(integration);
-                    throwMessage("info", "Detected Plugin: " + integration.getPluginName() + " v" + integration.getPluginVersion() + ": Loading integration!");
+            if (Bukkit.getPluginManager().isPluginEnabled(module[0])) {
+                if (Bukkit.getPluginManager().getPlugin(module[0]).getDescription().getVersion().startsWith(module[1])) {
+                    Class<?> integrationClass = Class.forName("com.draksterau.Regenerator.integration." + module[2]);
+                    if (Integration.class.isAssignableFrom(integrationClass)) {
+                        Integration integration = (Integration) integrationClass.newInstance();
+                        integration.plugin = module[0];
+                        integration.RegeneratorPlugin = this;
+                        integration.validateConfig();
+                        loadedIntegrations.add(integration);
+                        throwMessage("info", "Detected Plugin: " + integration.getPluginName() + " v" + integration.getPluginVersion() + ": Loading " + module[2] + "!");
+                    }
+                } else {
+                    throwMessage("warning", "Incompatible version of Plugin: " + module[0] + " (v" + Bukkit.getPluginManager().getPlugin(module[0]).getDescription().getVersion() + " and not v" + module[1] + "). Disabling " + module[2] + " integration module.");
                 }
             } else {
-                throwMessage("warning", "Didn't detect Plugin: " + plugin + ". Disabling " + plugin + " integration module.");
+                throwMessage("warning", "Didn't detect Plugin: " + module[0] + " (v" + module[1] + "). Disabling " + module[2] + " integration module.");
             }
         } catch (ClassNotFoundException ex) {
             throwMessage("severe", "Failed to load integration for plugin: " + plugin + ". Please contact Bysokar for support!");
@@ -122,19 +148,29 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
         
     }
     
-    public boolean isEnabledIntegration(String plugin) {
+    public List<String> convertToModule(String plugin) {
+        String name = Bukkit.getPluginManager().getPlugin(plugin).getName();
+        String version = Bukkit.getPluginManager().getPlugin(plugin).getDescription().getVersion();
+        for (List<String> module : availableIntergrations) {
+            if (module.get(0).equals(name) && version.startsWith(module.get(1))) {
+                return module;
+            }
+        }
+        return null;
+    }
+    public boolean isEnabledIntegration(List<String> plugin) {
         for (Integration integration : loadedIntegrations) {
-            if (integration.getPluginName().equals(plugin)) {
+            if (integration.getPluginName().equals(plugin.get(0)) && integration.getPluginVersion().startsWith(plugin.get(1))) {
                 return true;
             }
         }
         return false;
     }
     
-    public void disableIntegrationFor(String plugin) {
+    public void disableIntegrationFor(List<String> plugin) {
         Integration toDisable = null;
         for (Integration integration : loadedIntegrations) {
-            if (integration.getPluginName().equals(plugin)) {
+            if (integration.getPluginName().equals(plugin.get(0)) && integration.getPluginVersion().startsWith(plugin.get(1))) {
                 toDisable = integration;
             }
         }
@@ -143,7 +179,7 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
         }
     }
     public void loadIntegrations() {
-        for (String plugin : availableIntergrations) {
+        for (List<String> plugin : availableIntergrations) {
             loadIntegrationFor(plugin);
         }
     }

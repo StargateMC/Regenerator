@@ -117,7 +117,7 @@ public class WorldGuardIntegration extends Integration {
         for (String regionName : iConfig.integrationConfig.getStringList("regionsAutoRegen")) {
             if (!regionExists(regionName)) {
                 RegeneratorPlugin.throwMessage("severe", "Region: " + regionName + " does not exist!");
-                RegeneratorPlugin.disableIntegrationFor(this.getPluginName());
+                RegeneratorPlugin.disableIntegrationFor(RegeneratorPlugin.convertToModule(plugin));
             }
         }
         iConfig.saveIntegrationConfig();    

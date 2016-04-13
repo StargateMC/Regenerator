@@ -89,7 +89,7 @@ public final class FactionsIntegration extends Integration {
         for (String factionName : iConfig.integrationConfig.getStringList("factionsAutoRegen")) {
             if (!factionExists(factionName)) {
                 RegeneratorPlugin.throwMessage("severe", "Faction: " + factionName + " does not exist!");
-                RegeneratorPlugin.disableIntegrationFor(this.getPluginName());
+                RegeneratorPlugin.disableIntegrationFor(RegeneratorPlugin.convertToModule(plugin));
             }
         }
         iConfig.saveIntegrationConfig();

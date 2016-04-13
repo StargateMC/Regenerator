@@ -9,6 +9,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import com.draksterau.Regenerator.RegeneratorPlugin;
+import java.util.List;
+import org.bukkit.Bukkit;
 
 /**
  *
@@ -22,16 +24,18 @@ public class integrationListener implements Listener {
         this.RegeneratorPlugin = RegeneratorPlugin;
     }
     
+
     // This listens for other plugins being enabled.
     
     public void onPluginEnable(PluginEnableEvent event) {
-        RegeneratorPlugin.loadIntegrationFor(event.getPlugin().getName());
-        
+        if (RegeneratorPlugin.convertToModule(event.getPlugin().getName()) != null) {
+            RegeneratorPlugin.loadIntegrationFor(RegeneratorPlugin.convertToModule(event.getPlugin().getName()));
+        }        
     }
     
     public void onPluginDisable(PluginDisableEvent event) {
-        if (RegeneratorPlugin.isEnabledIntegration(event.getPlugin().getName())) {
-            RegeneratorPlugin.disableIntegrationFor(event.getPlugin().getName());
-        }
+        if (RegeneratorPlugin.convertToModule(event.getPlugin().getName()) != null) {
+            RegeneratorPlugin.disableIntegrationFor(RegeneratorPlugin.convertToModule(event.getPlugin().getName()));
+        }        
     }
 }

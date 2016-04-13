@@ -8,9 +8,13 @@ package com.draksterau.Regenerator.integration;
 import com.draksterau.Regenerator.config.integrationConfigHandler;
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.FLocation;
-import com.massivecraft.factions.P;
+import com.massivecraft.factions.FPlayer;
+import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.Factions;
 import java.util.Arrays;
 import java.util.List;
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -30,17 +34,44 @@ public final class FactionsUUIDIntegration extends Integration {
         } else {
             return false;
         }
-        
     }
 
+    public Faction getFactionForChunk(Chunk chunk) {
+        Location loc = new Location(chunk.getWorld(), chunk.getX(), 100.0, chunk.getZ());
+        FLocation floc = new FLocation(loc);
+        if (!getFactionsUUIDFromConfig().contains(Board.getInstance().getFactionAt(floc).getTag())) {
+            return Board.getInstance().getFactionAt(floc);
+        } else {
+            return null;
+        }
+    }
+    
     @Override
     public boolean canPlayerRegen(Player player, Chunk chunk) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        FPlayer fp = FPlayers.getInstance().getByPlayer(player);
+        Faction f = fp.getFaction();
+        if (isChunkClaimed(chunk)) {
+            if (f.equals(getFactionForChunk(chunk)) && player.hasPermission("regenerator.regen.factionsuuid.FACTION")) {
+                return true;
+            } else {
+                if (player.hasPermission("regenerator.regen.factionsuuid.OTHER") && !getFactionsUUIDFromConfig().contains(getFactionForChunk(chunk))) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
     }
 
     @Override
     public boolean shouldChunkAutoRegen(Chunk chunk) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (!isChunkClaimed(chunk)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -54,7 +85,7 @@ public final class FactionsUUIDIntegration extends Integration {
         for (String factionName : iConfig.integrationConfig.getStringList("factionsUUIDAutoRegen")) {
             if (!factionUUIDExists(factionName)) {
                 RegeneratorPlugin.throwMessage("severe", "Faction: " + factionName + " does not exist!");
-                RegeneratorPlugin.disableIntegrationFor(this.getPluginName());
+                RegeneratorPlugin.disableIntegrationFor(RegeneratorPlugin.convertToModule(plugin));
             }
         }
         iConfig.saveIntegrationConfig();    
@@ -68,16 +99,36 @@ public final class FactionsUUIDIntegration extends Integration {
     
     @Override
     public String getPlayerRegenReason(Player player, Chunk chunk) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        FPlayer fp = FPlayers.getInstance().getByPlayer(player);
+        Faction f = fp.getFaction();
+        if (player.hasPermission(getPermissionRequiredToRegen(player,chunk))) {
+            return (ChatColor.GREEN + "You have regenerated the chunk at: " + ChatColor.BLUE + chunk.getX() + ChatColor.GRAY + "," + ChatColor.BLUE + chunk.getZ() + ChatColor.GREEN + " in " + ChatColor.BLUE + getFactionForChunk(chunk).getTag() + ChatColor.GREEN + " territory.");
+        } else {
+            if (!getFactionsUUIDFromConfig().contains(getFactionForChunk(chunk))) {
+                return ChatColor.RED + "You cannot regenerate the chunk at " + ChatColor.BLUE + chunk.getX() + ChatColor.GRAY + "," + ChatColor.BLUE + chunk.getZ() + ChatColor.RED + " manually due to your relation with " + getFactionForChunk(chunk).getTag() + ".";
+            } else {
+                return (ChatColor.RED + "You cannot regenerate the chunk at " + ChatColor.BLUE + chunk.getX() + ChatColor.GRAY + "," + ChatColor.BLUE + chunk.getZ() + ChatColor.RED + " manually as it is unclaimed.");
+            }
+        }
     }
 
     @Override
     public String getPermissionRequiredToRegen(Player player, Chunk chunk) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        FPlayer fp = FPlayers.getInstance().getByPlayer(player);
+        Faction f = fp.getFaction();
+        if (f.equals(getFactionForChunk(chunk))) {
+            return "regenerator.regen.factionsuuid.FACTION";
+        } else {
+            if (!getFactionsUUIDFromConfig().contains(getFactionForChunk(chunk))) {
+                return "regenerator.regen.factionsuuid.OTHER";
+            } else {
+                return "regenerator.regen.factionsuuid.UNCLAIMED";
+            }
+        }
     }
 
     private boolean factionUUIDExists(String factionName) {
-        if (P.p.getFactionTags().contains(factionName)) {
+        if (Factions.getInstance().isTagTaken(factionName)) {
             return true;
         } else {
             return false;
