@@ -75,21 +75,23 @@ public final class FactionsIntegration extends Integration {
     
     public List<String> getFactionsFromConfig() {
         integrationConfigHandler iConfig = new integrationConfigHandler(RegeneratorPlugin, this);
-        return iConfig.integrationConfig.getStringList("factionsAutoRegen");
+        return iConfig.integrationConfig.getStringList("claimsAutoRegen");
     }
     
     @Override
     public void validateConfig() {
         integrationConfigHandler iConfig = new integrationConfigHandler(RegeneratorPlugin, this);
         iConfig.saveDefaultIntegrationConfig();
-        List<String> factionsAutoRegen = Arrays.asList("WILDERNESS");
-        if (!iConfig.integrationConfig.isSet("factionsAutoRegen")) {
-            iConfig.integrationConfig.set("factionsAutoRegen", factionsAutoRegen);
+        List<String> claimsAutoRegen = Arrays.asList("Wilderness");
+        if (!iConfig.integrationConfig.isSet("claimsAutoRegen")) {
+            iConfig.integrationConfig.set("claimsAutoRegen", claimsAutoRegen);
         }
-        for (String factionName : iConfig.integrationConfig.getStringList("factionsAutoRegen")) {
-            if (!factionExists(factionName)) {
-                RegeneratorPlugin.throwMessage("severe", "Faction: " + factionName + " does not exist!");
+        for (String claimName : iConfig.integrationConfig.getStringList("claimsAutoRegen")) {
+            if (!claimExists(claimName)) {
+                RegeneratorPlugin.throwMessage("severe", "[" + this.getClass().getSimpleName() + "] Claim: " + claimName + " does not exist!");
                 RegeneratorPlugin.disableIntegrationFor(RegeneratorPlugin.convertToModule(plugin));
+            } else {
+                RegeneratorPlugin.throwMessage("info", "[" + this.getClass().getSimpleName() + "] Claim: " + claimName + " detected. Whitelisting for automatic regeneration!");
             }
         }
         iConfig.saveIntegrationConfig();
@@ -103,7 +105,7 @@ public final class FactionsIntegration extends Integration {
         return factionAtChunk;
     }
     
-    public static boolean factionExists(String name) {
+    public static boolean claimExists(String name) {
         Faction faction = FactionColl.get().getByName(name);
         return faction instanceof Faction;
     }

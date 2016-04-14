@@ -6,7 +6,7 @@
 # For integration configuration, please see the /integrations/<plugin>.yml file associated with your grief protection plugin.
 # For world configuration (Such as intervals between chunks), see /worlds/worldname/world.yml.
 
-config-version: 2.0.0
+config-version: 2.0.1
 
 # This must be set to true if there are no grief prevention plugins installed and you want the plugin to work.
 # WARNING: This means that the plugin will regnerate chunks that you may wish to remain protected!

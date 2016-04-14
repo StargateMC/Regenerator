@@ -110,17 +110,19 @@ public class WorldGuardIntegration extends Integration {
     public void validateConfig() {
         integrationConfigHandler iConfig = new integrationConfigHandler(RegeneratorPlugin, this);
         iConfig.saveDefaultIntegrationConfig();
-        List<String> regionsAutoRegen = Arrays.asList("__global__");
-        if (!iConfig.integrationConfig.isSet("regionsAutoRegen")) {
-            iConfig.integrationConfig.set("regionsAutoRegen", regionsAutoRegen);
+        List<String> claimsAutoRegen = Arrays.asList("__global__");
+        if (!iConfig.integrationConfig.isSet("claimsAutoRegen")) {
+            iConfig.integrationConfig.set("claimsAutoRegen", claimsAutoRegen);
         }
-        for (String regionName : iConfig.integrationConfig.getStringList("regionsAutoRegen")) {
-            if (!regionExists(regionName)) {
-                RegeneratorPlugin.throwMessage("severe", "Region: " + regionName + " does not exist!");
+        for (String claimName : iConfig.integrationConfig.getStringList("claimsAutoRegen")) {
+            if (!claimExists(claimName)) {
+                RegeneratorPlugin.throwMessage("severe", "[" + this.getClass().getSimpleName() + "] Claim: " + claimName + " does not exist!");
                 RegeneratorPlugin.disableIntegrationFor(RegeneratorPlugin.convertToModule(plugin));
+            } else {
+                RegeneratorPlugin.throwMessage("info", "[" + this.getClass().getSimpleName() + "] Claim: " + claimName + " detected. Whitelisting for automatic regeneration!");
             }
         }
-        iConfig.saveIntegrationConfig();    
+        iConfig.saveIntegrationConfig();
     }
 
     @Override
@@ -152,7 +154,7 @@ public class WorldGuardIntegration extends Integration {
         return null;
     }
     
-    public boolean regionExists(String regionSearchingFor) {
+    public boolean claimExists(String regionSearchingFor) {
         for (World world : Bukkit.getWorlds()) {
             RegionManager regionManager = WGBukkit.getRegionManager(world);
             Map< String, ProtectedRegion > worldRegions = regionManager.getRegions(); 
@@ -166,7 +168,7 @@ public class WorldGuardIntegration extends Integration {
     }
     public List<String> getRegionsFromConfig() {
         integrationConfigHandler iConfig = new integrationConfigHandler(RegeneratorPlugin, this);
-        return iConfig.integrationConfig.getStringList("regionsAutoRegen");
+        return iConfig.integrationConfig.getStringList("claimsAutoRegen");
     }
     
     public boolean isOwner(ProtectedRegion region, Player player) {

@@ -47,7 +47,7 @@ public final class integrationConfigHandler {
     public void reloadIntegrationConfig() {
         saveDefaultIntegrationConfig();
         if (integrationConfigFile == null) {
-            integrationConfigFile = new File(plugin.getDataFolder() + "/integration/" + integration.getPluginName() + ".yml");
+            integrationConfigFile = new File(plugin.getDataFolder() + "/integration/" + integration.getClass().getSimpleName() + ".yml");
         }
         integrationConfig = YamlConfiguration.loadConfiguration(integrationConfigFile);
 
@@ -74,7 +74,7 @@ public final class integrationConfigHandler {
     }
     public void saveDefaultIntegrationConfig() {
         if (integrationConfigFile == null) {
-            integrationConfigFile = new File(plugin.getDataFolder() + "/integration/" + integration.getPluginName() + ".yml");
+            integrationConfigFile = new File(plugin.getDataFolder() + "/integration/" + integration.getClass().getSimpleName() + ".yml");
         }
         if (!integrationConfigFile.exists()) {      
             integrationConfig = YamlConfiguration.loadConfiguration(plugin.getResource("integration.yml"));
