@@ -21,7 +21,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.Listener;
 import com.draksterau.Regenerator.integration.Integration;
 import com.draksterau.Regenerator.listeners.integrationListener;
+import com.draksterau.Regenerator.tasks.ChunkTask;
 import com.draksterau.Regenerator.tasks.lagTask;
+import java.io.File;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 public class RegeneratorPlugin extends JavaPlugin implements Listener {
@@ -90,6 +93,11 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
         Factions.add("2.8");
         Factions.add("FactionsIntegration");
         availableIntergrations.add(Factions);
+        List<String> Landlord = new ArrayList<String>();
+        Landlord.add("Landlord");
+        Landlord.add("1.3");
+        Landlord.add("LandlordIntegration");
+        availableIntergrations.add(Landlord);
         for (List<String> module : availableIntergrations) {
             throwMessage("info", module.get(2) + " integration module initialised.");
         }
@@ -102,6 +110,7 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
          return false;
      }
     }
+    
     public void initialiseWorlds() {
         for (World world : Bukkit.getWorlds()) {
             throwMessage("info", "Loading World: " + world.getName());
@@ -252,6 +261,12 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
         }
         if (!getConfig().isSet("regen-on-world-unload")) {
             getConfig().set("regen-on-world-unload", false);
+        }
+        if (!getConfig().isSet("regen-on-server-start")) {
+            getConfig().set("regen-on-server-start", false);
+        }
+        if (!getConfig().isSet("server-start-regen-range")) {
+            getConfig().set("server-start-regen-range", 5000);
         }
         saveConfig();
         }

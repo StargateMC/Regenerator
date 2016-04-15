@@ -63,7 +63,7 @@ public class GriefPreventionIntegration extends Integration {
         if (canPlayerRegen(player,chunk)) {
             return (ChatColor.GREEN + "You have regenerated the chunk at: " + ChatColor.BLUE + chunk.getX() + ChatColor.GRAY + "," + ChatColor.BLUE + chunk.getZ() + ChatColor.GREEN + " in GriefPrevention protected territory.");
         } else {
-            return (ChatColor.RED + "You cannot regenerate the chunk at " + ChatColor.BLUE + chunk.getX() + ChatColor.GRAY + "," + ChatColor.BLUE + chunk.getZ() + ChatColor.RED + " manually as you do not have the " + getPermissionRequiredToRegen(player,chunk) + " permission nodess");
+            return (ChatColor.RED + "You cannot regenerate the chunk at " + ChatColor.BLUE + chunk.getX() + ChatColor.GRAY + "," + ChatColor.BLUE + chunk.getZ() + ChatColor.RED + " manually as you do not have the " + getPermissionRequiredToRegen(player,chunk) + " permission nodes");
         }
     }
 
@@ -72,7 +72,7 @@ public class GriefPreventionIntegration extends Integration {
         if (getOwnerOfChunk(chunk) == player) {
             return ("regenerator.regen.griefprevention.OWNER");
         } else {
-            return null;
+            return ("regenerator.regen.griefprevention.OVERRIDE");
         }
     }
     

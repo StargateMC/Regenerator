@@ -90,7 +90,7 @@ public class eventListener implements Listener {
                        //RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + event.getChunk().getX() + "," + event.getChunk().getZ());
                 }
             }
-            RegeneratorPlugin.tellAllNotified(ChatColor.GREEN + "Regenerator is completed regenerating all inactive chunks on: " + event.getWorld().getName() + ". Expect lag for a minute!");
+            RegeneratorPlugin.tellAllNotified(ChatColor.GREEN + "Regenerator is completed regenerating all inactive chunks on: " + event.getWorld().getName() + "!");
         }
     }
     
@@ -109,7 +109,7 @@ public class eventListener implements Listener {
                        //RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + event.getChunk().getX() + "," + event.getChunk().getZ());
                 }
             }
-            RegeneratorPlugin.tellAllNotified(ChatColor.GREEN + "Regenerator is completed regenerating all inactive chunks on: " + event.getWorld().getName() + ". Expect lag for a minute!");
+            RegeneratorPlugin.tellAllNotified(ChatColor.GREEN + "Regenerator is completed regenerating all inactive chunks on: " + event.getWorld().getName() + "!");
         }
     }
     @EventHandler(priority = EventPriority.LOWEST)

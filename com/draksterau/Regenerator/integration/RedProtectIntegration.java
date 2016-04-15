@@ -144,10 +144,10 @@ public class RedProtectIntegration extends Integration {
     public List<Region> getRegionsForChunk(Chunk chunk) {
         List<Region> regions = new ArrayList<Region>();
         for (Region region : RedProtect.rm.getRegionsByWorld(chunk.getWorld())) {
-            int minChunkX = (int)Math.ceil(region.getMinMbrX() / 16f);
-            int maxChunkX = (int)Math.ceil(region.getMaxMbrX() / 16f);
-            int minChunkZ = (int)Math.ceil(region.getMinMbrZ() / 16f);
-            int maxChunkZ = (int)Math.ceil(region.getMaxMbrZ() / 16f);
+            int minChunkX = (int)Math.floor(region.getMinMbrX() / 16f);
+            int maxChunkX = (int)Math.floor(region.getMaxMbrX() / 16f);
+            int minChunkZ = (int)Math.floor(region.getMinMbrZ() / 16f);
+            int maxChunkZ = (int)Math.floor(region.getMaxMbrZ() / 16f);
             if (chunk.getX() >= minChunkX && chunk.getX() <= maxChunkX && chunk.getZ() >= minChunkZ && chunk.getZ() <= maxChunkZ) {
                 regions.add(region);
             }
