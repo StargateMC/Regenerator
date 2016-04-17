@@ -36,11 +36,13 @@ public final class worldConfigHandler {
         return worldConfig;
     }
 
-    public int getChunkInterval() {
-        return worldConfig.getInt("interval");
+    public long getChunkInterval() {
+        this.reloadWorldConfig();
+        return worldConfig.getLong("interval");
     }
     
     public boolean getAutoRegenEnabled() {
+        this.reloadWorldConfig();
         return worldConfig.getBoolean("autoregen");
     }
     public void configureWorld () {
@@ -50,14 +52,28 @@ public final class worldConfigHandler {
         }
         plugin.throwMessage("info", "Interval set to: " + getChunkInterval());
         
-        if (!worldConfig.isSet("autoregen")) {
-            worldConfig.set("autoregen", false);
+        if (plugin.getConfig().getBoolean("default-autoregen")) {
+            if (!worldConfig.isSet("autoregen")) {
+                worldConfig.set("autoregen", true);
+            }
+        } else {
+            if (!worldConfig.isSet("autoregen")) {
+                worldConfig.set("autoregen", false);
+            }
         }
+        
         plugin.throwMessage("info", "Automatic Regeneration set to: " + worldConfig.getBoolean("autoregen"));
         
-        if (!worldConfig.isSet("manualregen")) {
-            worldConfig.set("manualregen", false);
+        if (plugin.getConfig().getBoolean("default-manualregen")) {
+            if (!worldConfig.isSet("manualregen")) {
+                worldConfig.set("manualregen", true);
+            }
+        } else {
+            if (!worldConfig.isSet("manualregen")) {
+                worldConfig.set("manualregen", false);
+            }
         }
+        
         plugin.throwMessage("info", "Manual Regeneration set to: " + worldConfig.getBoolean("manualregen"));
 
         if (!worldConfig.isSet("populate-chunks")) {
@@ -77,26 +93,31 @@ public final class worldConfigHandler {
         if (!(worldConfig.isSet("skip-radius"))) {
              worldConfig.set("skip-radius", 0);
         }
-        plugin.throwMessage("info", "Skip-Radius: " + worldConfig.getInt("skip-radius"));
+        plugin.throwMessage("info", "Skip-Radius: " + worldConfig.getLong("skip-radius"));
         // Saves the config file.
         saveWorldConfig();
     }
     
     public boolean shouldPopulate() {
+        this.reloadWorldConfig();
         return worldConfig.getBoolean("populate-chunks");
     }
     public boolean shouldRandomize() {
+        this.reloadWorldConfig();
         return worldConfig.getBoolean("randomize-structures-and-ores");
     }
     public boolean getManualRegen() {
+        this.reloadWorldConfig();
         return worldConfig.getBoolean("manualregen");
     }
      
     public boolean getAutoRegen() {
+        this.reloadWorldConfig();
         return worldConfig.getBoolean("autoregen");
     }
     
     public long getSkipRadius() {
+        this.reloadWorldConfig();
         return worldConfig.getLong("skip-radius");
     }
     
@@ -106,10 +127,12 @@ public final class worldConfigHandler {
     }
     
     public long getInterval() {
+        this.reloadWorldConfig();
         return worldConfig.getLong("interval");
     }
     
     public long getLastAction() {
+        this.reloadWorldConfig();
         return worldConfig.getLong("lastAction");
     }
     public void updateLastAction() {

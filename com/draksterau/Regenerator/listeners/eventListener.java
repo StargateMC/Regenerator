@@ -56,11 +56,15 @@ public class eventListener implements Listener {
                         RegeneratorPlugin.isPaused = false;
                         RegeneratorPlugin.tellAllNotified(ChatColor.GREEN + "Regenerator has resumed regeneration capabilities as TPS has risen to: " + (int)lagTask.getTps());
                     }
-                    if (RegeneratorPlugin.validateChunkInactivity(event.getChunk(), false) && RegeneratorPlugin.autoRegenRequirementsMet(event.getChunk())) {
+                    if (RegeneratorPlugin.validateChunkInactivity(event.getChunk(), false)) {
+                        if (RegeneratorPlugin.autoRegenRequirementsMet(event.getChunk())) {
                             Bukkit.getServer().getScheduler().runTask(RegeneratorPlugin, new ChunkTask(RegeneratorPlugin, event.getChunk()));
                             cConfig = new chunkConfigHandler(RegeneratorPlugin, event.getChunk());
                             cConfig.updateLastRegen();
                             RegeneratorPlugin.throwMessage("info", "Regenerating Chunk at: " + event.getChunk().getX() + "," + event.getChunk().getZ());
+                        } else {
+                           //RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + event.getChunk().getX() + "," + event.getChunk().getZ());
+                        }
                     } else {
                            //RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + event.getChunk().getX() + "," + event.getChunk().getZ());
                     }
@@ -123,14 +127,26 @@ public class eventListener implements Listener {
                         RegeneratorPlugin.isPaused = false;
                         RegeneratorPlugin.tellAllNotified(ChatColor.GREEN + "Regenerator has resumed regeneration capabilities as TPS has risen to: " + (int)lagTask.getTps());
                     }
-                    if (RegeneratorPlugin.validateChunkInactivity(fromChunk, true) && RegeneratorPlugin.autoRegenRequirementsMet(fromChunk)) {
-                            Bukkit.getServer().getScheduler().runTask(RegeneratorPlugin, new ChunkTask(RegeneratorPlugin, fromChunk));
-                            chunkConfigHandler cConfig = new chunkConfigHandler(RegeneratorPlugin, fromChunk);
-                            cConfig = new chunkConfigHandler(RegeneratorPlugin, fromChunk);
-                            cConfig.updateLastRegen();
-                            RegeneratorPlugin.throwMessage("info", "Regenerating Chunk at: " + fromChunk.getX() + "," + fromChunk.getZ());
-                    } else {
-                           //RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + event.getChunk().getX() + "," + event.getChunk().getZ());
+                    long z;
+                    long x;
+                    for (z = ((fromChunk.getZ()*16)-(RegeneratorPlugin.getConfig().getLong("regen-on-player-change-chunk-range"))); z <= ((fromChunk.getZ()*16) + (RegeneratorPlugin.getConfig().getLong("regen-on-player-change-chunk-range"))); z = z + 16) {
+                        for (x = ((fromChunk.getX()*16)-(RegeneratorPlugin.getConfig().getLong("regen-on-player-change-chunk-range"))); x <= ((fromChunk.getX()*16) + (RegeneratorPlugin.getConfig().getLong("regen-on-player-change-chunk-range"))); x = x + 16) {
+                            Location loc = new Location(fromChunk.getWorld(), x, 100.0, z);
+                            Chunk toRegenerate = fromChunk.getWorld().getChunkAt(loc);
+                            if (RegeneratorPlugin.validateChunkInactivity(toRegenerate, true)) {
+                                if (RegeneratorPlugin.autoRegenRequirementsMet(toRegenerate)) {
+                                    Bukkit.getServer().getScheduler().runTask(RegeneratorPlugin, new ChunkTask(RegeneratorPlugin, toRegenerate));
+                                    chunkConfigHandler cConfig = new chunkConfigHandler(RegeneratorPlugin, toRegenerate);
+                                    cConfig = new chunkConfigHandler(RegeneratorPlugin, toRegenerate);
+                                    cConfig.updateLastRegen();
+                                    RegeneratorPlugin.throwMessage("info", "Regenerating Chunk at: " + toRegenerate.getX() + "," + toRegenerate.getZ());
+                                } else {
+                                  // RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + toRegenerate.getX() + "," + toRegenerate.getZ());
+                                }
+                            } else {
+                                  // RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + toRegenerate.getX() + "," + toRegenerate.getZ());
+                            }
+                        }
                     }
                 } else {
                     if (!RegeneratorPlugin.isPaused) {
@@ -155,11 +171,15 @@ public class eventListener implements Listener {
                         RegeneratorPlugin.isPaused = false;
                         RegeneratorPlugin.tellAllNotified(ChatColor.GREEN + "Regenerator has resumed regeneration capabilities as TPS has risen to: " + (int)lagTask.getTps());
                     }
-                    if (RegeneratorPlugin.validateChunkInactivity(event.getChunk(), true) && RegeneratorPlugin.autoRegenRequirementsMet(event.getChunk())) {
+                    if (RegeneratorPlugin.validateChunkInactivity(event.getChunk(), true)) {
+                        if (RegeneratorPlugin.autoRegenRequirementsMet(event.getChunk())) {
                             Bukkit.getServer().getScheduler().runTask(RegeneratorPlugin, new ChunkTask(RegeneratorPlugin, event.getChunk()));
                             cConfig = new chunkConfigHandler(RegeneratorPlugin, event.getChunk());
                             cConfig.updateLastRegen();
                             RegeneratorPlugin.throwMessage("info", "Regenerating Chunk at: " + event.getChunk().getX() + "," + event.getChunk().getZ());
+                        } else {
+                           //RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + event.getChunk().getX() + "," + event.getChunk().getZ());
+                        }
                     } else {
                            //RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + event.getChunk().getX() + "," + event.getChunk().getZ());
                     }

@@ -25,10 +25,12 @@ public class infoCommand {
     
     public void doCommand() {
         if (command.args.length == 2) {
+                World world = command.plugin.getSenderChunk(command.sender).getWorld();
+                Chunk chunk = command.plugin.getSenderChunk(command.sender);
+                chunkConfigHandler cConfig = new chunkConfigHandler(command.plugin, chunk);
+                worldConfigHandler wConfig = new worldConfigHandler(command.plugin, world);
             switch (command.args[1]) {
                 case "world":
-                World world = command.plugin.getSenderChunk(command.sender).getWorld();
-                worldConfigHandler wConfig = new worldConfigHandler(command.plugin, world);
                 command.sender.sendMessage(command.plugin.getFancyName() + ChatColor.GOLD + "Loading World information....");
                 command.sender.sendMessage(command.plugin.getFancyName() + " World Allows AutoRegen: " + wConfig.getAutoRegen());
                 command.sender.sendMessage(command.plugin.getFancyName() + " World Allows ManualRegen: " + wConfig.getManualRegen());
@@ -42,8 +44,6 @@ public class infoCommand {
                 }
                 break;
                 case "chunk":
-                    Chunk chunk = command.plugin.getSenderChunk(command.sender);
-                    chunkConfigHandler cConfig = new chunkConfigHandler(command.plugin, chunk);
                     long lastRegenMins = (command.plugin.convertMsToSecond(System.currentTimeMillis(), cConfig.getLastRegen()) / 60);
                     long lastBreakMins = (command.plugin.convertMsToSecond(System.currentTimeMillis(), cConfig.getLastBroken()) / 60);
                     long lastPlaceMins = (command.plugin.convertMsToSecond(System.currentTimeMillis(), cConfig.getLastPlaced()) / 60);
@@ -70,20 +70,28 @@ public class infoCommand {
                     } else {
                         command.sender.sendMessage(command.plugin.getFancyName() + " Protected by: " + ChatColor.RED + "None");
                     }
-                    if (command.plugin.canManuallyRegen(command.plugin.getSenderPlayer(command.sender), chunk)) {
-                        if (command.plugin.getIntegrationForChunk(chunk) == null) {
-                            command.sender.sendMessage(command.plugin.getFancyName() + ChatColor.GREEN + "You can regenerate this unclaimed chunk manually");
+                    if (wConfig.getManualRegen()) {
+                        if (cConfig.getManualRegen()) {
+                            if (command.plugin.canManuallyRegen(command.plugin.getSenderPlayer(command.sender), chunk)) {
+                                if (command.plugin.getIntegrationForChunk(chunk) == null) {
+                                    command.sender.sendMessage(command.plugin.getFancyName() + ChatColor.GREEN + "You can regenerate this unclaimed chunk manually");
+                                } else {
+                                    command.sender.sendMessage(command.plugin.getFancyName() + ChatColor.GREEN + "You can regenerate this " + command.plugin.getIntegrationForChunk(chunk).getPluginName() + " protected chunk");
+                                }
+                            } else {
+                                if (command.plugin.getIntegrationForChunk(chunk) == null) {
+                                    command.sender.sendMessage(command.plugin.getFancyName() + ChatColor.RED + "You cannot regenerate this unclaimed chunk.");
+                                    command.sender.sendMessage(command.plugin.getFancyName() + ChatColor.RED + "This requires the regenerator.regen.unclaimed permission node.");
+                                } else {
+                                    command.sender.sendMessage(command.plugin.getFancyName() + ChatColor.RED + "You cannot regenerate this " + command.plugin.getIntegrationForChunk(chunk).getPluginName() + " protected chunk");
+                                    command.sender.sendMessage(command.plugin.getFancyName() + ChatColor.RED + "Type /regenerator regen to find out what permission node is required.");
+                                }
+                            }
                         } else {
-                            command.sender.sendMessage(command.plugin.getFancyName() + ChatColor.GREEN + "You can regenerate this " + command.plugin.getIntegrationForChunk(chunk).getPluginName() + " protected chunk");
+                            command.sender.sendMessage(command.plugin.getFancyName() + ChatColor.RED + "You cannot regenerate this chunk as the chunk has manual regeneration disabled.");
                         }
                     } else {
-                        if (command.plugin.getIntegrationForChunk(chunk) == null) {
-                            command.sender.sendMessage(command.plugin.getFancyName() + ChatColor.RED + "You cannot regenerate this unclaimed chunk.");
-                            command.sender.sendMessage(command.plugin.getFancyName() + ChatColor.RED + "This requires the regenerator.regen.unclaimed permission node.");
-                        } else {
-                            command.sender.sendMessage(command.plugin.getFancyName() + command.plugin.getIntegrationForChunk(chunk).getPlayerRegenReason(command.plugin.getSenderPlayer(command.sender), chunk));
-                            command.sender.sendMessage(command.plugin.getFancyName() + ChatColor.RED + "This requires the " + command.plugin.getIntegrationForChunk(chunk).getPermissionRequiredToRegen(command.plugin.getSenderPlayer(command.sender), chunk) + " permission node.");
-                        }
+                        command.sender.sendMessage(command.plugin.getFancyName() + ChatColor.RED + "You cannot regenerate this chunk as the world has manual regeneration disabled.");
                     }
                     break;
                 default:

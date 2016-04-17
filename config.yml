@@ -6,7 +6,7 @@
 # For integration configuration, please see the /integrations/<plugin>.yml file associated with your grief protection plugin.
 # For world configuration (Such as intervals between chunks), see /worlds/worldname/world.yml.
 
-config-version: 2.1.1
+config-version: 2.2.2
 
 # This must be set to true if there are no grief prevention plugins installed and you want the plugin to work.
 # WARNING: This means that the plugin will regnerate chunks that you may wish to remain protected!
@@ -27,5 +27,10 @@ regen-on-player-change-chunk: true
 regen-on-world-load: true
 # This will cause a regeneration event when a world is unloaded. This will lag the server temporarily and notify all players with the regenerator.notify permission node.
 regen-on-world-unload: true
-
+# Number of blocks away that is checked to auto regen when a player triggers a changeChunkEvent
+regen-on-player-change-chunk-range: 128
+# Whether or not new worlds that are loaded should have manual regen enabled by default
+default-autoregen: false
+# Whether or not new worlds that are loaded should have auto regen enabled by default
+default-autoregen: false
 

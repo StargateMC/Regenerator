@@ -10,6 +10,7 @@ import com.draksterau.Regenerator.config.worldConfigHandler;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.plugin.Plugin;
@@ -35,7 +36,8 @@ public class ChunkTask extends BukkitRunnable {
     @Override
     
     public void run() {   
-        
+            RegeneratorPlugin actualPlugin = (RegeneratorPlugin) plugin;
+
             if (chunk.getWorld().regenerateChunk(chunk.getX(),chunk.getZ())) {
               //  log.log(Level.INFO, "Chunk regenerated successfully for chunk: {0},{1} on world: {2}", new Object[]{chunk.getX(), chunk.getZ(), chunk.getWorld().getName()});
             } else {
@@ -54,6 +56,7 @@ public class ChunkTask extends BukkitRunnable {
                     pop.populate(chunk.getWorld(),random, chunk);
                 }
             }
+            actualPlugin.tellAllNotified(ChatColor.GRAY + "Chunk regenerating at: " + ChatColor.BLUE + chunk.getX()*16 + ChatColor.GRAY + "," + ChatColor.BLUE + chunk.getZ()*16 + ChatColor.GRAY + " on world: " + ChatColor.GREEN + chunk.getWorld().getName());
             if (chunk.getWorld().refreshChunk(chunk.getX(),chunk.getZ())) {
            //     log.log(Level.INFO, "Chunk refreshed successfully for chunk: {0},{1} on world: {2}", new Object[]{chunk.getX(), chunk.getZ(), chunk.getWorld().getName()});
             } else {

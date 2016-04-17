@@ -68,6 +68,16 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
     }
     
     public void initAvailableIntegrations() {
+        List<String> Towny = new ArrayList<String>();
+        Towny.add("Towny");
+        Towny.add("0.91");
+        Towny.add("TownyIntegration");
+        availableIntergrations.add(Towny);
+        List<String> FactionsOne = new ArrayList<String>();
+        FactionsOne.add("Factions");
+        FactionsOne.add("1.8");
+        FactionsOne.add("FactionsOneIntegration");
+        availableIntergrations.add(FactionsOne);
         List<String> FactionsUUID = new ArrayList<String>();
         FactionsUUID.add("Factions");
         FactionsUUID.add("1.6");
@@ -250,6 +260,9 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
         if (!getConfig().isSet("regen-on-player-change-chunk")) {
             getConfig().set("regen-on-player-change-chunk", true);
         }
+        if (!getConfig().isSet("regen-on-player-change-chunk-range")) {
+            getConfig().set("regen-on-player-change-chunk-range", 128);
+        }
         if (!getConfig().isSet("regen-on-chunk-load")) {
             getConfig().set("regen-on-chunk-load", true);
         }
@@ -262,11 +275,11 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
         if (!getConfig().isSet("regen-on-world-unload")) {
             getConfig().set("regen-on-world-unload", false);
         }
-        if (!getConfig().isSet("regen-on-server-start")) {
-            getConfig().set("regen-on-server-start", false);
+        if (!getConfig().isSet("default-autoregen")) {
+            getConfig().set("default-autoregen", false);
         }
-        if (!getConfig().isSet("server-start-regen-range")) {
-            getConfig().set("server-start-regen-range", 5000);
+        if (!getConfig().isSet("default-manualregen")) {
+            getConfig().set("default-manualregen", false);
         }
         saveConfig();
         }
@@ -466,12 +479,33 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
         } else {
             // This loads the chunk interval for the world.
             worldConfigHandler wConfig = new worldConfigHandler(this, chunk.getWorld());
-            int chunkInterval = wConfig.getChunkInterval();
+            long chunkInterval = wConfig.getChunkInterval();
             // This statement checks to see if the last time the chunk had a block broken or placed is greater than the chunkInterval for the world.
-            if (secSinceLastPlaced >= chunkInterval || secSinceLastBroken >= chunkInterval) {
-                return true;
+            if (secSinceLastPlaced >= chunkInterval) {
+                if (cConfig.getLastRegen() == 0) {
+                    return true;
+                } else {
+                    if (cConfig.getLastRegen() < cConfig.getLastPlaced()) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
             } else {
-                return false;
+                if (secSinceLastBroken >= chunkInterval) {
+                    if (cConfig.getLastRegen() == 0) {
+                        return true;
+                    } else {
+                        if (cConfig.getLastRegen() < cConfig.getLastBroken()) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                } else {
+                    // Not inactive chunk.
+                    return false;
+                }
             }
         }
     }

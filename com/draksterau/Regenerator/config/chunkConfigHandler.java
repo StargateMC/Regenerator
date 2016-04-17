@@ -50,25 +50,32 @@ public final class chunkConfigHandler {
     }
     
     public boolean getManualRegen() {
+        this.reloadChunkConfig();
         return chunkConfig.getBoolean("manualregen");
     }
     public boolean getAutoRegen() {
+        this.reloadChunkConfig();
         return chunkConfig.getBoolean("autoregen");
     }
     
     public long getLastRegen() {
+        this.reloadChunkConfig();
         return this.chunkConfig.getLong("lastRegen");
     }
     public long getLastBroken() {
+        this.reloadChunkConfig();
         return this.chunkConfig.getLong("lastBroken");
     }
     public long getLastPlaced() {
+        this.reloadChunkConfig();
         return this.chunkConfig.getLong("lastPlaced");
     }
     public long getLastLoaded() {
+        this.reloadChunkConfig();
         return this.chunkConfig.getLong("loaded");
     }
     public long getLastUnloaded() {
+        this.reloadChunkConfig();
         return this.chunkConfig.getLong("unloaded");
     }
     

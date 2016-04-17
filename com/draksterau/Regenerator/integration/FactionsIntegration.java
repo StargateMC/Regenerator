@@ -88,7 +88,7 @@ public final class FactionsIntegration extends Integration {
         }
         for (String claimName : iConfig.integrationConfig.getStringList("claimsAutoRegen")) {
             if (!claimExists(claimName)) {
-                RegeneratorPlugin.throwMessage("severe", "[" + this.getClass().getSimpleName() + "] Claim: " + claimName + " does not exist!");
+                RegeneratorPlugin.throwMessage("warning", "[" + this.getClass().getSimpleName() + "] Claim: " + claimName + " does not exist!");
                 RegeneratorPlugin.disableIntegrationFor(RegeneratorPlugin.convertToModule(plugin));
             } else {
                 RegeneratorPlugin.throwMessage("info", "[" + this.getClass().getSimpleName() + "] Claim: " + claimName + " detected. Whitelisting for automatic regeneration!");
