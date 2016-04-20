@@ -61,7 +61,7 @@ public class eventListener implements Listener {
                             Bukkit.getServer().getScheduler().runTask(RegeneratorPlugin, new ChunkTask(RegeneratorPlugin, event.getChunk()));
                             cConfig = new chunkConfigHandler(RegeneratorPlugin, event.getChunk());
                             cConfig.updateLastRegen();
-                            RegeneratorPlugin.throwMessage("info", "Regenerating Chunk at: " + event.getChunk().getX() + "," + event.getChunk().getZ());
+                            RegeneratorPlugin.throwMessage("info", "Regenerating Chunk at: " + event.getChunk().getX() + "," + event.getChunk().getZ() + " on world: " + event.getWorld().getName());
                         } else {
                            //RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + event.getChunk().getX() + "," + event.getChunk().getZ());
                         }
@@ -77,44 +77,6 @@ public class eventListener implements Listener {
             }
         } 
 
-    }
-    
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onWorldLoad(WorldLoadEvent event) {
-        if (RegeneratorPlugin.getConfig().getBoolean("regen-on-world-load")) {
-            RegeneratorPlugin.tellAllNotified(ChatColor.RED + "Regenerator is regenerating all inactive chunks on: " + event.getWorld().getName() + ". Expect lag for a minute!");
-            for (Chunk chunk : event.getWorld().getLoadedChunks()) {
-                if (RegeneratorPlugin.validateChunkInactivity(chunk, true) && RegeneratorPlugin.autoRegenRequirementsMet(chunk)) {
-                        Bukkit.getServer().getScheduler().runTask(RegeneratorPlugin, new ChunkTask(RegeneratorPlugin, chunk));
-                        chunkConfigHandler cConfig = new chunkConfigHandler(RegeneratorPlugin, chunk);
-                        cConfig = new chunkConfigHandler(RegeneratorPlugin, chunk);
-                        cConfig.updateLastRegen();
-                        RegeneratorPlugin.throwMessage("info", "Regenerating Chunk at: " + chunk.getX() + "," + chunk.getZ());
-                } else {
-                       //RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + event.getChunk().getX() + "," + event.getChunk().getZ());
-                }
-            }
-            RegeneratorPlugin.tellAllNotified(ChatColor.GREEN + "Regenerator is completed regenerating all inactive chunks on: " + event.getWorld().getName() + "!");
-        }
-    }
-    
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onWorldUnload(WorldUnloadEvent event) {
-        if (RegeneratorPlugin.getConfig().getBoolean("regen-on-world-unload")) {
-            RegeneratorPlugin.tellAllNotified(ChatColor.RED + "Regenerator is regenerating all inactive chunks on: " + event.getWorld().getName() + ". Expect lag for a minute!");
-            for (Chunk chunk : event.getWorld().getLoadedChunks()) {
-                if (RegeneratorPlugin.validateChunkInactivity(chunk, false) && RegeneratorPlugin.autoRegenRequirementsMet(chunk)) {
-                        Bukkit.getServer().getScheduler().runTask(RegeneratorPlugin, new ChunkTask(RegeneratorPlugin, chunk));
-                        chunkConfigHandler cConfig = new chunkConfigHandler(RegeneratorPlugin, chunk);
-                        cConfig = new chunkConfigHandler(RegeneratorPlugin, chunk);
-                        cConfig.updateLastRegen();
-                        RegeneratorPlugin.throwMessage("info", "Regenerating Chunk at: " + chunk.getX() + "," + chunk.getZ());
-                } else {
-                       //RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + event.getChunk().getX() + "," + event.getChunk().getZ());
-                }
-            }
-            RegeneratorPlugin.tellAllNotified(ChatColor.GREEN + "Regenerator is completed regenerating all inactive chunks on: " + event.getWorld().getName() + "!");
-        }
     }
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerMove(PlayerMoveEvent event) {
@@ -139,7 +101,7 @@ public class eventListener implements Listener {
                                     chunkConfigHandler cConfig = new chunkConfigHandler(RegeneratorPlugin, toRegenerate);
                                     cConfig = new chunkConfigHandler(RegeneratorPlugin, toRegenerate);
                                     cConfig.updateLastRegen();
-                                    RegeneratorPlugin.throwMessage("info", "Regenerating Chunk at: " + toRegenerate.getX() + "," + toRegenerate.getZ());
+                                    RegeneratorPlugin.throwMessage("info", "Regenerating Chunk at: " + toRegenerate.getX() + "," + toRegenerate.getZ() + " on world: " + toRegenerate.getWorld().getName());
                                 } else {
                                   // RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + toRegenerate.getX() + "," + toRegenerate.getZ());
                                 }
@@ -176,7 +138,7 @@ public class eventListener implements Listener {
                             Bukkit.getServer().getScheduler().runTask(RegeneratorPlugin, new ChunkTask(RegeneratorPlugin, event.getChunk()));
                             cConfig = new chunkConfigHandler(RegeneratorPlugin, event.getChunk());
                             cConfig.updateLastRegen();
-                            RegeneratorPlugin.throwMessage("info", "Regenerating Chunk at: " + event.getChunk().getX() + "," + event.getChunk().getZ());
+                            RegeneratorPlugin.throwMessage("info", "Regenerating Chunk at: " + event.getChunk().getX() + "," + event.getChunk().getZ() + " on world: " + event.getWorld().getName());
                         } else {
                            //RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + event.getChunk().getX() + "," + event.getChunk().getZ());
                         }

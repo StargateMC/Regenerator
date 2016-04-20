@@ -237,7 +237,7 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
             for (Entity entity : entities) {
                 if (entity instanceof Player) {
                     Player player = (Player)entity;
-                    if (player.isOp() || player.hasPermission("regenerator.notify")) {
+                    if (player.hasPermission("regenerator.notify")) {
                         player.sendMessage(getFancyName() + ChatColor.BLUE + "Notify" + ChatColor.GRAY + ":" + message);
                     }                
                 }
@@ -268,12 +268,6 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
         }
         if (!getConfig().isSet("regen-on-chunk-unload")) {
             getConfig().set("regen-on-chunk-unload", true);
-        }
-        if (!getConfig().isSet("regen-on-world-load")) {
-            getConfig().set("regen-on-world-load", false);
-        }
-        if (!getConfig().isSet("regen-on-world-unload")) {
-            getConfig().set("regen-on-world-unload", false);
         }
         if (!getConfig().isSet("default-autoregen")) {
             getConfig().set("default-autoregen", false);
