@@ -21,6 +21,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -119,7 +120,13 @@ public class eventListener implements Listener {
             }
         }
     }
-    
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerTeleport(PlayerChangedWorldEvent event) {
+        if (event.getPlayer().hasPermission("regenerator.worldchange.notify")) {
+            worldConfigHandler wConfig = new worldConfigHandler(RegeneratorPlugin, event.getPlayer().getWorld());
+            event.getPlayer().sendMessage(RegeneratorPlugin.getFancyName() + ChatColor.RED + "Warning:" + ChatColor.GRAY + " Unclaimed land on this world will regenerate after it is inactive for : " + ChatColor.AQUA + (wConfig.getChunkInterval() * 60) + ChatColor.GRAY + " minutes");
+        }
+    }
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChunkLoad(ChunkLoadEvent event) {
         worldConfigHandler wConfig = new worldConfigHandler(RegeneratorPlugin, event.getChunk().getWorld());
