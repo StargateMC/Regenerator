@@ -480,21 +480,32 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
             worldConfigHandler wConfig = new worldConfigHandler(this, chunk.getWorld());
             long chunkInterval = wConfig.getChunkInterval();
             
+            // If the chunk has never been modified, dont do anything.
+            if (secSinceLastPlaced == 0 && secSinceLastBroken == 0 && secSinceLastRegen == 0) return false;
+            
+            // If the Broken is zero and the placed is old, dont regenerate.
+            if ((secSinceLastBroken == 0 && secSinceLastPlaced != 0 && secSinceLastPlaced > secSinceLastRegen)) return false;
+            
+            // If the Placed is zero and the broken is old, dont regenerate.
+            if ((secSinceLastPlaced == 0 && secSinceLastBroken != 0 && secSinceLastBroken > secSinceLastRegen)) return false;
+            
+            // If we get to the point here, we make sure the chunk has not regenerated since the last block break or place.
+            if ((secSinceLastBroken != 0 && secSinceLastBroken > secSinceLastRegen) && (secSinceLastPlaced != 0 && secSinceLastPlaced > secSinceLastRegen)) return false;
+            
             // If the land has been claimed before and the seconds since last unclaimed are not greater than the interval, we do not care how active the chunk is.
             if (secSinceLastUnclaimed != 0 && secSinceLastUnclaimed < chunkInterval) return false;
-            
             // If the chunk has been regenerated before, make sure it waits at least the interval time before doing it again.
             if (secSinceLastRegen != 0 && secSinceLastRegen < chunkInterval) return false;
-            
             // If a block has been placed in the chunk recently, we dont want to regenerate.
             if (secSinceLastPlaced != 0 && secSinceLastPlaced < chunkInterval) return false;
-            
             // If a block has been broken in the chunk recently, we do not want to regenerate.
             if (secSinceLastBroken != 0 && secSinceLastBroken < chunkInterval) return false;
-            
-            // If the chunk has never been modified, dont do anything.
-            if (secSinceLastPlaced == 0 && secSinceLastBroken == 0) return false;
-            
+
+
+            // If there has been no action since unclaim, cancel this event.
+            //if ((secSinceLastPlaced != 0 && secSinceLastPlaced > secSinceLastUnclaimed) && (secSinceLastBroken != 0 && secSinceLastBroken > secSinceLastUnclaimed)) return false;
+            //throwMessage("info", "The break and place events are more recent than the last unclaim.");
+
             return true;
         }
 }

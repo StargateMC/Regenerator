@@ -50,7 +50,7 @@ public class eventListener implements Listener {
         if (wConfig.getAutoRegen() || wConfig.getManualRegen()) {
             chunkConfigHandler cConfig = new chunkConfigHandler(RegeneratorPlugin, event.getChunk());
             cConfig.updateLastUnloaded();
-            if (RegeneratorPlugin.getIntegrationForChunk(event.getChunk()) != null && cConfig.getLastUnclaimed() > cConfig.getLastClaimed()) {
+            if (RegeneratorPlugin.getIntegrationForChunk(event.getChunk()) != null && (cConfig.getLastUnclaimed() > cConfig.getLastClaimed() || cConfig.getLastClaimed() == 0)) {
                 cConfig.updateLastClaimed();
             }
             if (RegeneratorPlugin.getIntegrationForChunk(event.getChunk()) == null && cConfig.getLastUnclaimed() < cConfig.getLastClaimed()) {
@@ -103,7 +103,7 @@ public class eventListener implements Listener {
                             Location loc = new Location(fromChunk.getWorld(), x, 100.0, z);
                             Chunk toRegenerate = fromChunk.getWorld().getChunkAt(loc);
                             chunkConfigHandler cConfig = new chunkConfigHandler(RegeneratorPlugin, toRegenerate);
-                            if (RegeneratorPlugin.getIntegrationForChunk(toRegenerate) != null && cConfig.getLastUnclaimed() > cConfig.getLastClaimed()) {
+                            if (RegeneratorPlugin.getIntegrationForChunk(toRegenerate) != null && (cConfig.getLastUnclaimed() > cConfig.getLastClaimed() || cConfig.getLastClaimed() == 0)) {
                                 cConfig.updateLastClaimed();
                             }
                             if (RegeneratorPlugin.getIntegrationForChunk(toRegenerate) == null && cConfig.getLastUnclaimed() < cConfig.getLastClaimed()) {
@@ -148,7 +148,7 @@ public class eventListener implements Listener {
         if (wConfig.getAutoRegen() || wConfig.getManualRegen()) {
             chunkConfigHandler cConfig = new chunkConfigHandler(RegeneratorPlugin, event.getChunk());
             cConfig.updateLastLoaded();
-            if (RegeneratorPlugin.getIntegrationForChunk(event.getChunk()) != null && cConfig.getLastUnclaimed() > cConfig.getLastClaimed()) {
+            if (RegeneratorPlugin.getIntegrationForChunk(event.getChunk()) != null && (cConfig.getLastUnclaimed() > cConfig.getLastClaimed() || cConfig.getLastClaimed() == 0)) {
                 cConfig.updateLastClaimed();
             }
             if (RegeneratorPlugin.getIntegrationForChunk(event.getChunk()) == null && cConfig.getLastUnclaimed() < cConfig.getLastClaimed()) {

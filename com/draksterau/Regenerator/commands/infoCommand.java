@@ -47,6 +47,8 @@ public class infoCommand {
                     long lastRegenMins = (command.plugin.convertMsToSecond(System.currentTimeMillis(), cConfig.getLastRegen()) / 60);
                     long lastBreakMins = (command.plugin.convertMsToSecond(System.currentTimeMillis(), cConfig.getLastBroken()) / 60);
                     long lastPlaceMins = (command.plugin.convertMsToSecond(System.currentTimeMillis(), cConfig.getLastPlaced()) / 60);
+                    long lastClaimedMins = (command.plugin.convertMsToSecond(System.currentTimeMillis(), cConfig.getLastClaimed()) / 60);
+                    long lastUnclaimedMins = (command.plugin.convertMsToSecond(System.currentTimeMillis(), cConfig.getLastUnclaimed()) / 60);
                     command.sender.sendMessage(command.plugin.getFancyName() + ChatColor.GOLD + "Loading Chunk information....");
                     if (cConfig.getLastPlaced() == 0) {
                         command.sender.sendMessage(command.plugin.getFancyName() + " Last Block Place: " + ChatColor.RED + "Never");
@@ -62,6 +64,16 @@ public class infoCommand {
                         command.sender.sendMessage(command.plugin.getFancyName() + " Last Regen: " + ChatColor.RED + "Never");
                     } else {
                         command.sender.sendMessage(command.plugin.getFancyName() + " Last Regen: " + lastRegenMins + " mins ago");
+                    }
+                    if (cConfig.getLastClaimed() == 0) {
+                        command.sender.sendMessage(command.plugin.getFancyName() + " Last Claimed: " + ChatColor.RED + "Never");
+                    } else {
+                        command.sender.sendMessage(command.plugin.getFancyName() + " Last Claimed: " + lastClaimedMins + " mins ago");
+                    }
+                    if (cConfig.getLastUnclaimed() == 0) {
+                        command.sender.sendMessage(command.plugin.getFancyName() + " Last Unclaimed: " + ChatColor.RED + "Never");
+                    } else {
+                        command.sender.sendMessage(command.plugin.getFancyName() + " Last Unclaimed: " + lastUnclaimedMins + " mins ago");
                     }
                     command.sender.sendMessage(command.plugin.getFancyName() + " Manual Regen Allowed: " + cConfig.getManualRegen());
                     command.sender.sendMessage(command.plugin.getFancyName() + " Auto Regen Allowed: " + cConfig.getAutoRegen());
