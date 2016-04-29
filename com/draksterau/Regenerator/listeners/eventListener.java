@@ -50,6 +50,12 @@ public class eventListener implements Listener {
         if (wConfig.getAutoRegen() || wConfig.getManualRegen()) {
             chunkConfigHandler cConfig = new chunkConfigHandler(RegeneratorPlugin, event.getChunk());
             cConfig.updateLastUnloaded();
+            if (RegeneratorPlugin.getIntegrationForChunk(event.getChunk()) != null && cConfig.getLastUnclaimed() > cConfig.getLastClaimed()) {
+                cConfig.updateLastClaimed();
+            }
+            if (RegeneratorPlugin.getIntegrationForChunk(event.getChunk()) == null && cConfig.getLastUnclaimed() < cConfig.getLastClaimed()) {
+                cConfig.updateLastUnclaimed();
+            }
             //throwMessage("info", "Unloading Chunk: {0} on world: {1}", new Object[]{event.getChunk(), event.getChunk().getWorld().getName()});
             if (RegeneratorPlugin.getConfig().getBoolean("regen-on-chunk-unload")) {
                 if (RegeneratorPlugin.isLagOK()) {
@@ -96,11 +102,16 @@ public class eventListener implements Listener {
                         for (x = ((fromChunk.getX()*16)-(RegeneratorPlugin.getConfig().getLong("regen-on-player-change-chunk-range"))); x <= ((fromChunk.getX()*16) + (RegeneratorPlugin.getConfig().getLong("regen-on-player-change-chunk-range"))); x = x + 16) {
                             Location loc = new Location(fromChunk.getWorld(), x, 100.0, z);
                             Chunk toRegenerate = fromChunk.getWorld().getChunkAt(loc);
+                            chunkConfigHandler cConfig = new chunkConfigHandler(RegeneratorPlugin, toRegenerate);
+                            if (RegeneratorPlugin.getIntegrationForChunk(toRegenerate) != null && cConfig.getLastUnclaimed() > cConfig.getLastClaimed()) {
+                                cConfig.updateLastClaimed();
+                            }
+                            if (RegeneratorPlugin.getIntegrationForChunk(toRegenerate) == null && cConfig.getLastUnclaimed() < cConfig.getLastClaimed()) {
+                                cConfig.updateLastUnclaimed();
+                            }
                             if (RegeneratorPlugin.validateChunkInactivity(toRegenerate, true)) {
                                 if (RegeneratorPlugin.autoRegenRequirementsMet(toRegenerate)) {
                                     Bukkit.getServer().getScheduler().runTask(RegeneratorPlugin, new ChunkTask(RegeneratorPlugin, toRegenerate));
-                                    chunkConfigHandler cConfig = new chunkConfigHandler(RegeneratorPlugin, toRegenerate);
-                                    cConfig = new chunkConfigHandler(RegeneratorPlugin, toRegenerate);
                                     cConfig.updateLastRegen();
                                     RegeneratorPlugin.throwMessage("info", "Regenerating Chunk at: " + toRegenerate.getX() + "," + toRegenerate.getZ() + " on world: " + toRegenerate.getWorld().getName());
                                 } else {
@@ -124,7 +135,11 @@ public class eventListener implements Listener {
     public void onPlayerTeleport(PlayerChangedWorldEvent event) {
         if (event.getPlayer().hasPermission("regenerator.worldchange.notify")) {
             worldConfigHandler wConfig = new worldConfigHandler(RegeneratorPlugin, event.getPlayer().getWorld());
-            event.getPlayer().sendMessage(RegeneratorPlugin.getFancyName() + ChatColor.RED + "Warning:" + ChatColor.GRAY + " Unclaimed land on this world will regenerate after it is inactive for : " + ChatColor.AQUA + (wConfig.getChunkInterval() * 60) + ChatColor.GRAY + " minutes");
+            if (wConfig.getAutoRegen() == true) {
+                event.getPlayer().sendMessage(RegeneratorPlugin.getFancyName() + ChatColor.RED + "Warning:" + ChatColor.GRAY + " Unclaimed land on this world will regenerate after it is inactive for : " + ChatColor.AQUA + (wConfig.getChunkInterval() / 60) + ChatColor.GRAY + " minutes");
+            } else {
+                event.getPlayer().sendMessage(RegeneratorPlugin.getFancyName() + ChatColor.BLUE + "Note:" + ChatColor.GRAY + " Unclaimed land on this world will not automatically regenerate.");
+            }
         }
     }
     @EventHandler(priority = EventPriority.LOWEST)
@@ -133,6 +148,12 @@ public class eventListener implements Listener {
         if (wConfig.getAutoRegen() || wConfig.getManualRegen()) {
             chunkConfigHandler cConfig = new chunkConfigHandler(RegeneratorPlugin, event.getChunk());
             cConfig.updateLastLoaded();
+            if (RegeneratorPlugin.getIntegrationForChunk(event.getChunk()) != null && cConfig.getLastUnclaimed() > cConfig.getLastClaimed()) {
+                cConfig.updateLastClaimed();
+            }
+            if (RegeneratorPlugin.getIntegrationForChunk(event.getChunk()) == null && cConfig.getLastUnclaimed() < cConfig.getLastClaimed()) {
+                cConfig.updateLastUnclaimed();
+            }
             //throwMessage("info", "Unloading Chunk: {0} on world: {1}", new Object[]{event.getChunk(), event.getChunk().getWorld().getName()});
             if (RegeneratorPlugin.getConfig().getBoolean("regen-on-chunk-load")) {
                 if (RegeneratorPlugin.isLagOK()) {

@@ -9,6 +9,8 @@ import com.draksterau.Regenerator.RegeneratorPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -38,13 +40,15 @@ public final class chunkConfigHandler {
     }
 
     public void configureChunk () throws UnsupportedEncodingException {
-        chunkConfig.set("unloaded", 0);
-        chunkConfig.set("loaded", 0);
-        chunkConfig.set("lastPlaced", 0);
-        chunkConfig.set("lastBroken", 0);
-        chunkConfig.set("lastRegen", 0);
-        chunkConfig.set("autoregen", true);
-        chunkConfig.set("manualregen", true);
+        if (!chunkConfig.isSet("unloaded")) chunkConfig.set("unloaded", 0);
+        if (!chunkConfig.isSet("loaded")) chunkConfig.set("loaded", 0);
+        if (!chunkConfig.isSet("lastPlaced")) chunkConfig.set("lastPlaced", 0);
+        if (!chunkConfig.isSet("lastBroken")) chunkConfig.set("lastPlaced", 0);
+        if (!chunkConfig.isSet("lastRegen")) chunkConfig.set("lastPlaced", 0);
+        if (!chunkConfig.isSet("lastClaimed")) chunkConfig.set("lastClaimed", 0);
+        if (!chunkConfig.isSet("lastUnclaimed")) chunkConfig.set("lastUnclaimed", 0);
+        if (!chunkConfig.isSet("autoregen")) chunkConfig.set("autoregen", true);
+        if (!chunkConfig.isSet("manualregen")) chunkConfig.set("manualregen", true);
         // Saves the config file.
         saveChunkConfig();
     }
@@ -78,7 +82,22 @@ public final class chunkConfigHandler {
         this.reloadChunkConfig();
         return this.chunkConfig.getLong("unloaded");
     }
-    
+    public long getLastClaimed() {
+        this.reloadChunkConfig();
+        return this.chunkConfig.getLong("lastClaimed");
+    }
+    public void updateLastClaimed() {
+        this.chunkConfig.set("lastClaimed", System.currentTimeMillis());
+        this.saveChunkConfig();
+    }
+    public long getLastUnclaimed() {
+        this.reloadChunkConfig();
+        return this.chunkConfig.getLong("lastUnclaimed");
+    }
+    public void updateLastUnclaimed() {
+        this.chunkConfig.set("lastUnclaimed", System.currentTimeMillis());
+        this.saveChunkConfig();
+    }
     public void updateLastPlaced() {
         this.chunkConfig.set("lastPlaced", System.currentTimeMillis());
         this.saveChunkConfig();
@@ -102,18 +121,22 @@ public final class chunkConfigHandler {
         this.saveChunkConfig();
     }
     public void reloadChunkConfig() {
-        saveDefaultChunkConfig();
-        if (chunkConfigFile == null) {
-        chunkConfigFile = new File(plugin.getDataFolder() + "/worlds/" + chunk.getWorld().getName() + "/chunks/", chunk.getX()+","+chunk.getZ() + ".yml");
-        }
-        chunkConfig = YamlConfiguration.loadConfiguration(chunkConfigFile);
-
-        if (chunkConfig == null) {
-            try {
-                configureChunk();
-            } catch (UnsupportedEncodingException ex) {
-                plugin.throwMessage("severe","Could not save config to " + chunkConfigFile + " (Exception: " + ex.getMessage() + ")");
+        try {
+            saveDefaultChunkConfig();
+            if (chunkConfigFile == null) {
+                chunkConfigFile = new File(plugin.getDataFolder() + "/worlds/" + chunk.getWorld().getName() + "/chunks/", chunk.getX()+","+chunk.getZ() + ".yml");
             }
+            chunkConfig = YamlConfiguration.loadConfiguration(chunkConfigFile);
+            configureChunk();
+            if (chunkConfig == null) {
+                try {
+                    configureChunk();
+                } catch (UnsupportedEncodingException ex) {
+                    plugin.throwMessage("severe","Could not save config to " + chunkConfigFile + " (Exception: " + ex.getMessage() + ")");
+                }
+            }
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(chunkConfigHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

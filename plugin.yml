@@ -1,6 +1,6 @@
 name: Regenerator
 main: com.draksterau.Regenerator.RegeneratorPlugin
-version: 2.2.3
+version: 2.2.5
 softdepend: [ Factions, GriefPrevention, WorldGuard, RedProtect, Landlord, Towny ]
 description: Regenerator is a perpetual world plugin that supports many grief prevention plugins.
 author: Bysokar

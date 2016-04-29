@@ -455,6 +455,8 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
         long secSinceLastRegen = 0;
         long secSinceLastPlaced = 0;
         long secSinceLastBroken = 0;
+        long secSinceLastClaimed = 0;
+        long secSinceLastUnclaimed = 0;
         
         chunkConfigHandler cConfig = new chunkConfigHandler(this, chunk);
         
@@ -467,42 +469,32 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
         if (cConfig.getLastRegen() != 0) {
             secSinceLastRegen = (System.currentTimeMillis() - cConfig.getLastRegen()) / 1000;
         }
-        // The below statement says a chunk that has never been active should never be regenerated.
-        if (secSinceLastRegen == 0 && secSinceLastBroken == 0 && secSinceLastPlaced == 0) {
-            return false;
-        } else {
+        if (cConfig.getLastClaimed() != 0) {
+            secSinceLastClaimed = (System.currentTimeMillis() - cConfig.getLastClaimed()) / 1000;
+        }
+        if (cConfig.getLastUnclaimed() != 0) {
+            secSinceLastUnclaimed = (System.currentTimeMillis() - cConfig.getLastUnclaimed()) / 1000;
+        }
+        
             // This loads the chunk interval for the world.
             worldConfigHandler wConfig = new worldConfigHandler(this, chunk.getWorld());
             long chunkInterval = wConfig.getChunkInterval();
-            // This statement checks to see if the last time the chunk had a block broken or placed is greater than the chunkInterval for the world.
-            if (secSinceLastPlaced >= chunkInterval) {
-                if (cConfig.getLastRegen() == 0) {
-                    return true;
-                } else {
-                    if (cConfig.getLastRegen() < cConfig.getLastPlaced()) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            } else {
-                if (secSinceLastBroken >= chunkInterval) {
-                    if (cConfig.getLastRegen() == 0) {
-                        return true;
-                    } else {
-                        if (cConfig.getLastRegen() < cConfig.getLastBroken()) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                } else {
-                    // Not inactive chunk.
-                    return false;
-                }
-            }
+            
+            // If the land has been claimed before and the seconds since last unclaimed are not greater than the interval, we do not care how active the chunk is.
+            if (secSinceLastUnclaimed != 0 && secSinceLastUnclaimed < chunkInterval) return false;
+            
+            // If the chunk has been regenerated before, make sure it waits at least the interval time before doing it again.
+            if (secSinceLastRegen != 0 && secSinceLastRegen < chunkInterval) return false;
+            
+            // If a block has been placed in the chunk recently, we dont want to regenerate.
+            if (secSinceLastPlaced != 0 && secSinceLastPlaced < chunkInterval) return false;
+            
+            // If a block has been broken in the chunk recently, we do not want to regenerate.
+            if (secSinceLastBroken != 0 && secSinceLastBroken < chunkInterval) return false;
+            
+            // If the chunk has never been modified, dont do anything.
+            if (secSinceLastPlaced == 0 && secSinceLastBroken == 0) return false;
+            
+            return true;
         }
-    }
-    
-
 }
