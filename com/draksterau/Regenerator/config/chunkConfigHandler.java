@@ -29,7 +29,7 @@ public final class chunkConfigHandler {
     public chunkConfigHandler(RegeneratorPlugin plugin, Chunk chunk) {
         this.chunk = chunk;
         this.plugin = plugin;
-        getChunkConfig();
+        this.chunkConfig = getChunkConfig();
     }
     
     public FileConfiguration getChunkConfig() {
@@ -40,15 +40,33 @@ public final class chunkConfigHandler {
     }
 
     public void configureChunk () throws UnsupportedEncodingException {
-        if (!chunkConfig.isSet("unloaded")) chunkConfig.set("unloaded", 0);
-        if (!chunkConfig.isSet("loaded")) chunkConfig.set("loaded", 0);
-        if (!chunkConfig.isSet("lastPlaced")) chunkConfig.set("lastPlaced", 0);
-        if (!chunkConfig.isSet("lastBroken")) chunkConfig.set("lastPlaced", 0);
-        if (!chunkConfig.isSet("lastRegen")) chunkConfig.set("lastPlaced", 0);
-        if (!chunkConfig.isSet("lastClaimed")) chunkConfig.set("lastClaimed", 0);
-        if (!chunkConfig.isSet("lastUnclaimed")) chunkConfig.set("lastUnclaimed", 0);
-        if (!chunkConfig.isSet("autoregen")) chunkConfig.set("autoregen", true);
-        if (!chunkConfig.isSet("manualregen")) chunkConfig.set("manualregen", true);
+        if (!chunkConfig.isSet("unloaded")) {
+            chunkConfig.set("unloaded", 0);
+        }
+        if (!chunkConfig.isSet("loaded")) {
+            chunkConfig.set("loaded", 0);
+        }
+        if (!chunkConfig.isSet("lastPlaced")) {
+            chunkConfig.set("lastPlaced", 0);
+        }
+        if (!chunkConfig.isSet("lastBroken")) {
+            chunkConfig.set("lastPlaced", 0);
+        }
+        if (!chunkConfig.isSet("lastRegen")) {
+            chunkConfig.set("lastPlaced", 0);
+        }
+        if (!chunkConfig.isSet("lastClaimed")) {
+            chunkConfig.set("lastClaimed", 0);
+        }
+        if (!chunkConfig.isSet("lastUnclaimed")) {
+            chunkConfig.set("lastUnclaimed", 0);
+        }
+        if (!chunkConfig.isSet("autoregen")) {
+            chunkConfig.set("autoregen", true);
+        }
+        if (!chunkConfig.isSet("manualregen")) {
+            chunkConfig.set("manualregen", true);
+        }
         // Saves the config file.
         saveChunkConfig();
     }
@@ -99,6 +117,7 @@ public final class chunkConfigHandler {
         this.saveChunkConfig();
     }
     public void updateLastPlaced() {
+        this.reloadChunkConfig();
         this.chunkConfig.set("lastPlaced", System.currentTimeMillis());
         this.saveChunkConfig();
     }
@@ -127,13 +146,8 @@ public final class chunkConfigHandler {
                 chunkConfigFile = new File(plugin.getDataFolder() + "/worlds/" + chunk.getWorld().getName() + "/chunks/", chunk.getX()+","+chunk.getZ() + ".yml");
             }
             chunkConfig = YamlConfiguration.loadConfiguration(chunkConfigFile);
-            configureChunk();
             if (chunkConfig == null) {
-                try {
-                    configureChunk();
-                } catch (UnsupportedEncodingException ex) {
-                    plugin.throwMessage("severe","Could not save config to " + chunkConfigFile + " (Exception: " + ex.getMessage() + ")");
-                }
+                configureChunk();
             }
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(chunkConfigHandler.class.getName()).log(Level.SEVERE, null, ex);
