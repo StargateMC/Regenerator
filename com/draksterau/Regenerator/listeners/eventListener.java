@@ -115,10 +115,10 @@ public class eventListener implements Listener {
                                     cConfig.updateLastRegen();
                                     RegeneratorPlugin.throwMessage("info", "Regenerating Chunk at: " + toRegenerate.getX() + "," + toRegenerate.getZ() + " on world: " + toRegenerate.getWorld().getName());
                                 } else {
-                                  // RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + toRegenerate.getX() + "," + toRegenerate.getZ());
+                                   RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + toRegenerate.getX() + "," + toRegenerate.getZ());
                                 }
                             } else {
-                                  // RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + toRegenerate.getX() + "," + toRegenerate.getZ());
+                                   RegeneratorPlugin.throwMessage("info", "Ignoring Chunk at: " + toRegenerate.getX() + "," + toRegenerate.getZ());
                             }
                         }
                     }
