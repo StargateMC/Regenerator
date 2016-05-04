@@ -21,11 +21,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.Listener;
 import com.draksterau.Regenerator.integration.Integration;
 import com.draksterau.Regenerator.listeners.integrationListener;
-import com.draksterau.Regenerator.tasks.ChunkTask;
 import com.draksterau.Regenerator.tasks.lagTask;
-import java.io.File;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
+import com.draksterau.Regenerator.tasks.worldTask;
+import com.draksterau.Regenerator.worlds.RChunk;
+import com.draksterau.Regenerator.worlds.RWorld;
 
 public class RegeneratorPlugin extends JavaPlugin implements Listener {
     
@@ -38,8 +37,10 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
     
     List<Integration> loadedIntegrations = new ArrayList<Integration>();
     
-    public String definedWorlds;
-   
+    public List<RWorld> loadedWorlds = new ArrayList<RWorld>();
+    
+    public List<RChunk> loadedChunks = new ArrayList<RChunk>();
+
     public boolean isPaused = false;
     
     @Override
@@ -48,7 +49,7 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
             getConfiguration();
             initAvailableIntegrations();
             loadIntegrations();
-            initialiseWorlds();
+            loadWorlds();
             if (this.isEnabled()) {
                     throwMessage("info", "Starting Regenerator v" + getConfig().getString("config-version"));
                     if (!loadedIntegrations.isEmpty()) {
@@ -63,10 +64,20 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
                     if (this.isEnabled()) {
                         getServer().getPluginManager().registerEvents(new eventListener(this), this);
                         getServer().getScheduler().scheduleSyncRepeatingTask(this, new lagTask(), 100L, 1L);
+                        for (RWorld rw : loadedWorlds) {
+                            getServer().getScheduler().scheduleSyncRepeatingTask(this, new worldTask(rw), 1000L, 1L);
+                        }
                     }
             }
     }
     
+    public void loadWorlds() {
+        for (World world : Bukkit.getWorlds()) {
+            RWorld RWorld = new RWorld(this, world);
+            this.loadedWorlds.add(RWorld);
+            throwMessage("info", "Loaded World : " + world.getName());
+        }
+    }
     public void initAvailableIntegrations() {
         List<String> Towny = new ArrayList<String>();
         Towny.add("Towny");
@@ -119,14 +130,6 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
      } else {
          return false;
      }
-    }
-    
-    public void initialiseWorlds() {
-        for (World world : Bukkit.getWorlds()) {
-            throwMessage("info", "Loading World: " + world.getName());
-            worldConfigHandler wConfig = new worldConfigHandler(this, world);
-            wConfig.configureWorld();
-        }
     }
     
     public Integration getLoadedIntegration(String name) {

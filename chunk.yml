@@ -1,10 +1,4 @@
-## Template chunk config file.
+# Chunk Data file.
+# This file no longer stores chunk related configuration. 
+# DO NOT EDIT UNLESS YOU KNOW WHAT YOU ARE DOING.
 ---
-
-loaded: 0
-unloaded: 0
-lastPlaced: 0
-lastBroken: 0
-lastRegen: 0
-autoregen: true
-manualregen: true

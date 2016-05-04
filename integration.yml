@@ -3,5 +3,5 @@
 # claimsAutoRegen : This is the list of regions/factions/territories that you wish to auto-regenerate. 
 # This is only supported by plugins that can do it. 
 # Examples of those that cant: 
-# FactionsUUID has a 'wilderness' setting that is automatically assigned to autoregenerate. Nothing else can be.
+# FactionsUUID has a 'wilderness' setting that is automatically assigned to autoregenerate. Nothing else can be configured.
 # GriefPrevention considers anything that is not a claim wilderness and doesnt support region naming properly.

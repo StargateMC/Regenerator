@@ -1,16 +1,13 @@
-## Default world config file.
+# World configuration file.
+# Interval (long) is the number of seconds a chunk must be inactive for before it can regenerate (manually or automatically).
+# autoRegen (true/false) is whether or not chunks can automatically regenerate on this world. Overrides all other triggers.
+# manualRegen (true/false) is whether or not chunks can manually regenerate on this world. Overrides all other triggers.
+# maxBlockAutoRegen (long) is the world border for regenerator. Anything outside this X or Z coordinate will not be touched. (0 = not enabled)
+# minBlockAutoRegen (long) is the number of blocks from the spawn point that are excluded from automatic regeneration. (0 = not enabled)
 ---
 
-# Interval is the number of seconds a chunk must be inactive for before it can regenerate (manually or automatically).
-interval: 5
-# Set this to true to enable autoregeneration on a world.
-autoregen: false
-# Set this to true to allow players to regenerate chunks in the world, depending on permissions/relations.
-manualregen: false
-
-# DO NOT CHANGE LASTACTION. IT IS AUTOMATICALLY POPULATED.
-lastAction: 0
-# Skip radius for the world. This is the number of blocks away from your world spawn that automatic regeneration will start.
-skip-radius: 0
-# Populate chunks with trees, villages, ores and temples? If you do not do this it will always regenerate with either no ores/trees/temples/villages or will be the exact same as it was before.
-populate-chunks: true
+regenInterval: 86400
+autoRegen: false
+manualRegen: false
+minBlockAutoRegen: 0
+maxBlockAutoRegen: 0
