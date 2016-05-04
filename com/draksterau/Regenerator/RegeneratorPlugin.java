@@ -23,8 +23,8 @@ import com.draksterau.Regenerator.integration.Integration;
 import com.draksterau.Regenerator.listeners.integrationListener;
 import com.draksterau.Regenerator.tasks.lagTask;
 import com.draksterau.Regenerator.tasks.worldTask;
-import com.draksterau.Regenerator.worlds.RChunk;
-import com.draksterau.Regenerator.worlds.RWorld;
+import com.draksterau.Regenerator.Handlers.RChunk;
+import com.draksterau.Regenerator.Handlers.RWorld;
 
 public class RegeneratorPlugin extends JavaPlugin implements Listener {
     

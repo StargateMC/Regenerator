@@ -5,7 +5,7 @@
  */
 package com.draksterau.Regenerator.tasks;
 
-import com.draksterau.Regenerator.worlds.RWorld;
+import com.draksterau.Regenerator.Handlers.RWorld;
 import java.util.logging.Logger;
 import org.bukkit.Chunk;
 import org.bukkit.plugin.Plugin;

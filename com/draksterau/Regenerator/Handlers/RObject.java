@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.draksterau.Regenerator.worlds;
+package com.draksterau.Regenerator.Handlers;
 
 import com.draksterau.Regenerator.RegeneratorPlugin;
 
