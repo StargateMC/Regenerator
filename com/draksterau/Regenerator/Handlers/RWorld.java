@@ -29,11 +29,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public final class RWorld extends RObject {
     
     public World world;
-    boolean autoRegen = false;
-    boolean manualRegen = false;
-    long regenInterval = 86400;
-    long minBlockAutoRegen = 0;
-    long maxBlockAutoRegen = 0;
+    public boolean autoRegen = false;
+    public boolean manualRegen = false;
+    public long regenInterval = 86400;
+    public long minBlockAutoRegen = 0;
+    public long maxBlockAutoRegen = 0;
     
     private File worldConfigFile;
     private FileConfiguration worldConfig;
@@ -94,7 +94,7 @@ public final class RWorld extends RObject {
         try {
             worldConfig.save(worldConfigFile);
         } catch (IOException ex) {
-            plugin.throwMessage("severe","Could not save world config to " + worldConfigFile + " (Exception: " + ex.getMessage() + ")");
+            plugin.utils.throwMessage("severe","Could not save world config to " + worldConfigFile + " (Exception: " + ex.getMessage() + ")");
         }
     }
 }

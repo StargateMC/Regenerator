@@ -23,7 +23,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public final class RChunk extends RObject {
     
-    Chunk chunk;
+    public Chunk chunk;
+    
+    // Last activity time (in ms).
+    public long lastActivity = 0;
     
     private File chunkConfigFile;
     private FileConfiguration chunkConfig;
@@ -75,7 +78,7 @@ public final class RChunk extends RObject {
         try {
             chunkConfig.save(chunkConfigFile);
         } catch (IOException ex) {
-            plugin.throwMessage("severe","Could not save chunk data to " + chunkConfigFile + " (Exception: " + ex.getMessage() + ")");
+            plugin.utils.throwMessage("severe","Could not save chunk data to " + chunkConfigFile + " (Exception: " + ex.getMessage() + ")");
         }
     }
 

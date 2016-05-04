@@ -6,6 +6,8 @@
 package com.draksterau.Regenerator.Handlers;
 
 import com.draksterau.Regenerator.RegeneratorPlugin;
+import java.io.File;
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  *
@@ -13,8 +15,9 @@ import com.draksterau.Regenerator.RegeneratorPlugin;
  */
 abstract class RObject {
     
-    // Last activity time (in ms).
-    long lastActivity = 0;
+    public File configFile;
+    public FileConfiguration config;
+    
     // Access to the plugin.
     public RegeneratorPlugin plugin;
     
