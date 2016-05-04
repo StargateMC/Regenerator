@@ -8,8 +8,6 @@ package com.draksterau.Regenerator.tasks;
 import com.draksterau.Regenerator.Handlers.RWorld;
 import com.draksterau.Regenerator.RegeneratorPlugin;
 import java.util.logging.Logger;
-import org.bukkit.Chunk;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -30,6 +28,7 @@ public class regenTask extends BukkitRunnable {
     public void run() {
         for (RWorld RWorld : plugin.loadedWorlds) {
             // Do stuff.
+            // This should scan all worlds, one at a time, then regenerate chunks if they are inactive in the RChunk data.
         }
     }
 }

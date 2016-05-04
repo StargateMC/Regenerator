@@ -8,8 +8,6 @@ package com.draksterau.Regenerator.listeners;
 import com.draksterau.Regenerator.RegeneratorPlugin;
 import com.draksterau.Regenerator.Handlers.RChunk;
 import com.draksterau.Regenerator.Handlers.RWorld;
-import com.draksterau.Regenerator.tasks.regenTask;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
