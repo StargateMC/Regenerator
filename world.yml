@@ -1,5 +1,5 @@
 # World configuration file.
-# Interval (long) is the number of seconds a chunk must be inactive for before it can regenerate (manually or automatically).
+# regenInterval (long) is the number of seconds a chunk must be inactive for before it can regenerate (manually or automatically).
 # autoRegen (true/false) is whether or not chunks can automatically regenerate on this world. Overrides all other triggers.
 # manualRegen (true/false) is whether or not chunks can manually regenerate on this world. Overrides all other triggers.
 # maxBlockAutoRegen (long) is the world border for regenerator. Anything outside this X or Z coordinate will not be touched. (0 = not enabled)
@@ -7,7 +7,7 @@
 ---
 
 regenInterval: 86400
-autoRegen: false
+autoRegen: true
 manualRegen: false
 minBlockAutoRegen: 0
 maxBlockAutoRegen: 0

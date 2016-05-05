@@ -15,10 +15,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FilenameUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -29,9 +34,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public final class RWorld extends RObject {
     
     public World world;
-    public boolean autoRegen = false;
+    public boolean autoRegen = true;
     public boolean manualRegen = false;
-    public long regenInterval = 86400;
+    public long regenInterval = 30;
     public long minBlockAutoRegen = 0;
     public long maxBlockAutoRegen = 0;
     
@@ -43,6 +48,7 @@ public final class RWorld extends RObject {
         this.world = world;
         this.loadData();
     }
+    
     public long getIntervalDays() {
         return (this.regenInterval / 86400);
     }
@@ -66,6 +72,27 @@ public final class RWorld extends RObject {
         // Get the number of chunks available.
         return ((this.maxBlockAutoRegen - this.minBlockAutoRegen) / 16) ^ 2;
     }
+    public List<RChunk> getAllRChunks () {
+        this.loadData();
+        List<RChunk> allChunks = new ArrayList<RChunk>();
+        allChunks.clear();
+        File chunkConfigFile = null;
+        FileConfiguration chunkConfig = null;
+        // Attempt to load the config file.
+        chunkConfigFile = new File(plugin.getDataFolder() + "/data/" + world.getName() + ".yml");
+        // Attempt to read the config in the config file.
+        chunkConfig = YamlConfiguration.loadConfiguration(chunkConfigFile);
+        if (chunkConfig == null) return allChunks;
+        if (!chunkConfig.isConfigurationSection("chunks")) return allChunks;
+        for (Object chunk : chunkConfig.getConfigurationSection("chunks").getKeys(true).toArray()) {
+            int x = Integer.valueOf(chunk.toString().split(",")[0]);
+            int z = Integer.valueOf(chunk.toString().split(",")[1]);
+            String worldName = this.world.getName();
+            RChunk RChunk = new RChunk(plugin,x,z,worldName);
+            allChunks.add(RChunk);
+        }
+        return allChunks;
+    }
     
     @Override
     void loadData() {
@@ -73,10 +100,12 @@ public final class RWorld extends RObject {
         if (worldConfigFile == null) worldConfigFile = new File(plugin.getDataFolder() + "/worlds/" + world.getName() + ".yml");
         // Attempt to read the config in the config file.
         worldConfig = YamlConfiguration.loadConfiguration(worldConfigFile);
-        // If the config file is null (due to the config file being invalid or not there) create a new one.
-        if (worldConfig == null) worldConfigFile = new File(plugin.getDataFolder() + "/worlds/" + world.getName() + ".yml");
         // If the file doesnt exist, populate it from the template.
-        if (!worldConfigFile.exists()) worldConfig = YamlConfiguration.loadConfiguration(plugin.getResource("world.yml")); saveData();
+        if (!worldConfigFile.exists()) {
+            worldConfigFile = new File(plugin.getDataFolder() + "/worlds/" + world.getName() + ".yml");
+            worldConfig = YamlConfiguration.loadConfiguration(plugin.getResource("world.yml"));
+            saveData();
+        }
         this.autoRegen = worldConfig.getBoolean("autoRegen");
         this.manualRegen = worldConfig.getBoolean("manualRegen");
         this.maxBlockAutoRegen = worldConfig.getLong("maxBlockAutoRegen");

@@ -1,20 +1,24 @@
 ############################################################################################################################
 ## Regenerator, a Perpetual world plugin that integrates with Multiverse, Multiworld and several grief prevention plugins.##
 ############################################################################################################################
-
 # The main configuration file no longer stores any data relating to what worlds to handle etc.
 # For integration configuration, please see the /integrations/<plugin>.yml file associated with your grief protection plugin.
 # For world configuration (Such as intervals between chunks), see /worlds/worldname.yml.
+############################################################################################################################
+# noGriefRun must be set to true if there are no grief prevention plugins installed and you want the plugin to work. 
+# minTpsRegen is the Minimum TPS that the server must have to perform regeneration.
+# defaultAutoRegen sets whether or not or not new worlds that are loaded should have manual regen enabled by default
+# defaultManualRegen sets whether or not new worlds that are loaded should have auto regen enabled by default
+# percentIntervalRuntime (double) is the percentage of parseInterval that can be used for regeneration tasks. 0.1 is 10%, 0.5 is 50% and 1.0 is 100%.
+# parseInterval (long) is the time in seconds between checks for inactive chunks.
+# numChunksPerParse (long) is the number of chunks total that can be regenerated per parse. (Additional inactive chunks will be delayed to next parse)
+############################################################################################################################
 
-configVersion: 3.0.0
-
-# This must be set to true if there are no grief prevention plugins installed and you want the plugin to work.
-# WARNING: This means that the plugin will regnerate chunks that you may wish to remain protected!
-noGriefRun: false
-# Minimum TPS that the server must have to perform regeneration.
-# This will terminate all pending tasks and will not start them again until TPS is above the specified threshold.
+configVersion: 3.0.0Alpha
+noGriefRun: true
 minTpsRegen: 10
-# Whether or not new worlds that are loaded should have manual regen enabled by default
 defaultAutoRegen: false
-# Whether or not new worlds that are loaded should have auto regen enabled by default
 defaultManualRegen: false
+percentIntervalRuntime: 0.1
+parseInterval: 15
+numChunksPerParse: 10

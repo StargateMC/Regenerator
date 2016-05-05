@@ -1,6 +1,6 @@
 package com.draksterau.Regenerator;
 
-import com.draksterau.Regenerator.commands.RegeneratorCommand;
+//import com.draksterau.Regenerator.commands.RegeneratorCommand;
 import com.draksterau.Regenerator.listeners.eventListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -44,8 +44,8 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
     @Override
     public void onEnable () {
         utils.throwMessage("info", "Loaded Regenerator!");
-        utils.initAvailableIntegrations();
-        utils.loadIntegrations();
+//        utils.initAvailableIntegrations();
+//        utils.loadIntegrations();
         utils.loadWorlds();
         if (this.isEnabled()) {
             utils.throwMessage("info", "Starting Regenerator v" + config.configVersion);
@@ -53,7 +53,7 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
                 if (config.noGriefRun) {
                     utils.throwMessage("warning", "No supported grief protection plugins found. No land will be protected from regeneration via external plugins!");
                 } else {
-                    utils.throwMessage("severe", "No supported grief protection plugins found. You must set 'no-grief-run' to true in config before Regenerator will load. This is accepting you need to configure things properly OR YOU WILL LOSE CHUNKS!");
+                    utils.throwMessage("severe", "No supported grief protection plugins found. You must set 'noGriefRun' to true in config before Regenerator will load. This is accepting you need to configure things properly OR YOU WILL LOSE CHUNKS!");
                 }
             }
             if (this.isEnabled()) {
@@ -62,7 +62,7 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
                 // This registers a repeating task to measure 1 tick, so we can accurately  get TPS.
                 lagTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(this, new lagTask(), 100L, 1L);
                 // This registers the regeneration task.
-                regenTaskID = getServer().getScheduler().scheduleAsyncRepeatingTask(this, new regenTask(this), 100L, 1L);
+                getServer().getScheduler().runTaskTimerAsynchronously(this, new regenTask(this), config.parseInterval * 20, config.parseInterval * 20);
             }
         }
     }
@@ -71,10 +71,10 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
      Bukkit.getServer().getPluginManager().disablePlugin(this);
     }
     
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        RegeneratorCommand RegeneratorCommand = new RegeneratorCommand(this, sender, cmd, label, args);
-        return RegeneratorCommand.doCommand();
-    }
+//    @Override
+//    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+//        //RegeneratorCommand RegeneratorCommand = new RegeneratorCommand(this, sender, cmd, label, args);
+//        //return RegeneratorCommand.doCommand();
+//    }
 
 }

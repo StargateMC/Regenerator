@@ -23,10 +23,13 @@ public final class RConfig extends RObject {
         return plugin;
     }
     // Interval between task parses on worlds.
-    public long parseInterval = 60;
+    public long parseInterval = 15;
+    
+    // How much of the interval in percent can be used for processing?
+    public double percentIntervalRuntime = 0.1;
     
     // Maximum chunks per parse
-    public long numChunksPerParse = 30;
+    public long numChunksPerParse = 5;
     
     // Whether or not new worlds that are loaded should have manual regen enabled by default
     public boolean defaultManualRegen = false;
@@ -38,13 +41,17 @@ public final class RConfig extends RObject {
     public int minTpsRegen = 15;
     
     // Should Regenerator run without grief prevention plugins enabled?
-    public boolean noGriefRun = false;
+    public boolean noGriefRun = true;
     
     public RConfig(RegeneratorPlugin plugin) {
         super(plugin);
         this.loadData();
     }
 
+    public void validate() {
+        if (minTpsRegen > 20 || minTpsRegen < 1) minTpsRegen = 15;
+        
+    }
     @Override
     void loadData() {
         // Attempt to load the config file.
@@ -54,7 +61,10 @@ public final class RConfig extends RObject {
         // If the config file is null (due to the config file being invalid or not there) create a new one.
         if (configFile == null) configFile = new File(plugin.getDataFolder() + "/global.yml");
         // If the file doesnt exist, populate it from the template.
-        if (!configFile.exists()) config = YamlConfiguration.loadConfiguration(plugin.getResource("global.yml")); saveData();
+        if (!configFile.exists()) {
+            config = YamlConfiguration.loadConfiguration(plugin.getResource("global.yml"));
+            saveData();
+        } 
         this.defaultManualRegen = config.getBoolean("defaultManualRegen");
         this.defaultAutoRegen = config.getBoolean("defaultAutoRegen");
         this.noGriefRun = config.getBoolean("noGriefRun");
@@ -62,6 +72,7 @@ public final class RConfig extends RObject {
         this.configVersion = config.getString("configVersion");   
         this.parseInterval = config.getInt("parseInterval");
         this.numChunksPerParse =config.getInt("numChunksPerParse");
+        this.percentIntervalRuntime = config.getDouble("percentIntervalRuntime");
     }
 
     @Override
@@ -73,6 +84,7 @@ public final class RConfig extends RObject {
         config.set("configVersion", this.configVersion);
         config.set("numChunksPerParse", this.numChunksPerParse);
         config.set("parseInterval", this.parseInterval);
+        config.set("percentIntervalRuntime", this.percentIntervalRuntime);
         try {
             config.save(configFile);
         } catch (IOException ex) {

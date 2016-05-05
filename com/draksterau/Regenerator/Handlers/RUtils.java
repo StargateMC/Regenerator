@@ -56,7 +56,7 @@ public class RUtils extends RObject {
     // Gets an RChunk
     public RChunk getRChunkForChunk(Chunk chunk) {
         for (RChunk RChunk : plugin.loadedChunks) {
-            if (RChunk.chunk.equals(chunk)) {
+            if (RChunk.getChunk().equals(chunk)) {
                 return RChunk;
             }
         }
@@ -71,23 +71,21 @@ public class RUtils extends RObject {
         
         // If the world is not loaded, do nothing.
         if (RWorld == null) return false;
-        
         // Blocked at the world level.
         if (!RWorld.canAutoRegen()) {
             return false;
         }
                 
         // This handles the world configuration for borders and the skip radius.
-        if (RWorld.minBlockAutoRegen < distance(chunk.getX(), 100.0, chunk.getZ(), chunk.getWorld().getSpawnLocation().getBlockX(), 100.0, chunk.getWorld().getSpawnLocation().getBlockZ())) return false;
-        if (RWorld.maxBlockAutoRegen > distance(chunk.getX(), 100.0, chunk.getZ(), chunk.getWorld().getSpawnLocation().getBlockX(), 100.0, chunk.getWorld().getSpawnLocation().getBlockZ())) return false;
-
+        if (RWorld.minBlockAutoRegen >= distance(chunk.getX(), 100.0, chunk.getZ(), chunk.getWorld().getSpawnLocation().getBlockX(), 100.0, chunk.getWorld().getSpawnLocation().getBlockZ())) return false;
+        if (RWorld.maxBlockAutoRegen != 0 && RWorld.maxBlockAutoRegen > distance(chunk.getX(), 100.0, chunk.getZ(), chunk.getWorld().getSpawnLocation().getBlockX(), 100.0, chunk.getWorld().getSpawnLocation().getBlockZ())) return false;
         // Blocked at the integration level.
         for (Integration integration : plugin.loadedIntegrations) {
             if (!integration.shouldChunkAutoRegen(chunk)) {
                 return false;
             }
         }
-        
+
         // Not blocked.
         return true;
     }
@@ -119,22 +117,6 @@ public class RUtils extends RObject {
                 if (player.isOnline() && !player.isOp() && !player.hasPermission("regenerator.notify")) {
                     player.sendMessage(getFancyName() + " " + message);
                 }                
-            }
-        }
-        tellAllNotified(message);
-    }
-        
-    // Tells all players with the regenerator.notify permission node what is happening.
-    public void tellAllNotified(String message) {
-        for (World world : Bukkit.getWorlds()) {
-            List<Entity> entities = world.getEntities();
-            for (Entity entity : entities) {
-                if (entity instanceof Player) {
-                    Player player = (Player)entity;
-                    if (player.hasPermission("regenerator.notify")) {
-                        player.sendMessage(getFancyName() + ChatColor.BLUE + "Notify" + ChatColor.GRAY + ":" + message);
-                    }                
-                }
             }
         }
     }
@@ -287,7 +269,7 @@ public class RUtils extends RObject {
         Landlord.add("LandlordIntegration");
         plugin.availableIntergrations.add(Landlord);
         for (List<String> module : plugin.availableIntergrations) {
-            throwMessage("info", module.get(2) + " integration module initialised.");
+            throwMessage("info", module.get(2) + " module initialised.");
         }
     }
     
@@ -301,18 +283,17 @@ public class RUtils extends RObject {
     
     
     
-    public boolean validateChunkInactivity (Chunk chunk, boolean isLoading) {
+    public boolean validateChunkInactivity (RChunk rChunk) {
         
         long secSinceLastActive = 0;
         
-        RChunk RChunk = getRChunkForChunk(chunk);
-        RWorld RWorld = getRWorldForWorld(RChunk.chunk.getWorld());       
+        RWorld RWorld = getRWorldForWorld(rChunk.getWorld());       
         
         // IF the chunk doesnt exist, do nothing.
-        if (RChunk == null) return false;
+        if (rChunk == null) return false;
         
-        if (RChunk.lastActivity != 0) {
-            secSinceLastActive = (System.currentTimeMillis() - RChunk.lastActivity) / 1000;
+        if (rChunk.lastActivity != 0) {
+            secSinceLastActive = (System.currentTimeMillis() - rChunk.lastActivity) / 1000;
         }
         
         // If the chunk has never been modified, dont do anything.
@@ -344,13 +325,13 @@ public class RUtils extends RObject {
                         integration.RegeneratorPlugin = plugin;
                         integration.validateConfig();
                         plugin.loadedIntegrations.add(integration);
-                        throwMessage("info", "Detected Plugin: " + integration.getPluginName() + " v" + integration.getPluginVersion() + ": Loading " + module[2] + "!");
+                        throwMessage("info", "[" + module[2] + "] Detected Plugin: " + integration.getPluginName() + " v" + integration.getPluginVersion() + ": Loading " + module[2] + "!");
                     }
                 } else {
-                    throwMessage("warning", "Incompatible version of Plugin: " + module[0] + " (v" + Bukkit.getPluginManager().getPlugin(module[0]).getDescription().getVersion() + " and not v" + module[1] + "). Disabling " + module[2] + " integration module.");
+                    throwMessage("warning", "[" + module[2] + "] Incompatible version of Plugin: " + module[0] + " (v" + Bukkit.getPluginManager().getPlugin(module[0]).getDescription().getVersion() + " and not v" + module[1] + "). Disabling " + module[2] + " module.");
                 }
             } else {
-                throwMessage("warning", "Didn't detect Plugin: " + module[0] + " (v" + module[1] + "). Disabling " + module[2] + " integration module.");
+                throwMessage("warning", "[" + module[2] + "] Didn't detect Plugin: " + module[0] + " (v" + module[1] + "). Disabling " + module[2] + " integration module.");
             }
         } catch (ClassNotFoundException ex) {
             throwMessage("severe", "Failed to load integration for plugin: " + plugin + ". Please contact Bysokar for support!");

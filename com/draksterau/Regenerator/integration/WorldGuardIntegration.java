@@ -116,10 +116,10 @@ public class WorldGuardIntegration extends Integration {
         }
         for (String claimName : iConfig.integrationConfig.getStringList("claimsAutoRegen")) {
             if (!claimExists(claimName)) {
-                RegeneratorPlugin.throwMessage("warning", "[" + this.getClass().getSimpleName() + "] Claim: " + claimName + " does not exist!");
-                RegeneratorPlugin.disableIntegrationFor(RegeneratorPlugin.convertToModule(plugin));
+                RegeneratorPlugin.utils.throwMessage("warning", "[" + this.getClass().getSimpleName() + "] Claim: " + claimName + " does not exist!");
+                RegeneratorPlugin.utils.disableIntegrationFor(RegeneratorPlugin.utils.convertToModule(plugin));
             } else {
-                RegeneratorPlugin.throwMessage("info", "[" + this.getClass().getSimpleName() + "] Claim: " + claimName + " detected. Whitelisting for automatic regeneration!");
+                RegeneratorPlugin.utils.throwMessage("info", "[" + this.getClass().getSimpleName() + "] Claim: " + claimName + " detected. Whitelisting for automatic regeneration!");
             }
         }
         iConfig.saveIntegrationConfig();

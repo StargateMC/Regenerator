@@ -11,6 +11,8 @@ import com.draksterau.Regenerator.Handlers.RWorld;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -56,17 +58,37 @@ public class eventListener implements Listener {
     
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onChunkLoad(ChunkLoadEvent event) {
-        RChunk RChunk = new RChunk(RegeneratorPlugin, event.getChunk());
+        RChunk RChunk = new RChunk(RegeneratorPlugin, event.getChunk().getX(), event.getChunk().getZ(), event.getWorld().getName());
         RegeneratorPlugin.loadedChunks.add(RChunk);
     }
     
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onChunkUnload(ChunkUnloadEvent event) {
-        RChunk RChunk = new RChunk(RegeneratorPlugin, event.getChunk());
+        RChunk RChunk = new RChunk(RegeneratorPlugin, event.getChunk().getX(), event.getChunk().getZ(), event.getWorld().getName());
         RegeneratorPlugin.loadedChunks.remove(RChunk);
     }
 
     /// END CHUNK EVENTS ///
+    
+    // START BLOCK EVENTS ///
+    
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onBlockBreak(BlockBreakEvent event) {
+        RChunk rChunk = new RChunk(RegeneratorPlugin, event.getBlock().getChunk().getX(), event.getBlock().getChunk().getZ(), event.getBlock().getWorld().getName());
+        if (RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk())) rChunk.updateActivity();
+        if (!RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk()) && rChunk.lastActivity != 0) rChunk.resetActivity();
+        RegeneratorPlugin.utils.throwMessage("info", " Updated last activity to: " + rChunk.lastActivity);
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onBlockPlace(BlockPlaceEvent event) {
+        RChunk rChunk = new RChunk(RegeneratorPlugin, event.getBlock().getChunk().getX(), event.getBlock().getChunk().getZ(), event.getBlock().getWorld().getName());
+        if (RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk())) rChunk.updateActivity();
+        if (!RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk()) && rChunk.lastActivity != 0) rChunk.resetActivity();
+        RegeneratorPlugin.utils.throwMessage("info", " Updated last activity to: " + rChunk.lastActivity);
+    }
+    
+    // END BLOCK EVENTS ///
     
     // START PLUGIN EVENTS ///
     
