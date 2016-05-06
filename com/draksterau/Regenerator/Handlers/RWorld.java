@@ -38,26 +38,21 @@ public final class RWorld extends RObject {
     }
     
     public long getIntervalDays() {
-        this.loadData();
         return (this.regenInterval / 86400);
     }
     public long getIntervalHours() {
         return (this.regenInterval / 3600);
     }
     public long getIntervalMins() {
-        this.loadData();
         return (this.regenInterval / 60);
     }
     public long getIntervalSecs() {
-        this.loadData();
         return (this.regenInterval);
     }
     public boolean canAutoRegen() {
-        this.loadData();
         return this.autoRegen;
     }
     public boolean canManualRegen() {
-        this.loadData();
         return this.manualRegen;
     }
 

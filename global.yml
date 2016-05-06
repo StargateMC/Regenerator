@@ -1,11 +1,9 @@
 ############################################################################################################################
 ## Regenerator, a Perpetual world plugin that integrates with Multiverse, Multiworld and several grief prevention plugins.##
 ############################################################################################################################
-
 # The main configuration file no longer stores any data relating to what worlds to handle etc.
 # For integration configuration, please see the /integrations/<plugin>.yml file associated with your grief protection plugin.
 # For world configuration (Such as intervals between chunks), see /worlds/worldname.yml.
-
 ############################################################################################################################
 # noGriefRun must be set to true if there are no grief prevention plugins installed and you want the plugin to work. 
 # minTpsRegen is the Minimum TPS that the server must have to perform regeneration.
@@ -17,7 +15,7 @@
 ############################################################################################################################
 ---
 
-configVersion: 3.0.0Beta
+configVersion: 3.0.0
 noGriefRun: false
 minTpsRegen: 15
 defaultAutoRegen: false
