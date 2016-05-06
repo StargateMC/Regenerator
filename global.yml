@@ -1,9 +1,11 @@
 ############################################################################################################################
 ## Regenerator, a Perpetual world plugin that integrates with Multiverse, Multiworld and several grief prevention plugins.##
 ############################################################################################################################
+
 # The main configuration file no longer stores any data relating to what worlds to handle etc.
 # For integration configuration, please see the /integrations/<plugin>.yml file associated with your grief protection plugin.
 # For world configuration (Such as intervals between chunks), see /worlds/worldname.yml.
+
 ############################################################################################################################
 # noGriefRun must be set to true if there are no grief prevention plugins installed and you want the plugin to work. 
 # minTpsRegen is the Minimum TPS that the server must have to perform regeneration.
@@ -13,12 +15,13 @@
 # parseInterval (long) is the time in seconds between checks for inactive chunks.
 # numChunksPerParse (long) is the number of chunks total that can be regenerated per parse. (Additional inactive chunks will be delayed to next parse)
 ############################################################################################################################
+---
 
-configVersion: 3.0.0Alpha
-noGriefRun: true
-minTpsRegen: 10
+configVersion: 3.0.0Beta
+noGriefRun: false
+minTpsRegen: 15
 defaultAutoRegen: false
 defaultManualRegen: false
-percentIntervalRuntime: 0.1
-parseInterval: 15
-numChunksPerParse: 10
+percentIntervalRuntime: 0.5
+parseInterval: 60
+numChunksPerParse: 5

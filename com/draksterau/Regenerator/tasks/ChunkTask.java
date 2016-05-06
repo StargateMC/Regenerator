@@ -32,6 +32,7 @@ public class ChunkTask extends BukkitRunnable {
     @Override
     
     public void run() {   
+            if (!RChunk.plugin.utils.autoRegenRequirementsMet(RChunk.getChunk())) RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". It most likely was claimed?");
             RChunk.plugin.utils.throwMessage("info","Regenerating : " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName);
             if (RChunk.getWorld().regenerateChunk(RChunk.chunkX,RChunk.chunkZ)) {
               //  log.log(Level.INFO, "Chunk regenerated successfully for chunk: {0},{1} on world: {2}", new Object[]{chunk.getX(), chunk.getZ(), chunk.getWorld().getName()});

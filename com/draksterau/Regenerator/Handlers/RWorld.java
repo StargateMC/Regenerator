@@ -6,24 +6,12 @@
 package com.draksterau.Regenerator.Handlers;
 
 import com.draksterau.Regenerator.RegeneratorPlugin;
-import com.google.gson.Gson;
 import org.bukkit.World;
-import com.wimbli.WorldBorder.BorderData;
-import com.wimbli.WorldBorder.Config;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.commons.io.FilenameUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -34,9 +22,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public final class RWorld extends RObject {
     
     public World world;
-    public boolean autoRegen = true;
+    public boolean autoRegen = false;
     public boolean manualRegen = false;
-    public long regenInterval = 30;
+    public long regenInterval = 600;
     public long minBlockAutoRegen = 0;
     public long maxBlockAutoRegen = 0;
     
@@ -50,21 +38,26 @@ public final class RWorld extends RObject {
     }
     
     public long getIntervalDays() {
+        this.loadData();
         return (this.regenInterval / 86400);
     }
     public long getIntervalHours() {
         return (this.regenInterval / 3600);
     }
     public long getIntervalMins() {
+        this.loadData();
         return (this.regenInterval / 60);
     }
     public long getIntervalSecs() {
+        this.loadData();
         return (this.regenInterval);
     }
     public boolean canAutoRegen() {
+        this.loadData();
         return this.autoRegen;
     }
     public boolean canManualRegen() {
+        this.loadData();
         return this.manualRegen;
     }
 
@@ -94,6 +87,15 @@ public final class RWorld extends RObject {
         return allChunks;
     }
     
+    public String getFormattedInterval() {
+        String message = "";
+        if (this.getIntervalDays() > 0) message += (this.getIntervalDays() + "d, ");
+        if (this.getIntervalHours() > 0) message += ((this.getIntervalHours() - (this.getIntervalDays()*24)) + "h, ");
+        if (this.getIntervalMins() > 0) message += ((this.getIntervalMins() - (this.getIntervalHours()*60)) + " m, ");
+        if (this.getIntervalSecs() > 0) message += ((this.getIntervalSecs() - (this.getIntervalMins()*60)) + "s.");
+        if (message.length() == 0) message = ChatColor.RED + "Disabled" + ChatColor.GRAY;
+        return message;
+    }
     @Override
     void loadData() {
         // Attempt to load the config file.
@@ -104,6 +106,8 @@ public final class RWorld extends RObject {
         if (!worldConfigFile.exists()) {
             worldConfigFile = new File(plugin.getDataFolder() + "/worlds/" + world.getName() + ".yml");
             worldConfig = YamlConfiguration.loadConfiguration(plugin.getResource("world.yml"));
+            if (plugin.config.defaultAutoRegen) worldConfig.set("autoRegen", true);
+            if (plugin.config.defaultManualRegen) worldConfig.set("manualRegen", true);
             saveData();
         }
         this.autoRegen = worldConfig.getBoolean("autoRegen");

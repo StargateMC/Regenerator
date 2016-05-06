@@ -6,8 +6,8 @@
 # minBlockAutoRegen (long) is the number of blocks from the spawn point that are excluded from automatic regeneration. (0 = not enabled)
 ---
 
-regenInterval: 86400
-autoRegen: true
+regenInterval: 600
+autoRegen: false
 manualRegen: false
 minBlockAutoRegen: 0
 maxBlockAutoRegen: 0

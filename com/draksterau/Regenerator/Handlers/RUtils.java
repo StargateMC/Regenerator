@@ -48,6 +48,7 @@ public class RUtils extends RObject {
     public RWorld getRWorldForWorld(World world) {
         for (RWorld RWorld : plugin.loadedWorlds) {
             if (RWorld.world.equals(world)) {
+                RWorld.loadData();
                 return RWorld;
             }
         }
@@ -61,6 +62,13 @@ public class RUtils extends RObject {
             }
         }
         return null;
+    }
+    
+    // Returns a formatted string of Enabled or disabled
+    
+    public String getStatusForBoolean(boolean bool) {
+        if (bool) return ChatColor.GREEN + "Enabled" + ChatColor.GRAY;
+        return ChatColor.RED + "Disabled" + ChatColor.GRAY;
     }
     
     

@@ -23,10 +23,10 @@ public final class RConfig extends RObject {
         return plugin;
     }
     // Interval between task parses on worlds.
-    public long parseInterval = 15;
+    public long parseInterval = 60;
     
     // How much of the interval in percent can be used for processing?
-    public double percentIntervalRuntime = 0.1;
+    public double percentIntervalRuntime = 0.5;
     
     // Maximum chunks per parse
     public long numChunksPerParse = 5;
@@ -41,7 +41,7 @@ public final class RConfig extends RObject {
     public int minTpsRegen = 15;
     
     // Should Regenerator run without grief prevention plugins enabled?
-    public boolean noGriefRun = true;
+    public boolean noGriefRun = false;
     
     public RConfig(RegeneratorPlugin plugin) {
         super(plugin);

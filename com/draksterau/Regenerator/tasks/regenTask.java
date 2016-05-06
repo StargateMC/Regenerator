@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -44,6 +43,10 @@ public class regenTask extends BukkitRunnable {
     @Override
     public void run() {
         
+        if (this.plugin.isPaused) {
+            plugin.utils.throwMessage("info", "Regenerator is not beginning to parse inactive chunks as the TPS is below " + plugin.config.minTpsRegen + " (defined in global.yml).");
+            return;
+        }
         numWorlds = 0;
         chunksToRegenerate.clear();
         offsetTicks = 0;
@@ -58,7 +61,7 @@ public class regenTask extends BukkitRunnable {
             }
         }
         if (!chunksToRegenerate.isEmpty()) {
-            numChunks = chunksToRegenerate.size();
+            numChunks = chunksToRegenerate.size() - 1;
             secsTotal = (plugin.config.parseInterval * plugin.config.percentIntervalRuntime);
             secsBetweenChunks = (secsTotal / numChunks);
             plugin.utils.throwMessage("info", "Regenerator will regenerate 1 chunk per " + secsBetweenChunks + " seconds for " + secsTotal + " seconds.");
@@ -77,7 +80,7 @@ public class regenTask extends BukkitRunnable {
             plugin.utils.throwMessage("info", "Regeneration task completed without regenerating any chunks.");
         }
         if (!chunksToRegenerate.isEmpty()) {
-            plugin.utils.throwMessage("info", "Regeneration task completed after regenerating " +  numChunks + " chunks on " + numWorlds + " worlds.");
+            plugin.utils.throwMessage("info", "Regeneration task completed after processing " +  numChunks + " chunks on " + numWorlds + " worlds.");
         }
  
     }
