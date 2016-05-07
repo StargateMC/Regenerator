@@ -21,13 +21,14 @@ import com.draksterau.Regenerator.commands.RegeneratorCommand;
 
 public class RegeneratorPlugin extends JavaPlugin implements Listener {
     
-    // Config gets loaded here in onEnable()
-    public RConfig config = new RConfig(this);
+    public Logger log = Logger.getLogger("Minecraft");
     
     // Load the RUtils module.
     public RUtils utils = new RUtils(this);
         
-    public Logger log = Logger.getLogger("Minecraft");
+    // Config gets loaded here in onEnable()
+    public RConfig config = new RConfig(this);
+    
 
     public List<List<String>> availableIntergrations = new ArrayList<List<String>>();
     

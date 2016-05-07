@@ -23,13 +23,13 @@ public final class RConfig extends RObject {
         return plugin;
     }
     // Interval between task parses on worlds.
-    public long parseInterval = 60;
+    public long parseInterval = 300;
     
     // How much of the interval in percent can be used for processing?
     public double percentIntervalRuntime = 0.5;
     
     // Maximum chunks per parse
-    public long numChunksPerParse = 5;
+    public long numChunksPerParse = 25;
     
     // Whether or not new worlds that are loaded should have manual regen enabled by default
     public boolean defaultManualRegen = false;
@@ -46,6 +46,7 @@ public final class RConfig extends RObject {
     public RConfig(RegeneratorPlugin plugin) {
         super(plugin);
         this.loadData();
+        this.validateConfig();
     }
 
     public void validate() {
@@ -64,7 +65,7 @@ public final class RConfig extends RObject {
         if (!configFile.exists()) {
             config = YamlConfiguration.loadConfiguration(plugin.getResource("global.yml"));
             saveData();
-        } 
+        }
         this.defaultManualRegen = config.getBoolean("defaultManualRegen");
         this.defaultAutoRegen = config.getBoolean("defaultAutoRegen");
         this.noGriefRun = config.getBoolean("noGriefRun");
@@ -75,6 +76,40 @@ public final class RConfig extends RObject {
         this.percentIntervalRuntime = config.getDouble("percentIntervalRuntime");
     }
 
+    public void updateConfig() {
+        this.plugin.utils.throwMessage("info", "Detected old config file: Updating...");
+        // For now, we just update the config version.
+        this.configVersion = this.plugin.getDescription().getVersion();
+    }
+    
+    public void validateConfig() {
+        this.plugin.utils.throwMessage("info", "Validating configuration...");
+        if (!this.configVersion.equals(this.plugin.getDescription().getVersion())) {
+            updateConfig();
+        }
+        if (this.parseInterval < 60) {
+            this.plugin.utils.throwMessage("warning", "Detected parse interval that is below 60 seconds. Updating to this to be the minimum (60 seconds).");
+            this.parseInterval = 60;
+        }
+        if (this.parseInterval > 3600) {
+            this.plugin.utils.throwMessage("warning", "Detected parse interval that is above 3600 seconds. Updating to this to be the maximum (3600 seconds).");
+            this.parseInterval = 3600;
+        }
+        if (this.minTpsRegen > 20 || this.minTpsRegen < 1) {
+            this.plugin.utils.throwMessage("warning", "TPS Meter must have a valid TPS setting. This is an number between 1-20. Returning to default (15).");
+            this.minTpsRegen = 15;
+        }
+        if (this.percentIntervalRuntime > 1.0 || this.percentIntervalRuntime < 0.1) {
+            this.plugin.utils.throwMessage("warning", "Parse runtime must be a double between 0.1 and 1.0. Returning this to the default (0.5) - 50% of the parseInterval.");
+            this.percentIntervalRuntime = 0.5;
+        }
+        if (this.numChunksPerParse > (this.parseInterval * 10) || this.numChunksPerParse < 1) {
+            this.plugin.utils.throwMessage("warning", "Regenerator will only process a maximum of 1 chunk per 0.1 seconds and must be at least 1. The Maximum with your parse interval is (" + this.parseInterval * 10 + "). Defaulting this back to 50% of the maximum for your parseInterval.");
+            this.numChunksPerParse = (this.parseInterval * 5);
+        }
+        this.saveData();
+        this.loadData();
+    }
     @Override
     void saveData() {
         config.set("defaultManualRegen", this.defaultManualRegen);

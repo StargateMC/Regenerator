@@ -230,6 +230,7 @@ public class RUtils extends RObject {
     
     public void loadWorlds() {
         for (World world : Bukkit.getWorlds()) {
+            throwMessage("info", "Loading World : " + world.getName());
             RWorld RWorld = new RWorld(plugin, world);
             plugin.loadedWorlds.add(RWorld);
             throwMessage("info", "Loaded World : " + world.getName());

@@ -24,7 +24,7 @@ public final class RWorld extends RObject {
     public World world;
     public boolean autoRegen = false;
     public boolean manualRegen = false;
-    public long regenInterval = 600;
+    public long regenInterval = 3600;
     public long minBlockAutoRegen = 0;
     public long maxBlockAutoRegen = 0;
     
@@ -35,6 +35,7 @@ public final class RWorld extends RObject {
         super(Regenerator);
         this.world = world;
         this.loadData();
+        this.validateWorld();
     }
     
     public long getIntervalDays() {
@@ -109,9 +110,25 @@ public final class RWorld extends RObject {
         this.manualRegen = worldConfig.getBoolean("manualRegen");
         this.maxBlockAutoRegen = worldConfig.getLong("maxBlockAutoRegen");
         this.minBlockAutoRegen = worldConfig.getLong("minBlockAutoRegen");
-        this.regenInterval = worldConfig.getLong("regenInterval");        
+        this.regenInterval = worldConfig.getLong("regenInterval");
     }
 
+    public void validateWorld() {
+        if (regenInterval < plugin.config.parseInterval) {
+            this.plugin.utils.throwMessage("warning", "World: " + this.world.getName() + " is set to regenerate more quickly than Regenerator checks for inactive chunks (Parse interval in global.yml).");
+            this.plugin.utils.throwMessage("warning", "It is recommended you increase this worlds regenInterval or decrease the global parseInterval!");
+        }
+        if (regenInterval > (86400 * 30)) {
+            this.plugin.utils.throwMessage("warning", "World: " + this.world.getName() + " has a regeneration interval of more than 30 days. Setting this back to the maximum (30 days).");
+            this.regenInterval = 86400*30;
+        }
+        if (regenInterval < 600) {
+            this.plugin.utils.throwMessage("warning", "World: " + this.world.getName() + " has a regeneration interval of less than 10 minutes. Setting this back to the minimum of 10 minutes.");
+            this.regenInterval = 600;
+        }
+        this.saveData();
+        this.loadData();
+    }
     @Override
     void saveData() {
         worldConfig.set("minBlockAutoRegen", this.minBlockAutoRegen);
