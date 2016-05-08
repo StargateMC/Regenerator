@@ -47,6 +47,7 @@ public class regenTask extends BukkitRunnable {
             plugin.utils.throwMessage("info", "Regenerator is not beginning to parse inactive chunks as the TPS is below " + plugin.config.minTpsRegen + " (defined in global.yml).");
             return;
         }
+        
         numWorlds = 0;
         chunksToRegenerate.clear();
         offsetTicks = 0;

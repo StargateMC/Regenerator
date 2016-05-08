@@ -47,10 +47,9 @@ public final class RChunk extends RObject {
     }
     public boolean canAutoRegen() {
         RWorld world = new RWorld(this.plugin, this.getWorld());
-        boolean PluginsNotStopping = plugin.utils.autoRegenRequirementsMet(this.getChunk());
         boolean isInactive = plugin.utils.validateChunkInactivity(this);
         boolean isWorldAllowing = world.canAutoRegen();
-        if (PluginsNotStopping && isInactive && isWorldAllowing) return true;
+        if (isInactive && isWorldAllowing) return true;
         return false;
     }
     
