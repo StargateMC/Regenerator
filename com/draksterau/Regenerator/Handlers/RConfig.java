@@ -29,7 +29,7 @@ public final class RConfig extends RObject {
     public double percentIntervalRuntime = 0.5;
     
     // Maximum chunks per parse
-    public long numChunksPerParse = 25;
+    public double numChunksPerParse = 25;
     
     // Whether or not new worlds that are loaded should have manual regen enabled by default
     public boolean defaultManualRegen = false;
@@ -103,9 +103,9 @@ public final class RConfig extends RObject {
             this.plugin.utils.throwMessage("warning", "Parse runtime must be a double between 0.1 and 1.0. Returning this to the default (0.5) - 50% of the parseInterval.");
             this.percentIntervalRuntime = 0.5;
         }
-        if (this.numChunksPerParse > (this.parseInterval * 10) || this.numChunksPerParse < 1) {
-            this.plugin.utils.throwMessage("warning", "Regenerator will only process a maximum of 1 chunk per 0.1 seconds and must be at least 1. The Maximum with your parse interval is (" + this.parseInterval * 10 + "). Defaulting this back to 50% of the maximum for your parseInterval.");
-            this.numChunksPerParse = (this.parseInterval * 5);
+        if (this.numChunksPerParse > (((this.parseInterval * 10)) * this.percentIntervalRuntime) || this.numChunksPerParse < 1) {
+            this.plugin.utils.throwMessage("warning", "Regenerator will only process a maximum of 1 chunk per 0.1 seconds and must be at least 1. The Maximum with your parse interval is (" + ((this.parseInterval * 10) * this.percentIntervalRuntime) + "). Defaulting this back to 50% of the maximum for your parseInterval.");
+            this.numChunksPerParse = (((this.parseInterval * 5)) * this.percentIntervalRuntime);
         }
         this.saveData();
         this.loadData();
