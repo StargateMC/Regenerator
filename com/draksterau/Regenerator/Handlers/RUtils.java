@@ -75,9 +75,6 @@ public class RUtils extends RObject {
         if (!RWorld.canAutoRegen()) {
             return false;
         }
-        
-        RChunk rChunk = new RChunk(plugin, chunk.getX(), chunk.getZ(), chunk.getWorld().getName());
-        if (rChunk.lastActivity == 0) return false;
                 
         // This handles the world configuration for borders and the skip radius.
         if (RWorld.minBlockAutoRegen >= distance(chunk.getX(), 100.0, chunk.getZ(), chunk.getWorld().getSpawnLocation().getBlockX(), 100.0, chunk.getWorld().getSpawnLocation().getBlockZ())) return false;

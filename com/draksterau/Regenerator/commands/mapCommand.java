@@ -5,6 +5,7 @@
  */
 package com.draksterau.Regenerator.commands;
 
+import com.draksterau.Regenerator.Handlers.RChunk;
 import com.draksterau.Regenerator.RegeneratorPlugin;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,9 @@ public class mapCommand {
                 for (z = (rootChunk.getZ()-64); z <= (rootChunk.getZ() + 64); z = z+16) {
                     Chunk chunk = command.plugin.utils.getSenderPlayer(command.sender).getLocation().getWorld().getChunkAt(x, z);
                     if (command.plugin.utils.getCountIntegration(chunk) < 2) {
-                        if (command.plugin.utils.autoRegenRequirementsMet(chunk)) {
+        
+                        RChunk rChunk = new RChunk(command.plugin, chunk.getX(), chunk.getZ(), chunk.getWorld().getName());
+                        if (command.plugin.utils.autoRegenRequirementsMet(chunk) && rChunk.lastActivity != 0) {
                             string = string + ChatColor.BLUE + "O";
                         } else {
                             if (command.plugin.utils.canManuallyRegen(command.plugin.utils.getSenderPlayer(command.sender), chunk) && command.plugin.utils.getIntegrationForChunk(chunk) == null) {
