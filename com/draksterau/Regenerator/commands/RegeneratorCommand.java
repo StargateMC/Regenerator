@@ -42,10 +42,18 @@ public class RegeneratorCommand {
                 return true;
             default:
                 switch (args[0].toLowerCase()) {
+                    case "reload":
+                        if (sender.hasPermission("regenerator.admin")) {
+                            new reloadCommand(this).doCommand();
+                        } else {
+                            sender.sendMessage(plugin.utils.getFancyName() + ChatColor.RED + "This command requires the regenerator.admin permission node.");
+                        }
+                        break;
                     case "help":
-                        sender.sendMessage(plugin.utils.getFancyName() + ChatColor.GREEN + "regen" + ChatColor.GRAY + ": The regen command handles manual regeneration. Valid options are: chunk or unclaimed <world>");
+                        sender.sendMessage(plugin.utils.getFancyName() + ChatColor.GREEN + "regen" + ChatColor.GRAY + ": The regen command handles manual regeneration of a single chunk.");
                         sender.sendMessage(plugin.utils.getFancyName() + ChatColor.GREEN + "map" + ChatColor.GRAY + ": The map command will show a chunk map of the nearby area. It will be colored according to whether or not it regenerates automatically or you can manually regenerate it.");
                         sender.sendMessage(plugin.utils.getFancyName() + ChatColor.GREEN + "integrations" + ChatColor.GRAY + ": The integrations command will return whether or not the various supported plugins are active and running with Regenerator.");
+                        sender.sendMessage(plugin.utils.getFancyName() + ChatColor.GREEN + "reload" + ChatColor.GRAY + ": The reload command will cancel all pending regen tasks, reload the plugin and schedule the next parse for 30 seconds from now.");
                         break;
                     case "regen":
                         if (sender.hasPermission("regenerator.regen")) {

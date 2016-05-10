@@ -24,7 +24,7 @@ public class regenTask extends BukkitRunnable {
     RegeneratorPlugin plugin;
 
     List<RChunk> chunksToRegenerate = new ArrayList<RChunk>();
-    
+        
     double offsetTicks = 0;
 
     int numWorlds = 0;
@@ -43,7 +43,7 @@ public class regenTask extends BukkitRunnable {
     @Override
     public void run() {
         
-        if (this.plugin.isPaused) {
+        if (!this.plugin.utils.isLagOK()) {
             plugin.utils.throwMessage("info", "Regenerator is not beginning to parse inactive chunks as the TPS is below " + plugin.config.minTpsRegen + " (defined in global.yml).");
             return;
         }
@@ -63,6 +63,7 @@ public class regenTask extends BukkitRunnable {
         }
         if (!chunksToRegenerate.isEmpty()) {
             numChunks = chunksToRegenerate.size() - 1;
+            if (numChunks == 0) numChunks = 1;
             secsTotal = (plugin.config.parseInterval * plugin.config.percentIntervalRuntime);
             secsBetweenChunks = (secsTotal / numChunks);
             plugin.utils.throwMessage("info", "Regenerator will regenerate 1 chunk per " + secsBetweenChunks + " seconds for " + secsTotal + " seconds.");

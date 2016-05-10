@@ -16,6 +16,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -54,15 +55,6 @@ public class RUtils extends RObject {
         }
         return null;
     }
-    // Gets an RChunk
-    public RChunk getRChunkForChunk(Chunk chunk) {
-        for (RChunk RChunk : plugin.loadedChunks) {
-            if (RChunk.getChunk().equals(chunk)) {
-                return RChunk;
-            }
-        }
-        return null;
-    }
     
     // Returns a formatted string of Enabled or disabled
     
@@ -97,17 +89,26 @@ public class RUtils extends RObject {
         // Not blocked.
         return true;
     }
-    
+    // This simply lists supported plugins and versions.
+    public void iterateIntegrations() {
+        for (List<String> integration : plugin.availableIntergrations) {
+            String name = integration.get(2).replace("Integration", "");
+            throwMessage("info", ChatColor.LIGHT_PURPLE + name);
+        }
+    }
     // Formats a message and categorises it instead of using logger directly.
     public  void throwMessage(String type, String message) {
+
+        ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+
         if ("info".equals(type)) {
-            plugin.log.log(Level.INFO, "[{0}] {1}", new Object[]{plugin.getDescription().getName(), message});
+            console.sendMessage(getFancyName() + ChatColor.DARK_AQUA + "[" + type.toUpperCase() + "]: " + message);
         } else {
             if ("warning".equals(type)) {
-                plugin.log.log(Level.WARNING, "[{0}] {1}", new Object[]{plugin.getDescription().getName(), message});
+                console.sendMessage(getFancyName() + ChatColor.YELLOW + "[" + type.toUpperCase() + "]: " + message);
             } else {
                 if ("severe".equals(type)) {
-                    plugin.log.log(Level.SEVERE, "[{0}] {1}", new Object[]{plugin.getDescription().getName(), message});
+                    console.sendMessage(getFancyName() + ChatColor.RED + "[" + type.toUpperCase() + "]: " + message);
                     plugin.disablePlugin();
                 } else {
                     this.throwMessage("severe","Fatal call to throwMessage, valid message types are severe,info,warning");
@@ -132,6 +133,27 @@ public class RUtils extends RObject {
     // Returns a formatted version of the plugins name.
     public String getFancyName() {
         return ChatColor.RED + "[" + ChatColor.DARK_GREEN + plugin.getDescription().getName() + ChatColor.RED + "] " + ChatColor.GRAY;
+    }
+    
+    // Gets the players nearby to a chunk based on a distance value.
+    public List<Player> getPlayersNearChunk(RChunk rChunk, int distance) {
+        List<Player> playersNearby = new ArrayList<Player>();
+        List<Player> playersOnWorld = rChunk.getChunk().getWorld().getPlayers();
+        for (Player p : playersOnWorld) {
+            // Skip the player if they are further away.
+            if (distance(p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ(), rChunk.getChunk().getX(), p.getLocation().getBlockY(), rChunk.getChunk().getZ()) > distance) continue; 
+            playersNearby.add(p);
+        }
+        return playersNearby;
+    }
+    
+    
+    // This will be used for ingame debugging.
+    public void sendNotifyMessage(String message) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (!p.hasPermission("regenerator.notify")) continue;
+            p.sendMessage(getFancyName() + " " + ChatColor.GRAY + message);
+        }
     }
     
     // Gets the distance between to X,Y,Z coordinates.
@@ -277,9 +299,6 @@ public class RUtils extends RObject {
         Landlord.add("1.3");
         Landlord.add("LandlordIntegration");
         plugin.availableIntergrations.add(Landlord);
-        for (List<String> module : plugin.availableIntergrations) {
-            throwMessage("info", module.get(2) + " module initialised.");
-        }
     }
     
     public boolean isLagOK() {
@@ -337,10 +356,9 @@ public class RUtils extends RObject {
                         throwMessage("info", "[" + module[2] + "] Detected Plugin: " + integration.getPluginName() + " v" + integration.getPluginVersion() + ": Loading " + module[2] + "!");
                     }
                 } else {
-                    throwMessage("warning", "[" + module[2] + "] Incompatible version of Plugin: " + module[0] + " (v" + Bukkit.getPluginManager().getPlugin(module[0]).getDescription().getVersion() + " and not v" + module[1] + "). Disabling " + module[2] + " module.");
+                    throwMessage("warning", "[" + module[2] + "] Incompatible version of Plugin: " + module[0] + " (v" + Bukkit.getPluginManager().getPlugin(module[0]).getDescription().getVersion() + " and not v" + module[1] + ").");
+                    throwMessage("warning", "Disabling " + module[2] + " module.");
                 }
-            } else {
-                throwMessage("warning", "[" + module[2] + "] Didn't detect Plugin: " + module[0] + " (v" + module[1] + "). Disabling " + module[2] + " integration module.");
             }
         } catch (ClassNotFoundException ex) {
             throwMessage("severe", "Failed to load integration for plugin: " + plugin + ". Please contact Bysokar for support!");

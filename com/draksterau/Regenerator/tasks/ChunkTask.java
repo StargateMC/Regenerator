@@ -10,6 +10,7 @@ import static java.lang.Math.random;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -32,10 +33,19 @@ public class ChunkTask extends BukkitRunnable {
     @Override
     
     public void run() {   
+            // Lets check if the world the chunk is on is loaded still.
+            if (Bukkit.getServer().getWorld(RChunk.worldName) == null) {
+                RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". The world was unloaded and will regenerate next time it is found!");
+                return;
+            }
             // Now checking if a chunk is claimed at the point of regenerating only.
             if (!RChunk.plugin.utils.autoRegenRequirementsMet(RChunk.getChunk())) {
                 RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". It most likely was claimed?");
                 RChunk.resetActivity();
+                return;
+            }
+            if (!RChunk.plugin.utils.isLagOK()) {
+                RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". TPS is below that defined in global configuration.");
                 return;
             }
             RChunk.plugin.utils.throwMessage("info","Regenerating : " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName);

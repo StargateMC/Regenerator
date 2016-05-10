@@ -59,13 +59,7 @@ public class eventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onChunkLoad(ChunkLoadEvent event) {
         RChunk RChunk = new RChunk(RegeneratorPlugin, event.getChunk().getX(), event.getChunk().getZ(), event.getWorld().getName());
-        RegeneratorPlugin.loadedChunks.add(RChunk);
-    }
-    
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onChunkUnload(ChunkUnloadEvent event) {
-        RChunk RChunk = new RChunk(RegeneratorPlugin, event.getChunk().getX(), event.getChunk().getZ(), event.getWorld().getName());
-        RegeneratorPlugin.loadedChunks.remove(RChunk);
+        // Do nothing. This constructor for the RChunk will generate its entry in the data file if needed.
     }
 
     /// END CHUNK EVENTS ///

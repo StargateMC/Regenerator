@@ -87,7 +87,7 @@ public class WorldGuardIntegration extends Integration {
     @Override
     public boolean canPlayerRegen(Player player, Chunk chunk) {
         if (isChunkClaimed(chunk)) {
-            if (player.hasPermission(getPermissionRequiredToRegen(player, chunk)) && getPermissionRequiredToRegen(player,chunk) != null) {
+            if (player.hasPermission(getPermissionRequiredToRegen(player, chunk))) {
                 return true;
             } else {
                 return false;
@@ -149,9 +149,10 @@ public class WorldGuardIntegration extends Integration {
         } else {
             if (isMember(getRegionForChunk(chunk), player)) {
                 return "regenerator.regen.worldguard.MEMBER";
+            } else {
+                return "regenerator.regen.worldguard.OVERRIDE";
             }
         }
-        return null;
     }
     
     public boolean claimExists(String regionSearchingFor) {

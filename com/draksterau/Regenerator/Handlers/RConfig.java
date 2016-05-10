@@ -43,6 +43,9 @@ public final class RConfig extends RObject {
     // Should Regenerator run without grief prevention plugins enabled?
     public boolean noGriefRun = false;
     
+    // Distance at which players should be notified of a chunk around them regenerating.
+    public int distanceNearbyNotify = 64;
+    
     public RConfig(RegeneratorPlugin plugin) {
         super(plugin);
         this.loadData();
@@ -91,6 +94,7 @@ public final class RConfig extends RObject {
             this.plugin.utils.throwMessage("warning", "Detected parse interval that is below 60 seconds. Updating to this to be the minimum (60 seconds).");
             this.parseInterval = 60;
         }
+        
         if (this.parseInterval > 3600) {
             this.plugin.utils.throwMessage("warning", "Detected parse interval that is above 3600 seconds. Updating to this to be the maximum (3600 seconds).");
             this.parseInterval = 3600;

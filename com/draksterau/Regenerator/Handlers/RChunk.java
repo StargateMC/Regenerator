@@ -66,10 +66,6 @@ public final class RChunk extends RObject {
         return this.getChunk().isLoaded();
     }
     
-    public boolean isChunkCached() {
-        return plugin.loadedChunks.contains(this);
-    }
-    
     public void updateActivity() {
         this.lastActivity = System.currentTimeMillis();
         this.saveData();

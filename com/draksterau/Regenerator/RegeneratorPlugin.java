@@ -21,13 +21,11 @@ import com.draksterau.Regenerator.commands.RegeneratorCommand;
 
 public class RegeneratorPlugin extends JavaPlugin implements Listener {
     
-    public Logger log = Logger.getLogger("Minecraft");
-    
-    // Load the RUtils module.
-    public RUtils utils = new RUtils(this);
+    // Load the RUtils module on enable.
+    public RUtils utils;
         
     // Config gets loaded here in onEnable()
-    public RConfig config = new RConfig(this);
+    public RConfig config;
     
 
     public List<List<String>> availableIntergrations = new ArrayList<List<String>>();
@@ -36,32 +34,37 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
     
     public List<RWorld> loadedWorlds = new ArrayList<RWorld>();
     
-    public List<RChunk> loadedChunks = new ArrayList<RChunk>();
-
-    public boolean isPaused = false;
     
     @Override
     public void onEnable () {
-        utils.throwMessage("info", "Loaded Regenerator!");
+        // Load the RUtils module.
+        utils = new RUtils(this);
+        // Config gets loaded here in onEnable()
+        config = new RConfig(this);
+        utils.throwMessage("info", "Loading Regenerator!");
         utils.initAvailableIntegrations();
         utils.loadIntegrations();
-        utils.loadWorlds();
         if (this.isEnabled()) {
             utils.throwMessage("info", "Starting Regenerator v" + config.configVersion);
             if (loadedIntegrations.isEmpty()) {
                 if (config.noGriefRun) {
                     utils.throwMessage("warning", "No supported grief protection plugins found. No land will be protected from regeneration via external plugins!");
                 } else {
-                    utils.throwMessage("severe", "No supported grief protection plugins found. You must set 'noGriefRun' to true in config before Regenerator will load. This is accepting you need to configure things properly OR YOU WILL LOSE CHUNKS!");
+                    utils.throwMessage("warning", "No supported grief protection plugins found. You must acknowledge that you must configure the plugin properly or risk losing chunks.");
+                    utils.throwMessage("info", "Regenerator supports the following plugins:");
+                    utils.iterateIntegrations();
+                    utils.throwMessage("severe", "You must set 'noGriefRun' to true in config before Regenerator will load without integrations.");
                 }
             }
             if (this.isEnabled()) {
+                utils.loadWorlds();
                 // This registers all event listeners.
                 getServer().getPluginManager().registerEvents(new eventListener(this), this);
                 // This registers a repeating task to measure 1 tick, so we can accurately  get TPS.
                 getServer().getScheduler().runTaskTimer(this, new lagTask(), 100L, 1L);
                 // This registers the regeneration task.
-                getServer().getScheduler().runTaskTimerAsynchronously(this, new regenTask(this), config.parseInterval * 20, config.parseInterval * 20);
+                getServer().getScheduler().runTaskTimerAsynchronously(this, new regenTask(this), 1200, config.parseInterval * 20);
+                utils.throwMessage("info", "Scheduling next parse for 30 seconds from now and parsing every " + config.parseInterval + " seconds.");
             }
         }
     }

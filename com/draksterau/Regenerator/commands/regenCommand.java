@@ -30,7 +30,7 @@ public class regenCommand {
         if (command.plugin.utils.getSenderPlayer(command.sender) == null) {
             command.sender.sendMessage(ChatColor.RED + "This command can only be performed while in-game.");
         } else {
-            if (!command.plugin.isPaused) {
+            if (command.plugin.utils.isLagOK()) {
                 Chunk rootChunk = command.plugin.utils.getSenderPlayer(command.sender).getLocation().getChunk();
                 RChunk rChunk = new RChunk(command.plugin, rootChunk.getX(), rootChunk.getZ(), rootChunk.getWorld().getName());
                 if (command.plugin.utils.canManuallyRegen(command.plugin.utils.getSenderPlayer(command.sender), rootChunk)) {
