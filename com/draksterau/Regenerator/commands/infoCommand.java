@@ -49,9 +49,9 @@ public class infoCommand {
                     } else {
                         command.sender.sendMessage(command.plugin.utils.getFancyName() + " Last Activity: " + (timeSinceRegenSecs) + " secs ago");
                         if (TimeToRegenSecs == 0) {
-                            command.sender.sendMessage(command.plugin.utils.getFancyName() + " Time until Regen (Approx): " + ChatColor.RED + "Now");
+                            command.sender.sendMessage(command.plugin.utils.getFancyName() + " Flagged for regen: " + ChatColor.RED + "Now");
                         } else {
-                            command.sender.sendMessage(command.plugin.utils.getFancyName() + " Time until Regen (Approx): " + (TimeToRegenSecs) + " secs");
+                            command.sender.sendMessage(command.plugin.utils.getFancyName() + " Flagged for regen in :" + (TimeToRegenSecs) + " secs");
                         }
                     }
                     if (command.plugin.utils.getIntegrationForChunk(chunk) != null) {
