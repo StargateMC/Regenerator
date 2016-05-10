@@ -38,12 +38,21 @@ public class infoCommand {
                 command.sender.sendMessage(command.plugin.utils.getFancyName() + "Regeneration Interval: " + rWorld.getFormattedInterval());
                 break;
                 case "chunk":
-                    long lastRegenMins = (command.plugin.utils.convertMsToSecond(System.currentTimeMillis(), rChunk.lastActivity) / 60);
+                    long TimeToRegenSecs = 0;
+                    long timeSinceRegenSecs = (command.plugin.utils.convertMsToSecond(System.currentTimeMillis(), rChunk.lastActivity));
+                    if (rWorld.regenInterval > timeSinceRegenSecs) {
+                        TimeToRegenSecs = (rWorld.regenInterval - timeSinceRegenSecs);
+                    }
                     command.sender.sendMessage(command.plugin.utils.getFancyName() + ChatColor.GOLD + "Loading Chunk information....");
                     if (rChunk.lastActivity == 0) {
                         command.sender.sendMessage(command.plugin.utils.getFancyName() + " Last Activity: " + ChatColor.RED + "Never / Untracked");
                     } else {
-                        command.sender.sendMessage(command.plugin.utils.getFancyName() + " Last Activity: " + lastRegenMins + " mins ago");
+                        command.sender.sendMessage(command.plugin.utils.getFancyName() + " Last Activity: " + (timeSinceRegenSecs) + " secs ago");
+                        if (TimeToRegenSecs == 0) {
+                            command.sender.sendMessage(command.plugin.utils.getFancyName() + " Time until Regen (Approx): " + ChatColor.RED + "Now");
+                        } else {
+                            command.sender.sendMessage(command.plugin.utils.getFancyName() + " Time until Regen (Approx): " + (TimeToRegenSecs) + " secs");
+                        }
                     }
                     if (command.plugin.utils.getIntegrationForChunk(chunk) != null) {
                         command.sender.sendMessage(command.plugin.utils.getFancyName() + " Protected by: " + ChatColor.BLUE + command.plugin.utils.getIntegrationForChunk(chunk).getPluginName());
