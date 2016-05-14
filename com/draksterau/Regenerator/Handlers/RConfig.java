@@ -80,31 +80,31 @@ public final class RConfig extends RObject {
     }
 
     public void updateConfig() {
-        this.plugin.utils.throwMessage("info", "Detected old config file: Updating...");
+        this.plugin.utils.throwMessage("info",this.plugin.lang.getForKey("messages.oldConfigFileUpdating"));
         // For now, we just update the config version.
         this.configVersion = this.plugin.getDescription().getVersion();
     }
     
     public void validateConfig() {
-        this.plugin.utils.throwMessage("info", "Validating configuration...");
+        this.plugin.utils.throwMessage("info", this.plugin.lang.getForKey("messages.validatingConfig"));
         if (!this.configVersion.equals(this.plugin.getDescription().getVersion())) {
             updateConfig();
         }
         if (this.parseInterval < 60) {
-            this.plugin.utils.throwMessage("warning", "Detected parse interval that is below 60 seconds. Updating to this to be the minimum (60 seconds).");
+            this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.parseIntervalInsufficient"), "60"));
             this.parseInterval = 60;
         }
         
         if (this.parseInterval > 3600) {
-            this.plugin.utils.throwMessage("warning", "Detected parse interval that is above 3600 seconds. Updating to this to be the maximum (3600 seconds).");
+            this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.parseIntervalNotFrequent"), "3600"));
             this.parseInterval = 3600;
         }
         if (this.minTpsRegen > 20 || this.minTpsRegen < 1) {
-            this.plugin.utils.throwMessage("warning", "TPS Meter must have a valid TPS setting. This is an number between 1-20. Returning to default (15).");
+            this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.tpsInvalid"), "15"));
             this.minTpsRegen = 15;
         }
         if (this.percentIntervalRuntime > 1.0 || this.percentIntervalRuntime < 0.1) {
-            this.plugin.utils.throwMessage("warning", "Parse runtime must be a double between 0.1 and 1.0. Returning this to the default (0.5) - 50% of the parseInterval.");
+            this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.runtimeInvalid"), "0.5"));
             this.percentIntervalRuntime = 0.5;
         }
         if (this.numChunksPerParse > (((this.parseInterval * 10)) * this.percentIntervalRuntime) || this.numChunksPerParse < 1) {

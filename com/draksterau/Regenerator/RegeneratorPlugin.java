@@ -15,6 +15,7 @@ import com.draksterau.Regenerator.tasks.lagTask;
 import com.draksterau.Regenerator.tasks.regenTask;
 import com.draksterau.Regenerator.Handlers.RChunk;
 import com.draksterau.Regenerator.Handlers.RConfig;
+import com.draksterau.Regenerator.Handlers.RLang;
 import com.draksterau.Regenerator.Handlers.RUtils;
 import com.draksterau.Regenerator.Handlers.RWorld;
 import com.draksterau.Regenerator.commands.RegeneratorCommand;
@@ -27,6 +28,7 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
     // Config gets loaded here in onEnable()
     public RConfig config;
     
+    public RLang lang;
 
     public List<List<String>> availableIntergrations = new ArrayList<List<String>>();
     
@@ -37,15 +39,18 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
     
     @Override
     public void onEnable () {
+        // Loads the language file.
+        lang = new RLang(this);
         // Load the RUtils module.
         utils = new RUtils(this);
         // Config gets loaded here in onEnable()
         config = new RConfig(this);
+        
         utils.throwMessage("info", "Loading Regenerator!");
         utils.initAvailableIntegrations();
         utils.loadIntegrations();
         if (this.isEnabled()) {
-            utils.throwMessage("info", "Starting Regenerator v" + config.configVersion);
+            utils.throwMessage("info", lang.getForKey("messages.pluginStarting") + " v" + config.configVersion);
             if (loadedIntegrations.isEmpty()) {
                 if (config.noGriefRun) {
                     utils.throwMessage("warning", "No supported grief protection plugins found. No land will be protected from regeneration via external plugins!");
@@ -58,13 +63,14 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
             }
             if (this.isEnabled()) {
                 utils.loadWorlds();
+                
                 // This registers all event listeners.
                 getServer().getPluginManager().registerEvents(new eventListener(this), this);
                 // This registers a repeating task to measure 1 tick, so we can accurately  get TPS.
                 getServer().getScheduler().runTaskTimer(this, new lagTask(), 100L, 1L);
                 // This registers the regeneration task.
                 getServer().getScheduler().runTaskTimerAsynchronously(this, new regenTask(this), 1200, config.parseInterval * 20);
-                utils.throwMessage("info", "Scheduling next parse for 30 seconds from now and parsing every " + config.parseInterval + " seconds.");
+                utils.throwMessage("info", String.format(this.lang.getForKey("messages.parseSchedule"), "30", String.valueOf(config.parseInterval)));
             }
         }
     }
