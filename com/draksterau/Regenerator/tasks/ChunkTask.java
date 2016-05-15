@@ -62,7 +62,7 @@ public class ChunkTask extends BukkitRunnable {
                RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". Unloaded chunks are disabled for auto regeneration in global configuration.");
                return;
             }
-            if (RChunk.getChunk().getWorld().isChunkInUse(RChunk.chunkX, RChunk.chunkZ) && RChunk.plugin.config.regenerateChunksInUseByPlayers) {
+            if (RChunk.getChunk().getWorld().isChunkInUse(RChunk.chunkX, RChunk.chunkZ) && !RChunk.plugin.config.regenerateChunksInUseByPlayers) {
                RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". One or more players are using this chunk (Players can be ignored in config).");
                return;
             }
