@@ -26,3 +26,7 @@ messages:
     regenIntervalTooFrequentSuggestion: "It is recommended you increase the worlds regenInterval or decrease the global parseInterval"
     regenIntervalAboveMax: "The regeneration interval for %s is too infrequent. It must be less than %s days. Resetting to maximum."
     regenIntervalBelowMin: "The regeneration interval for %s is too frequent. It must be more than %s minutes.Resetting to minimum."
+    distanceNearbyTooClose: "Min Minimum distance for players from a regeneration event must be at least 1 chunk, resetting to %s blocks."
+    distanceNearbyTooFar: "Max Minimum distance for players from a regeneration event must be no more than 16 chunks, resetting to %s blocks."
+    mustTargetSomething: "Both unloaded and loaded chunks are not being targeted for automatic regeneration. This plugin must target something and is enabling targetUnloadedChunks."
+    addingNewConfig: "New Configuration option found: %s. Adding to %s!"

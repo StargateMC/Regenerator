@@ -43,8 +43,13 @@ public final class RConfig extends RObject {
     // Should Regenerator run without grief prevention plugins enabled?
     public boolean noGriefRun = false;
     
-    // Distance at which players should be notified of a chunk around them regenerating.
-    public int distanceNearbyNotify = 64;
+    // Distance at which players will prevent a chunk regenerating (too close)
+    public int distanceNearbyMinimum = 16;
+    
+    // Set this to true to allow loaded chunks to regenerate.
+    public boolean targetLoadedChunks = false;
+    // Set this to true to allow unloaded chunks to regenerate.
+    public boolean targetUnloadedChunks = true;
     
     public RConfig(RegeneratorPlugin plugin) {
         super(plugin);
@@ -69,14 +74,37 @@ public final class RConfig extends RObject {
             config = YamlConfiguration.loadConfiguration(plugin.getResource("global.yml"));
             saveData();
         }
+        if (!config.isSet("configVersion")) {
+            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "configVersion", this.configFile.getName()));
+        } else {
+            if (!config.getString("configVersion").equals(this.plugin.getDescription().getVersion())) {
+                updateConfig();
+            } else {
+                this.configVersion = config.getString("configVersion");
+            }
+        }
         this.defaultManualRegen = config.getBoolean("defaultManualRegen");
         this.defaultAutoRegen = config.getBoolean("defaultAutoRegen");
         this.noGriefRun = config.getBoolean("noGriefRun");
         this.minTpsRegen = config.getInt("minTpsRegen");
-        this.configVersion = config.getString("configVersion");   
         this.parseInterval = config.getInt("parseInterval");
         this.numChunksPerParse =config.getInt("numChunksPerParse");
         this.percentIntervalRuntime = config.getDouble("percentIntervalRuntime");
+        if (!config.isSet("distanceNearbyMinimum")) {
+            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "distanceNearbyMinimum", this.configFile.getName()));
+        } else {
+            this.distanceNearbyMinimum = config.getInt("distanceNearbyMinimum");
+        }
+        if (!config.isSet("targetLoadedChunks")) {
+            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "targetLoadedChunks", this.configFile.getName()));
+        } else {
+            this.targetLoadedChunks = config.getBoolean("targetLoadedChunks");
+        }
+        if (!config.isSet("targetUnloadedChunks")) {
+            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "targetUnloadedChunks", this.configFile.getName()));
+        } else {
+            this.targetUnloadedChunks = config.getBoolean("targetUnloadedChunks");
+        }
     }
 
     public void updateConfig() {
@@ -87,14 +115,23 @@ public final class RConfig extends RObject {
     
     public void validateConfig() {
         this.plugin.utils.throwMessage("info", this.plugin.lang.getForKey("messages.validatingConfig"));
-        if (!this.configVersion.equals(this.plugin.getDescription().getVersion())) {
-            updateConfig();
+        if (this.distanceNearbyMinimum < 16) {
+            this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.distanceNearbyTooClose"), "16"));
+            this.distanceNearbyMinimum = 16;
         }
+        if (this.distanceNearbyMinimum > 256) {
+            this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.distanceNearbyTooFar"), "256"));
+            this.distanceNearbyMinimum = 256;
+        }
+        
         if (this.parseInterval < 60) {
             this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.parseIntervalInsufficient"), "60"));
             this.parseInterval = 60;
         }
-        
+        if (!this.targetLoadedChunks && !this.targetUnloadedChunks) {
+            this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.mustTargetSomething")));
+            this.targetUnloadedChunks = true;
+        }
         if (this.parseInterval > 3600) {
             this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.parseIntervalNotFrequent"), "3600"));
             this.parseInterval = 3600;
@@ -124,6 +161,9 @@ public final class RConfig extends RObject {
         config.set("numChunksPerParse", this.numChunksPerParse);
         config.set("parseInterval", this.parseInterval);
         config.set("percentIntervalRuntime", this.percentIntervalRuntime);
+        config.set("distanceNearbyMinimum", this.distanceNearbyMinimum);
+        config.set("targetLoadedChunks", this.targetLoadedChunks);
+        config.set("targetUnloadedChunks", this.targetUnloadedChunks);
         try {
             config.save(configFile);
         } catch (IOException ex) {

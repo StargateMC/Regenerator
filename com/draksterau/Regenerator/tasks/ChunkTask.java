@@ -50,8 +50,21 @@ public class ChunkTask extends BukkitRunnable {
                 return;
             }
             
+            if (!RChunk.plugin.utils.getPlayersNearChunk(RChunk, RChunk.plugin.config.distanceNearbyMinimum).isEmpty()) {
+               RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". There are players closer than " + RChunk.plugin.config.distanceNearbyMinimum + " blocks away.");
+               return;
+            }
+            if (RChunk.getChunk().isLoaded() && !RChunk.plugin.config.targetLoadedChunks) {
+               RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". Loaded chunks are disabled for auto regeneration in global configuration.");
+               return;
+            }
+            if (!RChunk.getChunk().isLoaded() && !RChunk.plugin.config.targetUnloadedChunks) {
+               RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". Unloaded chunks are disabled for auto regeneration in global configuration.");
+               return;
+            }
+            
             if (!RChunk.getChunk().isLoaded()) {
-                RChunk.plugin.utils.throwMessage("info", "Loading chunk to regenerate, as it is needed to properly handle regeneration!");
+                RChunk.plugin.utils.throwMessage("info", "Loading chunk to regenerate!");
                 RChunk.getChunk().load();
                 wasUnloaded = true;
             }

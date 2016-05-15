@@ -23,6 +23,9 @@ public final class RLang extends RObject {
 
     private File langConfigFile;
     private FileConfiguration langConfig;
+    private File langConfigFileTemp;
+    private FileConfiguration langConfigTemp;
+    
     public RLang(RegeneratorPlugin plugin) {
         super(plugin);
         this.loadData();
@@ -45,7 +48,17 @@ public final class RLang extends RObject {
     public String getForKey(String key) {
         String value = langConfig.getString(key);
         if (value == null) {
-            return "ERROR - Key: " + key + " does not exist in the localisation file!";
+            langConfigFileTemp = new File(plugin.getDataFolder() + "/messages.yml");
+            langConfigTemp = YamlConfiguration.loadConfiguration(plugin.getResource("messages.yml"));
+            if (langConfigTemp.isSet(key)) {
+                plugin.utils.throwMessage("new","Loading default value for " + key + " as it does not exist in messages.yml!");
+                String tempValue = langConfigTemp.getString(key);
+                langConfig.set(key, tempValue);
+                this.saveData();
+                return tempValue;
+            } else {
+                return "ERROR - Key: " + key + " does not exist in the localisation file!";
+            }
         } else {
             return value;
         }

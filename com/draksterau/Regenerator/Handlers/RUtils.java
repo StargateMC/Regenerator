@@ -111,7 +111,11 @@ public class RUtils extends RObject {
                     console.sendMessage(getFancyName() + ChatColor.RED + "[" + type.toUpperCase() + "]: " + message);
                     plugin.disablePlugin();
                 } else {
-                    this.throwMessage("severe",String.format(this.plugin.lang.getForKey("messages.errorThrowingMessage")));
+                    if ("new".equals(type)) {
+                        console.sendMessage(getFancyName() + ChatColor.LIGHT_PURPLE + "[" + type.toUpperCase() + "]: " + message);
+                    } else {
+                        this.throwMessage("severe",String.format(this.plugin.lang.getForKey("messages.errorThrowingMessage")));
+                    }
                 }
             }
         }
