@@ -62,6 +62,10 @@ public class ChunkTask extends BukkitRunnable {
                RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". Unloaded chunks are disabled for auto regeneration in global configuration.");
                return;
             }
+            if (RChunk.getChunk().getWorld().isChunkInUse(RChunk.chunkX, RChunk.chunkZ) && RChunk.plugin.config.regenerateChunksInUseByPlayers) {
+               RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". One or more players are using this chunk (Players can be ignored in config).");
+               return;
+            }
             
             if (!RChunk.getChunk().isLoaded()) {
                 RChunk.plugin.utils.throwMessage("info", "Loading chunk to regenerate!");
@@ -70,6 +74,12 @@ public class ChunkTask extends BukkitRunnable {
             }
             
             RChunk.plugin.utils.throwMessage("info","Regenerating : " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName);
+            
+            if (RChunk.plugin.config.clearRegeneratedChunksOfEntities) {
+                RChunk.plugin.utils.throwMessage("info", "Clearing entities from chunk...");
+                RChunk.plugin.utils.clearEntitiesFromChunk(RChunk);
+            }
+            
             if (RChunk.getWorld().regenerateChunk(RChunk.chunkX,RChunk.chunkZ)) {
               //  log.log(Level.INFO, "Chunk regenerated successfully for chunk: {0},{1} on world: {2}", new Object[]{chunk.getX(), chunk.getZ(), chunk.getWorld().getName()});
             } else {
@@ -86,6 +96,7 @@ public class ChunkTask extends BukkitRunnable {
             for (BlockPopulator pop : RChunk.getWorld().getPopulators()) {
                 pop.populate(RChunk.getWorld(),random, RChunk.getChunk());
             }
+            
             if (RChunk.getWorld().refreshChunk(RChunk.chunkX,RChunk.chunkZ)) {
            //     log.log(Level.INFO, "Chunk refreshed successfully for chunk: {0},{1} on world: {2}", new Object[]{chunk.getX(), chunk.getZ(), chunk.getWorld().getName()});
             } else {

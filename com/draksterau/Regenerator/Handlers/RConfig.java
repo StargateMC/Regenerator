@@ -8,6 +8,8 @@ package com.draksterau.Regenerator.Handlers;
 import com.draksterau.Regenerator.RegeneratorPlugin;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
@@ -51,6 +53,15 @@ public final class RConfig extends RObject {
     // Set this to true to allow unloaded chunks to regenerate.
     public boolean targetUnloadedChunks = true;
     
+    // Should this plugin respect that chunks are in use by players.
+    public boolean regenerateChunksInUseByPlayers = false;
+    
+    // Should this plugin clear the chunk of all entities? This includes dropped items, villagers, zombies and all!
+    public boolean clearRegeneratedChunksOfEntities = false;
+    
+    // List of entity types that should be excluded from regenerating.
+    public List<String> excludeEntityTypesFromRegeneration = new ArrayList<String>();
+    
     public RConfig(RegeneratorPlugin plugin) {
         super(plugin);
         this.loadData();
@@ -59,7 +70,6 @@ public final class RConfig extends RObject {
 
     public void validate() {
         if (minTpsRegen > 20 || minTpsRegen < 1) minTpsRegen = 15;
-        
     }
     @Override
     void loadData() {
@@ -104,6 +114,21 @@ public final class RConfig extends RObject {
             this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "targetUnloadedChunks", this.configFile.getName()));
         } else {
             this.targetUnloadedChunks = config.getBoolean("targetUnloadedChunks");
+        }
+        if (!config.isSet("regenerateChunksInUseByPlayers")) {
+            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "regenerateChunksInUseByPlayers", this.configFile.getName()));
+        } else {
+            this.regenerateChunksInUseByPlayers = config.getBoolean("regenerateChunksInUseByPlayers");
+        }
+        if (!config.isSet("clearRegeneratedChunksOfEntities")) {
+            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "clearRegeneratedChunksOfEntities", this.configFile.getName()));
+        } else {
+            this.clearRegeneratedChunksOfEntities = config.getBoolean("clearRegeneratedChunksOfEntities");
+        }
+        if (!config.isSet("excludeEntityTypesFromRegeneration")) {
+            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "excludeEntityTypesFromRegeneration", this.configFile.getName()));
+        } else {
+            this.excludeEntityTypesFromRegeneration = config.getStringList("excludeEntityTypesFromRegeneration");
         }
     }
 
@@ -164,10 +189,14 @@ public final class RConfig extends RObject {
         config.set("distanceNearbyMinimum", this.distanceNearbyMinimum);
         config.set("targetLoadedChunks", this.targetLoadedChunks);
         config.set("targetUnloadedChunks", this.targetUnloadedChunks);
+        config.set("regenerateChunksInUseByPlayers", this.regenerateChunksInUseByPlayers);
+        config.set("clearRegeneratedChunksOfEntities", this.clearRegeneratedChunksOfEntities);
+        config.set("excludeEntityTypesFromRegeneration", this.excludeEntityTypesFromRegeneration);
         try {
             config.save(configFile);
         } catch (IOException ex) {
             plugin.utils.throwMessage("severe",String.format(plugin.lang.getForKey("messages.cantSaveGlobalConfig"), configFile.getAbsolutePath(), ex.getMessage()));
-        }    }
+        }    
+    }
     
 }

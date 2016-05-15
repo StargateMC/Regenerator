@@ -313,7 +313,16 @@ public class RUtils extends RObject {
      }
     }
     
-    
+    public void clearEntitiesFromChunk (RChunk rChunk) {
+        int count = 0;
+        for (Entity e : rChunk.getChunk().getEntities()) {
+            if (plugin.config.excludeEntityTypesFromRegeneration.contains(e.getType().getName())) continue;
+            if (e instanceof Player) continue;
+            e.remove();
+            count++;
+        }   
+        throwMessage("info", "Removed " + count + " entities from chunk!");
+    }
     
     public boolean validateChunkInactivity (RChunk rChunk) {
         

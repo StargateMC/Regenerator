@@ -15,10 +15,13 @@
 # distanceNearbyMinimum (int) is the number of blocks away a player must be before the regeneration event is allowed to occur.
 # targetUnloadedChunks when set to true will cause regenerator to process unloaded chunks when automatically regenerating.
 # targetLoadedChunks when set to true will cause regenerator to process loaded chunks when automatically regenerating.
+# clearRegeneratedChunksOfEntities when set to true will cause regenerator to clear any living or item based entity from the chunk being regenerated.
+# regenerateChunksInUseByPlayers when set to true will regenerate chunks that are currently loaded by players. This may have graphical issues that require a relog.
+# excludeEntityTypesFromRegeneration is a string list of all type names (as defined in : https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html). This support Forge Entity Types also, for example, CustomNPCs as below.
 ############################################################################################################################
 ---
 
-configVersion: 3.1.3
+configVersion: 3.1.4
 noGriefRun: false
 minTpsRegen: 15
 defaultAutoRegen: false
@@ -29,3 +32,7 @@ numChunksPerParse: 5
 distanceNearbyMinimum: 16
 targetUnloadedChunks: true
 targetLoadedChunks: false
+regenerateChunksInUseByPlayers: false
+clearRegeneratedChunksOfEntities: false
+excludeEntityTypesFromRegeneration:
+    - CUSTOMNPCS_CUSTOMNPC
