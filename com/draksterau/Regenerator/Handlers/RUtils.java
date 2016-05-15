@@ -111,7 +111,7 @@ public class RUtils extends RObject {
                     console.sendMessage(getFancyName() + ChatColor.RED + "[" + type.toUpperCase() + "]: " + message);
                     plugin.disablePlugin();
                 } else {
-                    this.throwMessage("severe","Fatal call to throwMessage, valid message types are severe,info,warning");
+                    this.throwMessage("severe",String.format(this.plugin.lang.getForKey("messages.errorThrowingMessage")));
                 }
             }
         }
@@ -252,10 +252,10 @@ public class RUtils extends RObject {
     
     public void loadWorlds() {
         for (World world : Bukkit.getWorlds()) {
-            throwMessage("info", "Loading World : " + world.getName());
+            throwMessage("info", String.format(this.plugin.lang.getForKey("messages.loadingWorld"), world.getName()));
             RWorld RWorld = new RWorld(plugin, world);
             plugin.loadedWorlds.add(RWorld);
-            throwMessage("info", "Loaded World : " + world.getName());
+            throwMessage("info", String.format(this.plugin.lang.getForKey("messages.loadedWorld"), world.getName()));
         }
     }
     public void initAvailableIntegrations() {
@@ -353,17 +353,18 @@ public class RUtils extends RObject {
                         integration.RegeneratorPlugin = plugin;
                         integration.validateConfig();
                         plugin.loadedIntegrations.add(integration);
-                        throwMessage("info", "[" + module[2] + "] Detected Plugin: " + integration.getPluginName() + " v" + integration.getPluginVersion() + ": Loading " + module[2] + "!");
+
+                        throwMessage("info", "[" + module[2] + "] " + String.format(plugin.lang.getForKey("messages.detectedAndLoadingIntegration"), integration.getPluginName(), integration.getPluginVersion(), module[2]));
                     }
                 } else {
-                    throwMessage("warning", "[" + module[2] + "] Incompatible version of Plugin: " + module[0] + " (v" + Bukkit.getPluginManager().getPlugin(module[0]).getDescription().getVersion() + " and not v" + module[1] + ").");
-                    throwMessage("warning", "Disabling " + module[2] + " module.");
+                    throwMessage("warning", "[" + module[2] + "] " + String.format(plugin.lang.getForKey("messages.detectedInvalidVersionForIntegration"), module[0], Bukkit.getPluginManager().getPlugin(module[0]).getDescription().getVersion(), module[1]));
+                    throwMessage("warning", String.format(plugin.lang.getForKey("messages.disableIntegration"), module[2]));
                 }
             }
         } catch (ClassNotFoundException ex) {
-            throwMessage("severe", "Failed to load integration for plugin: " + plugin + ". Please contact Bysokar for support!");
+            throwMessage("severe", String.format(plugin.lang.getForKey("messages.integrationUnsupported"), plugin));
         } catch (InstantiationException | IllegalAccessException ex) {
-            throwMessage("severe", "Failed to load integration for plugin: " + plugin + " (Exception: " + ex.getMessage() + " is not compatible!)");
+            throwMessage("severe", String.format(plugin.lang.getForKey("messages.integrationUnsupportedShouldBe"), plugin));
             ex.printStackTrace();
         }
         

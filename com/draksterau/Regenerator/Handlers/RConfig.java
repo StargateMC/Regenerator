@@ -108,7 +108,7 @@ public final class RConfig extends RObject {
             this.percentIntervalRuntime = 0.5;
         }
         if (this.numChunksPerParse > (((this.parseInterval * 10)) * this.percentIntervalRuntime) || this.numChunksPerParse < 1) {
-            this.plugin.utils.throwMessage("warning", "Regenerator will only process a maximum of 1 chunk per 0.1 seconds and must be at least 1. The Maximum with your parse interval is (" + ((this.parseInterval * 10) * this.percentIntervalRuntime) + "). Defaulting this back to 50% of the maximum for your parseInterval.");
+            this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.numChunksPerParseInvalid"), String.valueOf((((this.parseInterval * 10)) * this.percentIntervalRuntime)/2)));
             this.numChunksPerParse = (((this.parseInterval * 5)) * this.percentIntervalRuntime);
         }
         this.saveData();
@@ -127,7 +127,7 @@ public final class RConfig extends RObject {
         try {
             config.save(configFile);
         } catch (IOException ex) {
-            plugin.utils.throwMessage("severe","Could not save global config to " + configFile + " (Exception: " + ex.getMessage() + ")");
+            plugin.utils.throwMessage("severe",String.format(plugin.lang.getForKey("messages.cantSaveGlobalConfig"), configFile.getAbsolutePath(), ex.getMessage()));
         }    }
     
 }

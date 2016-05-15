@@ -30,14 +30,14 @@ public final class RLang extends RObject {
     @Override
     void loadData() {
         // Attempt to load the config file.
-        langConfigFile = new File(plugin.getDataFolder() + "/localisation.yml");
+        langConfigFile = new File(plugin.getDataFolder() + "/messages.yml");
         // Attempt to read the config in the config file.
         langConfig = YamlConfiguration.loadConfiguration(langConfigFile);
         // If the config file is null (due to the config file being invalid or not there) create a new one.
         // If the file doesnt exist, populate it from the template.
         if (!langConfigFile.exists()) {
-            langConfigFile = new File(plugin.getDataFolder() + "/localisation.yml");
-            langConfig = YamlConfiguration.loadConfiguration(plugin.getResource("localisation.yml"));
+            langConfigFile = new File(plugin.getDataFolder() + "/messages.yml");
+            langConfig = YamlConfiguration.loadConfiguration(plugin.getResource("messages.yml"));
             saveData();
         }
     }
@@ -56,7 +56,7 @@ public final class RLang extends RObject {
         try {
             langConfig.save(langConfigFile);
         } catch (IOException ex) {
-            plugin.utils.throwMessage("severe","Could not save localisation config to " + langConfigFile + " (Exception: " + ex.getMessage() + ")");
+            plugin.utils.throwMessage("severe","Could not save localisation config to " + langConfigFile.getAbsolutePath() + " (Exception: " + ex.getMessage() + ")");
         }    
     }
 

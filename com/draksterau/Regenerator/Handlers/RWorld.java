@@ -115,15 +115,15 @@ public final class RWorld extends RObject {
 
     public void validateWorld() {
         if (regenInterval < plugin.config.parseInterval) {
-            this.plugin.utils.throwMessage("warning", "World: " + this.world.getName() + " is set to regenerate more quickly than Regenerator checks for inactive chunks (Parse interval in global.yml).");
-            this.plugin.utils.throwMessage("warning", "It is recommended you increase this worlds regenInterval or decrease the global parseInterval!");
+            this.plugin.utils.throwMessage("warning", String.format(plugin.lang.getForKey("messages.regenIntervalTooFrequent"), this.world.getName()));
+            this.plugin.utils.throwMessage("warning", String.format(plugin.lang.getForKey("messages.regenIntervalTooFrequentSuggestion")));
         }
         if (regenInterval > (86400 * 30)) {
-            this.plugin.utils.throwMessage("warning", "World: " + this.world.getName() + " has a regeneration interval of more than 30 days. Setting this back to the maximum (30 days).");
+            this.plugin.utils.throwMessage("warning", String.format(plugin.lang.getForKey("messages.regenIntervalAboveMax"), this.world.getName(), "30"));
             this.regenInterval = 86400*30;
         }
         if (regenInterval < 600) {
-            this.plugin.utils.throwMessage("warning", "World: " + this.world.getName() + " has a regeneration interval of less than 10 minutes. Setting this back to the minimum of 10 minutes.");
+            this.plugin.utils.throwMessage("warning", String.format(plugin.lang.getForKey("messages.regenIntervalBelowMin"), this.world.getName(), "10"));
             this.regenInterval = 600;
         }
         this.saveData();
@@ -139,7 +139,7 @@ public final class RWorld extends RObject {
         try {
             worldConfig.save(worldConfigFile);
         } catch (IOException ex) {
-            plugin.utils.throwMessage("severe","Could not save world config to " + worldConfigFile + " (Exception: " + ex.getMessage() + ")");
+            plugin.utils.throwMessage("severe",String.format(plugin.lang.getForKey("messages.cantSaveWorldConfig"), configFile.getAbsolutePath(), ex.getMessage()));
         }
     }
 }

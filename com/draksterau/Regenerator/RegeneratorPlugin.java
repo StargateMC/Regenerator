@@ -46,11 +46,11 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
         // Config gets loaded here in onEnable()
         config = new RConfig(this);
         
-        utils.throwMessage("info", "Loading Regenerator!");
+        utils.throwMessage("info", String.format(lang.getForKey("messages.pluginLoading"), config.configVersion));
         utils.initAvailableIntegrations();
         utils.loadIntegrations();
         if (this.isEnabled()) {
-            utils.throwMessage("info", lang.getForKey("messages.pluginStarting") + " v" + config.configVersion);
+            utils.throwMessage("info", String.format(lang.getForKey("messages.pluginStarting"), config.configVersion));
             if (loadedIntegrations.isEmpty()) {
                 if (config.noGriefRun) {
                     utils.throwMessage("warning", "No supported grief protection plugins found. No land will be protected from regeneration via external plugins!");
