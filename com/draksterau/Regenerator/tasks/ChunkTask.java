@@ -21,6 +21,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class ChunkTask extends BukkitRunnable {
     
+    private boolean wasUnloaded;
     RChunk RChunk;
     private Logger log = Logger.getLogger("Minecraft");
     
@@ -48,6 +49,13 @@ public class ChunkTask extends BukkitRunnable {
                 RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". TPS is below that defined in global configuration.");
                 return;
             }
+            
+            if (!RChunk.getChunk().isLoaded()) {
+                RChunk.plugin.utils.throwMessage("info", "Loading chunk to regenerate, as it is needed to properly handle regeneration!");
+                RChunk.getChunk().load();
+                wasUnloaded = true;
+            }
+            
             RChunk.plugin.utils.throwMessage("info","Regenerating : " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName);
             if (RChunk.getWorld().regenerateChunk(RChunk.chunkX,RChunk.chunkZ)) {
               //  log.log(Level.INFO, "Chunk regenerated successfully for chunk: {0},{1} on world: {2}", new Object[]{chunk.getX(), chunk.getZ(), chunk.getWorld().getName()});
@@ -71,6 +79,10 @@ public class ChunkTask extends BukkitRunnable {
                 log.log(Level.SEVERE, "Chunk refreshed failed for chunk: {0},{1} on world: {2}", new Object[]{RChunk.chunkX, RChunk.chunkZ, RChunk.getWorldName()});
             }
             RChunk.resetActivity();
+            if (wasUnloaded) {
+                RChunk.plugin.utils.throwMessage("info", "Unloading regenerated chunk, as it was only loaded to regenerate!");
+                RChunk.getChunk().unload();
+            }
     }
 }
 
