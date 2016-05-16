@@ -66,7 +66,10 @@ public class ChunkTask extends BukkitRunnable {
                RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". One or more players are using this chunk (Players can be ignored in config).");
                return;
             }
-            
+            if (RChunk.plugin.config.warpDriveCompatibility && RChunk.plugin.utils.isWarpCoreNearby(RChunk.getChunk()) != null) {
+               RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". A WarpDrive ship core has been detected too close to this chunk.");
+               return;
+            }
             if (!RChunk.getChunk().isLoaded()) {
                 RChunk.plugin.utils.throwMessage("info", "Loading chunk to regenerate!");
                 RChunk.getChunk().load();

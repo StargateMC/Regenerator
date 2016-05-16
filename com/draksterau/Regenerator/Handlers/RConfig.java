@@ -59,6 +59,9 @@ public final class RConfig extends RObject {
     // Should this plugin clear the chunk of all entities? This includes dropped items, villagers, zombies and all!
     public boolean clearRegeneratedChunksOfEntities = false;
     
+    // Should this plugin not regenerate near WarpDrive ships?
+    public boolean warpDriveCompatibility = false;
+    
     // List of entity types that should be excluded from regenerating.
     public List<String> excludeEntityTypesFromRegeneration = new ArrayList<String>();
     
@@ -130,6 +133,11 @@ public final class RConfig extends RObject {
         } else {
             this.excludeEntityTypesFromRegeneration = config.getStringList("excludeEntityTypesFromRegeneration");
         }
+        if (!config.isSet("warpDriveCompatibility")) {
+            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "warpDriveCompatibility", this.configFile.getName()));
+        } else {
+            this.warpDriveCompatibility = config.getBoolean("warpDriveCompatibility");
+        }
     }
 
     public void updateConfig() {
@@ -192,6 +200,7 @@ public final class RConfig extends RObject {
         config.set("regenerateChunksInUseByPlayers", this.regenerateChunksInUseByPlayers);
         config.set("clearRegeneratedChunksOfEntities", this.clearRegeneratedChunksOfEntities);
         config.set("excludeEntityTypesFromRegeneration", this.excludeEntityTypesFromRegeneration);
+        config.set("warpDriveCompatibility", this.warpDriveCompatibility);
         try {
             config.save(configFile);
         } catch (IOException ex) {

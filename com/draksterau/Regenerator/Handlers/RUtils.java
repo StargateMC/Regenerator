@@ -14,7 +14,9 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
@@ -165,7 +167,19 @@ public class RUtils extends RObject {
         double distance = Math.sqrt(Math.pow(sx-dx,2) + Math.pow(sx-dx,2) + Math.pow(sz-dz,2));
         return distance;
     }
-    
+    public Location isWarpCoreNearby(Chunk c) {
+        World world = c.getWorld();
+        for (Chunk ch : world.getLoadedChunks()) {
+            for (BlockState te : ch.getTileEntities()) {
+                if (te.getType().name().equals("WARPDRIVE_BLOCKSHIPCORE")) {
+                    if (distance(te.getLocation().getX(), 100.0, te.getLocation().getZ(),(c.getX()*16), 100.0,(c.getZ()*16)) < 128) {
+                        return te.getLocation();
+                    }
+                }
+            }
+        }
+        return null;
+    }
     // Gets the count of online players in a chunk.
     public int onlinePlayersInChunk(Chunk chunk) {
         int count = 0;
