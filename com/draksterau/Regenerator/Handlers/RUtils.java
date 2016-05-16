@@ -172,7 +172,7 @@ public class RUtils extends RObject {
         for (Chunk ch : world.getLoadedChunks()) {
             for (BlockState te : ch.getTileEntities()) {
                 if (te.getType().name().equals("WARPDRIVE_BLOCKSHIPCORE")) {
-                    if (distance(te.getLocation().getX(), 100.0, te.getLocation().getZ(),(c.getX()*16), 100.0,(c.getZ()*16)) < 128) {
+                    if (distance(te.getLocation().getX(), 100.0, te.getLocation().getZ(),(c.getX()*16), 100.0,(c.getZ()*16)) < 182) {
                         return te.getLocation();
                     }
                 }
