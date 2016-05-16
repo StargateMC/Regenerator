@@ -44,7 +44,7 @@ public final class FactionsIntegration extends Integration {
     
     @Override
     public boolean isChunkClaimed(Chunk chunk) {
-        if (!getFactionsFromConfig().contains(getFactionForChunk(chunk).getName())) {
+        if (!getFactionsFromConfig().contains(getFactionForChunk(chunk).getName()) && !getFactionForChunk(chunk).getId().equals("none")) {
             return true;
         } else {
             return false;
