@@ -2,8 +2,8 @@
 ---
 
 messages:
-    pluginStarting: "Starting Regenerator v%s"
-    pluginLoading: "Loading Regenerator v%s"
+    pluginStarting: "Starting SRegen v%s"
+    pluginLoading: "Loading SRegen v%s"
     loadingWorld: "Loading World: %s"
     loadedWorld: "Loaded World: %s"
     oldConfigFileUpdating: Detected old config file.... updating!
@@ -13,7 +13,7 @@ messages:
     parseSchedule: "Scheduling next parse for %s seconds from now and parsing every %s seconds"
     tpsInvalid: "TPS meter must have a valid TPS setting, between 1-20. Resetting this to the default of  %s."
     runtimeInvalid: "Parse runtime must be between 0.1 and 1.0. Resetting this to the default of  %s."
-    numChunksPerParseInvalid: "numChunksPerParse is invalid. Regenerator will process a maximum of 1 chunk per 0.1 seconds. Resetting to %s."
+    numChunksPerParseInvalid: "numChunksPerParse is invalid. SRegen will process a maximum of 1 chunk per 0.1 seconds. Resetting to %s."
     cantSaveGlobalConfig: "Unable to save global configuration to %s. (Exception: %s)"
     cantSaveWorldConfig: "Unable to save world configuration to %s. (Exception: %s)"
     errorThrowingMessage: "Fatal call to throwMessage() method. Valid types are info, warning, severe"
@@ -22,7 +22,7 @@ messages:
     disableIntegration: "Disabling %s module"
     integrationUnsupported: "Failed to load integration for plugin %s. Please contact Bysokar for support!"
     integrationUnsupportedShouldBe: "Failed to load integration for plugin %s. Check console logs and report any errors to Bysokar!"
-    regenIntervalTooFrequent: "World: %s is set to regenerate more quickly than regenerator checks for inactive chunks (parseInterval in global.yml)"
+    regenIntervalTooFrequent: "World: %s is set to regenerate more quickly than SRegen checks for inactive chunks (parseInterval in global.yml)"
     regenIntervalTooFrequentSuggestion: "It is recommended you increase the worlds regenInterval or decrease the global parseInterval"
     regenIntervalAboveMax: "The regeneration interval for %s is too infrequent. It must be less than %s days. Resetting to maximum."
     regenIntervalBelowMin: "The regeneration interval for %s is too frequent. It must be more than %s minutes.Resetting to minimum."
