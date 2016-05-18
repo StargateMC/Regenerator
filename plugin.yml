@@ -4,7 +4,7 @@ version: 3.1.7
 softdepend: [ Factions, GriefPrevention, WorldGuard, RedProtect, Landlord, Towny ]
 description: Regenerator is a perpetual world plugin that supports many grief prevention plugins.
 author: Bysokar
-website: https://www.spigotmc.org/resources/regenerator.21896/
+website: https://www.spigotmc.org/resources/regenerator.23409/
 commands:
    regenerator:
       description: Core Regenerator command.
