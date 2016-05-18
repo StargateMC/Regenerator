@@ -1,5 +1,5 @@
 ############################################################################################################################
-## SRegen, a Perpetual world plugin that integrates with Multiverse, Multiworld and several grief prevention plugins.##
+## Regenerator, a Perpetual world plugin that integrates with Multiverse, Multiworld and several grief prevention plugins.##
 ############################################################################################################################
 # The main configuration file no longer stores any data relating to what worlds to handle etc.
 # For integration configuration, please see the /integrations/<plugin>.yml file associated with your grief protection plugin.
@@ -13,9 +13,9 @@
 # parseInterval (long) is the time in seconds between checks for inactive chunks.
 # numChunksPerParse (long) is the number of chunks total that can be regenerated per parse. (Additional inactive chunks will be delayed to next parse)
 # distanceNearbyMinimum (int) is the number of blocks away a player must be before the regeneration event is allowed to occur.
-# targetUnloadedChunks when set to true will cause SRegen to process unloaded chunks when automatically regenerating.
-# targetLoadedChunks when set to true will cause SRegen to process loaded chunks when automatically regenerating.
-# clearRegeneratedChunksOfEntities when set to true will cause SRegen to clear any living or item based entity from the chunk being regenerated.
+# targetUnloadedChunks when set to true will cause regenerator to process unloaded chunks when automatically regenerating.
+# targetLoadedChunks when set to true will cause regenerator to process loaded chunks when automatically regenerating.
+# clearRegeneratedChunksOfEntities when set to true will cause regenerator to clear any living or item based entity from the chunk being regenerated.
 # regenerateChunksInUseByPlayers when set to true will regenerate chunks that are currently loaded by players. This may have graphical issues that require a relog.
 # excludeEntityTypesFromRegeneration is a string list of all type names (as defined in : https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html). This support Forge Entity Types also, for example, CustomNPCs as below.
 ############################################################################################################################

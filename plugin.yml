@@ -1,11 +1,11 @@
-name: SRegen
-main: com.stargatemc.SRegen.SRegen
-version: 3.1.8
+name: Regenerator
+main: com.draksterau.Regenerator.RegeneratorPlugin
+version: 3.1.7
 softdepend: [ Factions, GriefPrevention, WorldGuard, RedProtect, Landlord, Towny ]
-description: SRegen is a perpetual world plugin that supports many grief prevention plugins.
+description: Regenerator is a perpetual world plugin that supports many grief prevention plugins.
 author: Bysokar
-website: https://www.spigotmc.org/resources/SRegen.23409/
+website: https://www.spigotmc.org/resources/regenerator.23409/
 commands:
-   sregen:
-      description: Core SRegen command.
-      usage: /sregen
+   regenerator:
+      description: Core Regenerator command.
+      usage: /regenerator

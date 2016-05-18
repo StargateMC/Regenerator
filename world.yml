@@ -2,7 +2,7 @@
 # regenInterval (long) is the number of seconds a chunk must be inactive for before it can regenerate (manually or automatically).
 # autoRegen (true/false) is whether or not chunks can automatically regenerate on this world. Overrides all other triggers.
 # manualRegen (true/false) is whether or not chunks can manually regenerate on this world. Overrides all other triggers.
-# maxBlockAutoRegen (long) is the world border for SRegen. Anything outside this X or Z coordinate will not be touched. (0 = not enabled)
+# maxBlockAutoRegen (long) is the world border for regenerator. Anything outside this X or Z coordinate will not be touched. (0 = not enabled)
 # minBlockAutoRegen (long) is the number of blocks from the spawn point that are excluded from automatic regeneration. (0 = not enabled)
 ---
 
