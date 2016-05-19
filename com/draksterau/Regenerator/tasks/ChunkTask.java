@@ -24,9 +24,11 @@ public class ChunkTask extends BukkitRunnable {
     private boolean wasUnloaded;
     RChunk RChunk;
     private Logger log = Logger.getLogger("Minecraft");
+    private boolean isManual;
     
-    public ChunkTask (RChunk RChunk) {
+    public ChunkTask (RChunk RChunk, boolean isManual) {
         this.RChunk = RChunk;
+        this.isManual = isManual;
     }
     
     
@@ -49,26 +51,27 @@ public class ChunkTask extends BukkitRunnable {
                 RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". TPS is below that defined in global configuration.");
                 return;
             }
-            
-            if (!RChunk.plugin.utils.getPlayersNearChunk(RChunk, RChunk.plugin.config.distanceNearbyMinimum).isEmpty()) {
-               RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". There are players closer than " + RChunk.plugin.config.distanceNearbyMinimum + " blocks away.");
-               return;
-            }
-            if (RChunk.getChunk().isLoaded() && !RChunk.plugin.config.targetLoadedChunks) {
-               RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". Loaded chunks are disabled for auto regeneration in global configuration.");
-               return;
-            }
-            if (!RChunk.getChunk().isLoaded() && !RChunk.plugin.config.targetUnloadedChunks) {
-               RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". Unloaded chunks are disabled for auto regeneration in global configuration.");
-               return;
-            }
-            if (RChunk.getChunk().getWorld().isChunkInUse(RChunk.chunkX, RChunk.chunkZ) && !RChunk.plugin.config.regenerateChunksInUseByPlayers) {
-               RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". One or more players are using this chunk (Players can be ignored in config).");
-               return;
-            }
-            if (RChunk.plugin.config.warpDriveCompatibility && RChunk.plugin.utils.isWarpCoreNearby(RChunk.getChunk()) != null) {
-               RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". A WarpDrive ship core has been detected too close to this chunk.");
-               return;
+            if (!isManual) {
+                if (!RChunk.plugin.utils.getPlayersNearChunk(RChunk, RChunk.plugin.config.distanceNearbyMinimum).isEmpty()) {
+                   RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". There are players closer than " + RChunk.plugin.config.distanceNearbyMinimum + " blocks away.");
+                   return;
+                }
+                if (RChunk.getChunk().isLoaded() && !RChunk.plugin.config.targetLoadedChunks) {
+                   RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". Loaded chunks are disabled for auto regeneration in global configuration.");
+                   return;
+                }
+                if (!RChunk.getChunk().isLoaded() && !RChunk.plugin.config.targetUnloadedChunks) {
+                   RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". Unloaded chunks are disabled for auto regeneration in global configuration.");
+                   return;
+                }
+                if (RChunk.getChunk().getWorld().isChunkInUse(RChunk.chunkX, RChunk.chunkZ) && !RChunk.plugin.config.regenerateChunksInUseByPlayers) {
+                   RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". One or more players are using this chunk (Players can be ignored in config).");
+                   return;
+                }
+                if (RChunk.plugin.config.warpDriveCompatibility && RChunk.plugin.utils.isWarpCoreNearby(RChunk.getChunk()) != null) {
+                   RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". A WarpDrive ship core has been detected too close to this chunk.");
+                   return;
+                }
             }
             if (!RChunk.getChunk().isLoaded()) {
                 RChunk.plugin.utils.throwMessage("info", "Loading chunk to regenerate!");
