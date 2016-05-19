@@ -34,7 +34,7 @@ public class regenCommand {
                 Chunk rootChunk = command.plugin.utils.getSenderPlayer(command.sender).getLocation().getChunk();
                 RChunk rChunk = new RChunk(command.plugin, rootChunk.getX(), rootChunk.getZ(), rootChunk.getWorld().getName());
                 if (command.plugin.utils.canManuallyRegen(command.plugin.utils.getSenderPlayer(command.sender), rootChunk)) {
-                    Bukkit.getServer().getScheduler().runTask(command.plugin, new ChunkTask(rChunk));
+                    Bukkit.getServer().getScheduler().runTask(command.plugin, new ChunkTask(rChunk, true));
                     rChunk.resetActivity();
                     Player player = command.plugin.utils.getSenderPlayer(command.sender);
                     Integration integration = command.plugin.utils.getIntegrationForChunk(player.getLocation().getChunk());
