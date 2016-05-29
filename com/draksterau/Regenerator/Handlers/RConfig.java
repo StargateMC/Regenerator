@@ -24,6 +24,10 @@ public final class RConfig extends RObject {
     public RegeneratorPlugin getPlugin() {
         return plugin;
     }
+    
+    // Should Regenerator cache chunks into the database when they are loaded?
+    public boolean cacheChunksOnLoad = false;
+    
     // Interval between task parses on worlds.
     public long parseInterval = 300;
     
@@ -103,6 +107,11 @@ public final class RConfig extends RObject {
         this.parseInterval = config.getInt("parseInterval");
         this.numChunksPerParse =config.getInt("numChunksPerParse");
         this.percentIntervalRuntime = config.getDouble("percentIntervalRuntime");
+        if (!config.isSet("cacheChunksOnLoad")) {
+            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "cacheChunksOnLoad", this.configFile.getName()));
+        } else {
+            this.cacheChunksOnLoad = config.getBoolean("cacheChunksOnLoad");
+        }
         if (!config.isSet("distanceNearbyMinimum")) {
             this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "distanceNearbyMinimum", this.configFile.getName()));
         } else {
@@ -201,6 +210,7 @@ public final class RConfig extends RObject {
         config.set("clearRegeneratedChunksOfEntities", this.clearRegeneratedChunksOfEntities);
         config.set("excludeEntityTypesFromRegeneration", this.excludeEntityTypesFromRegeneration);
         config.set("warpDriveCompatibility", this.warpDriveCompatibility);
+        config.set("cacheChunksOnLoad", this.cacheChunksOnLoad);
         try {
             config.save(configFile);
         } catch (IOException ex) {
