@@ -272,6 +272,7 @@ public class RUtils extends RObject {
         for (World world : Bukkit.getWorlds()) {
             throwMessage("info", String.format(this.plugin.lang.getForKey("messages.loadingWorld"), world.getName()));
             RWorld RWorld = new RWorld(plugin, world);
+            RChunk RChunk = new RChunk(plugin, world.getSpawnLocation().getBlockX(), world.getSpawnLocation().getBlockX(), world.getName());
             plugin.loadedWorlds.add(RWorld);
             throwMessage("info", String.format(this.plugin.lang.getForKey("messages.loadedWorld"), world.getName()));
         }
