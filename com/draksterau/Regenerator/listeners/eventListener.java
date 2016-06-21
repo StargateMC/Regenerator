@@ -41,7 +41,7 @@ public class eventListener implements Listener {
         RWorld RWorld = new RWorld(RegeneratorPlugin, event.getWorld());
         // If the Plugin currently hasnt got the RWorld registered, register it.
         if (!RegeneratorPlugin.loadedWorlds.contains(RWorld)) RegeneratorPlugin.loadedWorlds.add(RWorld);
-        RChunk RChunk = new RChunk(plugin, event.getWorld().getSpawnLocation().getBlockX(), event.getWorld().getSpawnLocation().getBlockX(), event.getWorld().getName());
+        RChunk RChunk = new RChunk(RegeneratorPlugin, event.getWorld().getSpawnLocation().getBlockX(), event.getWorld().getSpawnLocation().getBlockX(), event.getWorld().getName());
         RegeneratorPlugin.utils.throwMessage("info", "Loaded World : " + event.getWorld().getName());
     }
     

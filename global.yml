@@ -21,7 +21,7 @@
 ############################################################################################################################
 ---
 
-configVersion: 3.1.9
+configVersion: 3.2.0
 noGriefRun: false
 minTpsRegen: 15
 defaultAutoRegen: false
