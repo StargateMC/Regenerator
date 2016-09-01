@@ -41,17 +41,17 @@ public class ChunkTask extends BukkitRunnable {
                 RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". The world was unloaded and will regenerate next time it is found!");
                 return;
             }
-            // Now checking if a chunk is claimed at the point of regenerating only.
-            if (!RChunk.plugin.utils.autoRegenRequirementsMet(RChunk.getChunk())) {
-                RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". It most likely was claimed?");
-                RChunk.resetActivity();
-                return;
-            }
-            if (!RChunk.plugin.utils.isLagOK()) {
-                RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". TPS is below that defined in global configuration.");
-                return;
-            }
             if (!isManual) {
+                // Now checking if a chunk is claimed at the point of regenerating only.
+                if (!RChunk.plugin.utils.autoRegenRequirementsMet(RChunk.getChunk())) {
+                    RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". It most likely was claimed?");
+                    RChunk.resetActivity();
+                    return;
+                }
+                if (!RChunk.plugin.utils.isLagOK()) {
+                    RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". TPS is below that defined in global configuration.");
+                    return;
+                }
                 if (!RChunk.plugin.utils.getPlayersNearChunk(RChunk, RChunk.plugin.config.distanceNearbyMinimum).isEmpty()) {
                    RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". There are players closer than " + RChunk.plugin.config.distanceNearbyMinimum + " blocks away.");
                    return;
