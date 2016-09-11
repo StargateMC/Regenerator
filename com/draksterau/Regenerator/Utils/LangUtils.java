@@ -3,34 +3,32 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.draksterau.Regenerator.Handlers;
+package com.draksterau.Regenerator.Utils;
 
-import com.draksterau.Regenerator.RegeneratorPlugin;
+import com.draksterau.Regenerator.Regenerator;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  *
- * @author draks
+ * @author Allison
  */
-public final class RLang extends RObject {
-
+public final class LangUtils {
+    
     private File langConfigFile;
     private FileConfiguration langConfig;
     private File langConfigFileTemp;
     private FileConfiguration langConfigTemp;
+    public JavaPlugin plugin;
     
-    public RLang(RegeneratorPlugin plugin) {
-        super(plugin);
-        this.loadData();
+    public LangUtils(JavaPlugin plugin) {
+        this.plugin = plugin;
+        loadData();
     }
-    @Override
+    
     void loadData() {
         // Attempt to load the config file.
         langConfigFile = new File(plugin.getDataFolder() + "/messages.yml");
@@ -51,26 +49,27 @@ public final class RLang extends RObject {
             langConfigFileTemp = new File(plugin.getDataFolder() + "/messages.yml");
             langConfigTemp = YamlConfiguration.loadConfiguration(plugin.getResource("messages.yml"));
             if (langConfigTemp.isSet(key)) {
-                plugin.utils.throwMessage("new","Loading default value for " + key + " as it does not exist in messages.yml!");
+                Regenerator.getInstance().getUtils().throwMessage(plugin, "new","Loading default value for " + key + " as it does not exist in messages.yml!");
                 String tempValue = langConfigTemp.getString(key);
                 langConfig.set(key, tempValue);
                 this.saveData();
                 return tempValue;
             } else {
-                return "ERROR - Key: " + key + " does not exist in the localisation file!";
+                Regenerator.getInstance().getUtils().throwMessage(plugin, "warning", "ERROR - Key: " + key + " does not exist in the localisation file. Setting to default of UNDEFINED.");
+                langConfig.set(key, "UNDEFINED");
+                saveData();
+                return "UNDEFINED";
             }
         } else {
             return value;
         }
     }
     
-    @Override
     void saveData() {
         try {
             langConfig.save(langConfigFile);
         } catch (IOException ex) {
-            plugin.utils.throwMessage("severe","Could not save localisation config to " + langConfigFile.getAbsolutePath() + " (Exception: " + ex.getMessage() + ")");
+            Regenerator.getInstance().getUtils().throwMessage(plugin, "severe","Could not save localisation config to " + langConfigFile.getAbsolutePath() + " (Exception: " + ex.getMessage() + ")");
         }    
     }
-
 }
