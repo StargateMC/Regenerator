@@ -35,6 +35,10 @@ public abstract class RIntegration {
         return pluginName;
     }
     
+    public String getRequiredVersion() {
+        return this.supportedVersion;
+    }
+    
     public String getPluginVersion() {
         return Bukkit.getPluginManager().getPlugin(pluginName).getDescription().getVersion();
     }
