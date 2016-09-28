@@ -305,7 +305,7 @@ public class RUtils extends RObject {
         plugin.availableIntergrations.add(WorldGuard);
         List<String> RedProtect = new ArrayList<String>();
         RedProtect.add("RedProtect");
-        RedProtect.add("6.6");
+        RedProtect.add("7");
         RedProtect.add("RedProtectIntegration");
         plugin.availableIntergrations.add(RedProtect);
         List<String> Factions = new ArrayList<String>();
