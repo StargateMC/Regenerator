@@ -295,7 +295,7 @@ public class RUtils extends RObject {
         plugin.availableIntergrations.add(FactionsUUID);
         List<String> GriefPrevention = new ArrayList<String>();
         GriefPrevention.add("GriefPrevention");
-        GriefPrevention.add("15");
+        GriefPrevention.add("16");
         GriefPrevention.add("GriefPreventionIntegration");
         plugin.availableIntergrations.add(GriefPrevention);
         List<String> WorldGuard = new ArrayList<String>();
