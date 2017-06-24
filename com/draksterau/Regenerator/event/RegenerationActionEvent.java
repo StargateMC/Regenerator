@@ -5,7 +5,6 @@
  */
 package com.draksterau.Regenerator.event;
 
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 
 /**
