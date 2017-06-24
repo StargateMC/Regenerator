@@ -6,12 +6,13 @@
 package com.draksterau.Regenerator.tasks;
 
 import com.draksterau.Regenerator.Handlers.RChunk;
+import com.draksterau.Regenerator.event.RegenerationActionEvent;
 import static java.lang.Math.random;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -42,6 +43,25 @@ public class ChunkTask extends BukkitRunnable {
                     RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". The world was unloaded and will regenerate next time it is found!");
                     return;
                 }
+                
+                // Now fires an action event for other plugins to cancel.
+                
+                // Creating fake location for the regeneration event. For future region based support.
+                Location location = new Location(this.RChunk.getWorld(), (RChunk.chunkX*16), 0.0, (RChunk.chunkZ*16));
+                RegenerationActionEvent actionEvent = new RegenerationActionEvent(location);
+                
+                Bukkit.getServer().getPluginManager().callEvent(actionEvent);
+                if (actionEvent.isCancelled()) {
+                    int reasonCount = 1;                                            
+                    RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ", for the following reason(s):");
+                    for (String s : actionEvent.getCancelledReasons().keySet()) {
+                        RChunk.plugin.utils.throwMessage("info", "Skip reason " + reasonCount + ": " + s + " provided by : " + actionEvent.getCancelledReasons().get(s).getName() + ".");
+                        reasonCount++;
+                    }
+                    RChunk.resetActivity();
+                    return;        
+                }
+                
                 // Now checking if a chunk is claimed at the point of regenerating only.
                 if (!RChunk.plugin.utils.autoRegenRequirementsMet(RChunk.getChunk())) {
                     RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". It most likely was claimed?");

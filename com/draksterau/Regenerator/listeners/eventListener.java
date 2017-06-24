@@ -8,6 +8,10 @@ package com.draksterau.Regenerator.listeners;
 import com.draksterau.Regenerator.RegeneratorPlugin;
 import com.draksterau.Regenerator.Handlers.RChunk;
 import com.draksterau.Regenerator.Handlers.RWorld;
+import com.draksterau.Regenerator.event.RegenerationRequestEvent;
+import com.draksterau.Regenerator.event.RequestTrigger;
+import com.draksterau.Regenerator.tasks.ChunkTask;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -71,16 +75,27 @@ public class eventListener implements Listener {
     
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
+        RegenerationRequestEvent requestEvent = new RegenerationRequestEvent(event.getBlock().getLocation(), event.getPlayer(), RequestTrigger.Place, this.RegeneratorPlugin);
+        Bukkit.getServer().getPluginManager().callEvent(requestEvent);     
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    public void onRegenerationRequest(RegenerationRequestEvent event) {
         RChunk rChunk = new RChunk(RegeneratorPlugin, event.getBlock().getChunk().getX(), event.getBlock().getChunk().getZ(), event.getBlock().getWorld().getName());
-        if (RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk())) rChunk.updateActivity();
+        if (!event.isCancelled()) {
+            if (event.isImmediate()) {
+                Bukkit.getServer().getScheduler().runTask(this.RegeneratorPlugin, new ChunkTask(rChunk, true));
+            } else {
+                if (RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk())) rChunk.updateActivity();
+            }
+        }
         if (!RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk()) && rChunk.lastActivity != 0) rChunk.resetActivity();
     }
     
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
-        RChunk rChunk = new RChunk(RegeneratorPlugin, event.getBlock().getChunk().getX(), event.getBlock().getChunk().getZ(), event.getBlock().getWorld().getName());
-        if (RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk())) rChunk.updateActivity();
-        if (!RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk()) && rChunk.lastActivity != 0) rChunk.resetActivity();
+        RegenerationRequestEvent requestEvent = new RegenerationRequestEvent(event.getBlock().getLocation(), event.getPlayer(), RequestTrigger.Place, this.RegeneratorPlugin);
+        Bukkit.getServer().getPluginManager().callEvent(requestEvent);       
     }
     
     // END BLOCK EVENTS ///
