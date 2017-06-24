@@ -82,7 +82,7 @@ public class eventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
     public void onRegenerationRequest(RegenerationRequestEvent event) {
         RChunk rChunk = new RChunk(RegeneratorPlugin, event.getBlock().getChunk().getX(), event.getBlock().getChunk().getZ(), event.getBlock().getWorld().getName());
-        if (!event.isCancelled()) {
+        if (!event.isCancelled() && !event.getTrigger().equals(RequestTrigger.Command)) {
             if (event.isImmediate()) {
                 Bukkit.getServer().getScheduler().runTask(this.RegeneratorPlugin, new ChunkTask(rChunk, true));
             } else {
