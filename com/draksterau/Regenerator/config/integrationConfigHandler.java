@@ -9,6 +9,7 @@ import com.draksterau.Regenerator.RegeneratorPlugin;
 import com.draksterau.Regenerator.integration.Integration;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -77,7 +78,7 @@ public final class integrationConfigHandler {
             integrationConfigFile = new File(plugin.getDataFolder() + "/integration/" + integration.getClass().getSimpleName() + ".yml");
         }
         if (!integrationConfigFile.exists()) {      
-            integrationConfig = YamlConfiguration.loadConfiguration(plugin.getResource("integration.yml"));
+            integrationConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("integration.yml")));
             saveIntegrationConfig();
          }
     }

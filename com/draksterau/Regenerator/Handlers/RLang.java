@@ -8,6 +8,7 @@ package com.draksterau.Regenerator.Handlers;
 import com.draksterau.Regenerator.RegeneratorPlugin;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ public final class RLang extends RObject {
         // If the file doesnt exist, populate it from the template.
         if (!langConfigFile.exists()) {
             langConfigFile = new File(plugin.getDataFolder() + "/messages.yml");
-            langConfig = YamlConfiguration.loadConfiguration(plugin.getResource("messages.yml"));
+            langConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("messages.yml")));
             saveData();
         }
     }
@@ -49,7 +50,7 @@ public final class RLang extends RObject {
         String value = langConfig.getString(key);
         if (value == null) {
             langConfigFileTemp = new File(plugin.getDataFolder() + "/messages.yml");
-            langConfigTemp = YamlConfiguration.loadConfiguration(plugin.getResource("messages.yml"));
+            langConfigTemp = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("messages.yml")));
             if (langConfigTemp.isSet(key)) {
                 plugin.utils.throwMessage("new","Loading default value for " + key + " as it does not exist in messages.yml!");
                 String tempValue = langConfigTemp.getString(key);
