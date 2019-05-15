@@ -8,6 +8,7 @@ package com.draksterau.Regenerator.Handlers;
 import com.draksterau.Regenerator.RegeneratorPlugin;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -88,7 +89,7 @@ public final class RConfig extends RObject {
         if (configFile == null) configFile = new File(plugin.getDataFolder() + "/global.yml");
         // If the file doesnt exist, populate it from the template.
         if (!configFile.exists()) {
-            config = YamlConfiguration.loadConfiguration(plugin.getResource("global.yml"));
+            config = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("global.yml")));
             saveData();
         }
         if (!config.isSet("configVersion")) {
