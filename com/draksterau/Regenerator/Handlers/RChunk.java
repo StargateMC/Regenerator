@@ -8,6 +8,8 @@ package com.draksterau.Regenerator.Handlers;
 import com.draksterau.Regenerator.RegeneratorPlugin;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
@@ -84,7 +86,7 @@ public final class RChunk extends RObject {
         // If the file doesnt exist, populate it from the template.
         if (!chunkConfigFile.exists()) {
             chunkConfigFile = new File(plugin.getDataFolder() + "/data/" + this.worldName + ".yml");
-            chunkConfig = YamlConfiguration.loadConfiguration(plugin.getResource("chunk.yml"));
+            chunkConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("chunk.yml")));
             saveData();
         }
         this.lastActivity = chunkConfig.getLong("chunks." + chunkX + "," + chunkZ);

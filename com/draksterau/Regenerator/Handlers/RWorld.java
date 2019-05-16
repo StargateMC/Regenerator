@@ -9,6 +9,7 @@ import com.draksterau.Regenerator.RegeneratorPlugin;
 import org.bukkit.World;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.ChatColor;
@@ -101,7 +102,7 @@ public final class RWorld extends RObject {
         // If the file doesnt exist, populate it from the template.
         if (!worldConfigFile.exists()) {
             worldConfigFile = new File(plugin.getDataFolder() + "/worlds/" + world.getName() + ".yml");
-            worldConfig = YamlConfiguration.loadConfiguration(plugin.getResource("world.yml"));
+            worldConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("world.yml")));
             if (plugin.config.defaultAutoRegen) worldConfig.set("autoRegen", true);
             if (plugin.config.defaultManualRegen) worldConfig.set("manualRegen", true);
             saveData();
