@@ -106,8 +106,8 @@ public class ChunkTask extends BukkitRunnable {
                 RChunk.plugin.utils.clearEntitiesFromChunk(RChunk);
             }
             
-            if (RChunk.getWorld().regenerateChunk(RChunk.chunkX,RChunk.chunkZ)) {
-              //  log.log(Level.INFO, "Chunk regenerated successfully for chunk: {0},{1} on world: {2}", new Object[]{chunk.getX(), chunk.getZ(), chunk.getWorld().getName()});
+            if (RChunk.plugin.utils.regenerateChunk(RChunk.getChunk())) {
+                log.log(Level.INFO, "Chunk regenerated successfully for chunk: {0},{1} on world: {2}", new Object[]{RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getChunk().getWorld().getName()});
             } else {
                 log.log(Level.SEVERE, "Chunk regeneration failed for chunk: {0},{1} on world: {2}", new Object[]{RChunk.chunkX, RChunk.chunkZ, RChunk.getWorld().getName()});
             }
@@ -118,16 +118,16 @@ public class ChunkTask extends BukkitRunnable {
             long zRand = (long) (random() / 2 * 2 + 1);
             random.setSeed((long) RChunk.chunkX * xRand + (long) RChunk.chunkZ * zRand ^ RChunk.getWorld().getSeed());
 
-            // The below code populates a chunk.
-            for (BlockPopulator pop : RChunk.getWorld().getPopulators()) {
-                pop.populate(RChunk.getWorld(),random, RChunk.getChunk());
-            }
+//            // The below code populates a chunk.
+//            for (BlockPopulator pop : RChunk.getWorld().getPopulators()) {
+//                pop.populate(RChunk.getWorld(),random, RChunk.getChunk());
+//            }
             
-            if (RChunk.getWorld().refreshChunk(RChunk.chunkX,RChunk.chunkZ)) {
-           //     log.log(Level.INFO, "Chunk refreshed successfully for chunk: {0},{1} on world: {2}", new Object[]{chunk.getX(), chunk.getZ(), chunk.getWorld().getName()});
-            } else {
-                log.log(Level.SEVERE, "Chunk refreshed failed for chunk: {0},{1} on world: {2}", new Object[]{RChunk.chunkX, RChunk.chunkZ, RChunk.getWorldName()});
-            }
+//            if (RChunk.getWorld().refreshChunk(RChunk.chunkX,RChunk.chunkZ)) {
+//           //     log.log(Level.INFO, "Chunk refreshed successfully for chunk: {0},{1} on world: {2}", new Object[]{chunk.getX(), chunk.getZ(), chunk.getWorld().getName()});
+//            } else {
+//                log.log(Level.SEVERE, "Chunk refreshed failed for chunk: {0},{1} on world: {2}", new Object[]{RChunk.chunkX, RChunk.chunkZ, RChunk.getWorldName()});
+//            }
             RChunk.resetActivity();
             if (wasUnloaded) {
                 RChunk.plugin.utils.throwMessage("info", "Unloading regenerated chunk, as it was only loaded to regenerate!");

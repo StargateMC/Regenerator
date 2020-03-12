@@ -48,6 +48,17 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
         utils.initAvailableIntegrations();
         utils.loadIntegrations();
         if (this.isEnabled()) {
+            if (getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
+                if (Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion().startsWith("7")) {
+                    utils.throwMessage("info", "Detected WorldEdit v" + Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion());
+                } else {
+                    utils.throwMessage("severe", "Detected WorldEdit v" + Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion() + ", v7.0+ is required!");
+                    this.disablePlugin();
+                }
+            } else {
+                    utils.throwMessage("severe", "Regenerator v3.4.0+ requires WorldEdit 7 or greater to perform regeneration due to limitations in the Spigot/Bukkit API after MC v1.13. Please install WorldEdit!");
+                    this.disablePlugin();
+            }
             utils.throwMessage("info", String.format(lang.getForKey("messages.pluginStarting"), config.configVersion));
             if (loadedIntegrations.isEmpty()) {
                 if (config.noGriefRun) {

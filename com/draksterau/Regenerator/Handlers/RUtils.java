@@ -8,6 +8,11 @@ package com.draksterau.Regenerator.Handlers;
 import com.draksterau.Regenerator.RegeneratorPlugin;
 import com.draksterau.Regenerator.integration.Integration;
 import com.draksterau.Regenerator.tasks.lagTask;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -65,7 +70,23 @@ public class RUtils extends RObject {
         return ChatColor.RED + "Disabled" + ChatColor.GRAY;
     }
     
-    
+    public boolean regenerateChunk(Chunk chunk) {
+        int bx = chunk.getX() << 4;
+        int bz = chunk.getZ() << 4;
+        try {
+            BlockVector3 pt1 =  BlockVector3.at(bx, 0, bz);
+            BlockVector3 pt2 = BlockVector3.at(bx + 15, 256, bz + 15);
+            BukkitWorld world = new BukkitWorld(chunk.getWorld());
+            CuboidRegion region = new CuboidRegion(world, pt1, pt2);   
+            EditSession session = WorldEdit.getInstance().getEditSessionFactory().getEditSession(world, 65536);            
+            session.flushSession();
+            return world.regenerate(region, session);
+        } catch (Exception e) {
+            plugin.utils.throwMessage("severe", "Failed to regenerate chunk at : " + bx + "," + bz + " on world : " + chunk.getWorld().getName() + " due to WorldEdit exception!");
+            e.printStackTrace();
+            return false;
+        }
+    }
     // This verifies a chunk is inactive and unclaimed.
     public boolean autoRegenRequirementsMet(Chunk chunk) {
         
