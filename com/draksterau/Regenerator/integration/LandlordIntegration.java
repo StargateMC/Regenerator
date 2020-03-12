@@ -5,11 +5,8 @@
 // */
 //package com.draksterau.Regenerator.integration;
 //
+//import biz.princeps.landlord.OwnedLand;
 //import com.draksterau.Regenerator.config.integrationConfigHandler;
-//import com.jcdesimp.landlord.Landlord;
-//import com.jcdesimp.landlord.landMap.LandMap;
-//import com.jcdesimp.landlord.landMap.MapManager;
-//import com.jcdesimp.landlord.persistantData.OwnedLand;
 //import java.util.UUID;
 //import org.bukkit.ChatColor;
 //import org.bukkit.Chunk;

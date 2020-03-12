@@ -63,11 +63,32 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
                 utils.loadWorlds();
                 
                 // This registers all event listeners.
-                getServer().getPluginManager().registerEvents(new eventListener(this), this);
+                try {
+                    getServer().getPluginManager().registerEvents(new eventListener(this), this);
+                    utils.throwMessage("info", "Successfully registered Event Listeners!");
+                } catch (Exception e) {
+                    utils.throwMessage("severe", "Failed to start event listeners. Please report this (and the below error) to the developer!");
+                    e.printStackTrace();
+                    this.disablePlugin();
+                }
                 // This registers a repeating task to measure 1 tick, so we can accurately  get TPS.
-                getServer().getScheduler().runTaskTimer(this, new lagTask(), 100L, 1L);
+                try {
+                    new lagTask().runTaskTimer(this, 100L, 1L);
+                    utils.throwMessage("info", "Successfully registered TPS Monitor!");
+                } catch (Exception e) {
+                    utils.throwMessage("severe", "Failed to start TPS monitor. Please report this (and the below error) to the developer!");
+                    e.printStackTrace();
+                    this.disablePlugin();
+                }
                 // This registers the regeneration task.
-                getServer().getScheduler().runTaskTimerAsynchronously(this, new regenTask(this), 1200, config.parseInterval * 20);
+                try {
+                    new regenTask(this).runTaskTimerAsynchronously(this,1200, config.parseInterval * 20);
+                    utils.throwMessage("info", "Successfully registered Regeneration Task!");
+                } catch (Exception e) {
+                    utils.throwMessage("severe", "Failed to start regeneration task. Please report this (and the below error) to the developer!");
+                    e.printStackTrace();
+                    this.disablePlugin();
+                }
                 utils.throwMessage("info", String.format(this.lang.getForKey("messages.parseSchedule"), "30", String.valueOf(config.parseInterval)));
             }
         }
