@@ -68,8 +68,14 @@ public class regenTask extends BukkitRunnable {
             secsBetweenChunks = (secsTotal / numChunks);
             plugin.utils.throwMessage("info", "Regenerator will regenerate 1 chunk per " + secsBetweenChunks + " seconds for " + secsTotal + " seconds.");
             for (RChunk rChunk : chunksToRegenerate) {
-                Bukkit.getServer().getScheduler().runTaskLater(plugin, new ChunkTask(rChunk, false), (long)offsetTicks);
-                offsetTicks = offsetTicks + (secsBetweenChunks * 20);
+                try {
+                    new ChunkTask(rChunk, false).runTaskLater(plugin, (long)offsetTicks);
+                    offsetTicks = offsetTicks + (secsBetweenChunks * 20);
+                } catch (Exception e) {
+                    plugin.utils.throwMessage("severe", "Failed to regenerate chunk : " + rChunk.getChunk().getX() + "," + rChunk.getChunk().getZ() + " on world: " + rChunk.getWorldName());
+                    e.printStackTrace();
+                }
+                
             }
 
         }

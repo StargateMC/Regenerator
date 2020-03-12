@@ -280,7 +280,7 @@ public class RUtils extends RObject {
     public void initAvailableIntegrations() {
         List<String> Towny = new ArrayList<String>();
         Towny.add("Towny");
-        Towny.add("0.91");
+        Towny.add("0.9");
         Towny.add("TownyIntegration");
         plugin.availableIntergrations.add(Towny);
 //        List<String> FactionsOne = new ArrayList<String>();
@@ -308,11 +308,11 @@ public class RUtils extends RObject {
         RedProtect.add("7");
         RedProtect.add("RedProtectIntegration");
         plugin.availableIntergrations.add(RedProtect);
-//        List<String> Factions = new ArrayList<String>();
-//        Factions.add("Factions");
-//        Factions.add("2.8");
-//        Factions.add("FactionsIntegration");
-//        plugin.availableIntergrations.add(Factions);
+        List<String> Factions = new ArrayList<String>();
+        Factions.add("Factions");
+        Factions.add("3.3.0");
+        Factions.add("FactionsIntegration");
+        plugin.availableIntergrations.add(Factions);
         List<String> Landlord = new ArrayList<String>();
 //        Landlord.add("Landlord");
 //        Landlord.add("1.3");

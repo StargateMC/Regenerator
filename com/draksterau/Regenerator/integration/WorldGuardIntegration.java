@@ -5,25 +5,20 @@
  */
 package com.draksterau.Regenerator.integration;
 import com.draksterau.Regenerator.config.integrationConfigHandler;
-import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldguard.WorldGuard;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import org.bukkit.Bukkit;
 import com.sk89q.worldedit.math.BlockVector3;
 import java.util.Set;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
-import org.bukkit.util.BlockVector;
  
 /**
  *

@@ -84,7 +84,12 @@ public class eventListener implements Listener {
         RChunk rChunk = new RChunk(RegeneratorPlugin, event.getBlock().getChunk().getX(), event.getBlock().getChunk().getZ(), event.getBlock().getWorld().getName());
         if (!event.isCancelled() && !event.getTrigger().equals(RequestTrigger.Command)) {
             if (event.isImmediate()) {
-                Bukkit.getServer().getScheduler().runTask(this.RegeneratorPlugin, new ChunkTask(rChunk, true));
+                try {
+                    new ChunkTask(rChunk, false).runTask(RegeneratorPlugin);
+                } catch (Exception e) {
+                    RegeneratorPlugin.utils.throwMessage("severe", "Failed to regenerate chunk : " + rChunk.getChunk().getX() + "," + rChunk.getChunk().getZ() + " on world: " + rChunk.getWorldName());
+                    e.printStackTrace();
+                }
             } else {
                 if (RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk())) rChunk.updateActivity();
             }

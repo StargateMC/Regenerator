@@ -159,6 +159,7 @@ public class RedProtectIntegration extends Integration {
         }
         return null;
     }
+    
     public boolean claimExists(String regionName) {
         for (World world : Bukkit.getWorlds()) {
             if (RedProtect.get().getAPI().getRegion(regionName, world) != null) {
