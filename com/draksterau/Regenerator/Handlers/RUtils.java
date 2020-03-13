@@ -78,9 +78,10 @@ public class RUtils extends RObject {
             BlockVector3 pt2 = BlockVector3.at(bx + 15, 256, bz + 15);
             BukkitWorld world = new BukkitWorld(chunk.getWorld());
             CuboidRegion region = new CuboidRegion(world, pt1, pt2);   
-            EditSession session = WorldEdit.getInstance().getEditSessionFactory().getEditSession(world, 65536);            
+            EditSession session = WorldEdit.getInstance().getEditSessionFactory().getEditSession(world, 65536);
+            boolean result = world.regenerate(region, session);
             session.flushSession();
-            return world.regenerate(region, session);
+            return result;
         } catch (Exception e) {
             plugin.utils.throwMessage("severe", "Failed to regenerate chunk at : " + bx + "," + bz + " on world : " + chunk.getWorld().getName() + " due to WorldEdit exception!");
             e.printStackTrace();
