@@ -11,12 +11,17 @@ import com.draksterau.Regenerator.Handlers.RWorld;
 import com.draksterau.Regenerator.event.RegenerationRequestEvent;
 import com.draksterau.Regenerator.event.RequestTrigger;
 import com.draksterau.Regenerator.tasks.ChunkTask;
+import java.util.ArrayList;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -102,7 +107,26 @@ public class eventListener implements Listener {
         RegenerationRequestEvent requestEvent = new RegenerationRequestEvent(event.getBlock().getLocation(), event.getPlayer(), RequestTrigger.Place, this.RegeneratorPlugin);
         Bukkit.getServer().getPluginManager().callEvent(requestEvent);       
     }
-    
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onEntityExplode(EntityExplodeEvent  event) {
+        ArrayList<Chunk> chunksRequested = new ArrayList<Chunk>();
+        for (Block b : event.blockList()) {
+            if (chunksRequested.contains(b.getChunk())) continue;
+            RegenerationRequestEvent requestEvent = new RegenerationRequestEvent(b.getLocation(), null, RequestTrigger.Explosion, this.RegeneratorPlugin);
+            Bukkit.getServer().getPluginManager().callEvent(requestEvent);
+            if (!requestEvent.isCancelled()) chunksRequested.add(b.getChunk());
+        }
+    }
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onBlockExplode(BlockExplodeEvent  event) {
+        ArrayList<Chunk> chunksRequested = new ArrayList<Chunk>();
+        for (Block b : event.blockList()) {
+            if (chunksRequested.contains(b.getChunk())) continue;
+            RegenerationRequestEvent requestEvent = new RegenerationRequestEvent(b.getLocation(), null, RequestTrigger.Explosion, this.RegeneratorPlugin);
+            Bukkit.getServer().getPluginManager().callEvent(requestEvent);
+            if (!requestEvent.isCancelled()) chunksRequested.add(b.getChunk());
+        }
+    }
     // END BLOCK EVENTS ///
     
     // START PLUGIN EVENTS ///
