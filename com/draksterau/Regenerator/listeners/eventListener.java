@@ -7,6 +7,7 @@ package com.draksterau.Regenerator.listeners;
 
 import com.draksterau.Regenerator.RegeneratorPlugin;
 import com.draksterau.Regenerator.Handlers.RChunk;
+import com.draksterau.Regenerator.Handlers.RUtils;
 import com.draksterau.Regenerator.Handlers.RWorld;
 import com.draksterau.Regenerator.event.RegenerationRequestEvent;
 import com.draksterau.Regenerator.event.RequestTrigger;
@@ -44,7 +45,7 @@ public class eventListener implements Listener {
     
     /// START WORLD EVENTS ///
     
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onWorldLoad(WorldLoadEvent event) {
         // Load the RWorld from the filesystem.
         RWorld RWorld = new RWorld(RegeneratorPlugin, event.getWorld());
@@ -54,7 +55,7 @@ public class eventListener implements Listener {
         RegeneratorPlugin.utils.throwMessage("info", "Loaded World : " + event.getWorld().getName());
     }
     
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onWorldUnload(WorldUnloadEvent event) {
         RWorld RWorld = new RWorld(RegeneratorPlugin, event.getWorld());
         // If the Plugin currently has the RWorld registered, removed it.
@@ -66,7 +67,7 @@ public class eventListener implements Listener {
     
     /// START CHUNK EVENTS ///
     
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onChunkLoad(ChunkLoadEvent event) {
         if (RegeneratorPlugin.config.cacheChunksOnLoad) {
             RChunk RChunk = new RChunk(RegeneratorPlugin, event.getChunk().getX(), event.getChunk().getZ(), event.getWorld().getName());
@@ -77,14 +78,24 @@ public class eventListener implements Listener {
     /// END CHUNK EVENTS ///
     
     // START BLOCK EVENTS ///
-    
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
-        RegenerationRequestEvent requestEvent = new RegenerationRequestEvent(event.getBlock().getLocation(), event.getPlayer(), RequestTrigger.Place, this.RegeneratorPlugin);
+        if (event.getPlayer().equals(RegeneratorPlugin.fakePlayer)) return;
+        RegenerationRequestEvent requestEvent = new RegenerationRequestEvent(event.getBlock().getLocation(), event.getPlayer(), RequestTrigger.Break, this.RegeneratorPlugin);
         Bukkit.getServer().getPluginManager().callEvent(requestEvent);     
     }
     
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    public void onBreakCheck(BlockBreakEvent event) {
+        if (!event.getPlayer().equals(RegeneratorPlugin.fakePlayer)) return;
+        if (RUtils.breakAndResult.containsKey(event.getBlock().getLocation())) {
+            RegeneratorPlugin.utils.throwMessage("info", "Found result for break check: " + event.isCancelled() + " at : " + event.getBlock().getLocation().toString());
+            RUtils.breakAndResult.replace(event.getBlock().getLocation(), !event.isCancelled());
+            event.setCancelled(true);
+        }
+    }
+    
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
     public void onRegenerationRequest(RegenerationRequestEvent event) {
         RChunk rChunk = new RChunk(RegeneratorPlugin, event.getBlock().getChunk().getX(), event.getBlock().getChunk().getZ(), event.getBlock().getWorld().getName());
         if (!event.isCancelled() && !event.getTrigger().equals(RequestTrigger.Command)) {
@@ -102,12 +113,12 @@ public class eventListener implements Listener {
         if (!RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk()) && rChunk.lastActivity != 0) rChunk.resetActivity();
     }
     
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
         RegenerationRequestEvent requestEvent = new RegenerationRequestEvent(event.getBlock().getLocation(), event.getPlayer(), RequestTrigger.Place, this.RegeneratorPlugin);
         Bukkit.getServer().getPluginManager().callEvent(requestEvent);       
     }
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent  event) {
         ArrayList<Chunk> chunksRequested = new ArrayList<Chunk>();
         for (Block b : event.blockList()) {
@@ -117,7 +128,7 @@ public class eventListener implements Listener {
             if (!requestEvent.isCancelled()) chunksRequested.add(b.getChunk());
         }
     }
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockExplode(BlockExplodeEvent  event) {
         ArrayList<Chunk> chunksRequested = new ArrayList<Chunk>();
         for (Block b : event.blockList()) {

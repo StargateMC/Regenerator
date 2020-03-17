@@ -61,7 +61,11 @@ public class ChunkTask extends BukkitRunnable {
                     RChunk.resetActivity();
                     return;        
                 }
-                
+                if (RChunk.plugin.config.enableUnknownProtectionDetection && !RChunk.plugin.utils.canBreakChunk(RChunk.getChunk())) {
+                    RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + " as it is protected by an unknown source.");
+                    RChunk.resetActivity();
+                    return;
+                }
                 // Now checking if a chunk is claimed at the point of regenerating only.
                 if (!RChunk.plugin.utils.autoRegenRequirementsMet(RChunk.getChunk())) {
                     RChunk.plugin.utils.throwMessage("info", "Skipping regeneration of chunk: " + RChunk.chunkX + "," + RChunk.chunkZ + " on world: " + RChunk.worldName + ". It most likely was claimed?");

@@ -8,6 +8,7 @@ package com.draksterau.Regenerator.Handlers;
 import com.draksterau.Regenerator.RegeneratorPlugin;
 import com.draksterau.Regenerator.integration.Integration;
 import com.draksterau.Regenerator.tasks.lagTask;
+import com.mojang.authlib.GameProfile;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
@@ -15,7 +16,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
+import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -24,8 +25,17 @@ import org.bukkit.World;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import net.minecraft.server.v1_15_R1.MinecraftServer;
+import net.minecraft.server.v1_15_R1.WorldServer;
+import net.minecraft.server.v1_15_R1.EntityPlayer;
+import org.bukkit.craftbukkit.v1_15_R1.CraftServer;
+import net.minecraft.server.v1_15_R1.PlayerInteractManager;
+import org.bukkit.craftbukkit.v1_15_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
+
 
 /**
  *
@@ -33,6 +43,8 @@ import org.bukkit.entity.Player;
  */
 public class RUtils extends RObject {
 
+    public static HashMap<Location, Boolean> breakAndResult = new HashMap<Location, Boolean>();
+    
     public RUtils(RegeneratorPlugin plugin) {
         super(plugin);
     }
@@ -62,7 +74,38 @@ public class RUtils extends RObject {
         }
         return null;
     }
+    public Player getFakePlayer(){
+        if (plugin.fakePlayer == null) {
+            MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
+            WorldServer world = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle();
+            EntityPlayer npc = new EntityPlayer(server, world, new GameProfile(plugin.config.fakePlayerUUID, "Regenerator"), new PlayerInteractManager(world));
+            CraftPlayer player = new CraftPlayer((CraftServer)Bukkit.getServer(), npc);
+            plugin.fakePlayer = player;
+        }
+        return plugin.fakePlayer;
+    }
     
+    public boolean canBreakChunk(Chunk c) {
+            int X = c.getX() * 16;
+            int Z = c.getZ() * 16;
+            for (int x = 0; x < 16; x++) {
+                for (int z = 0; z < 16; z++) {
+                    for (int y = 0; y < 256; y++) {
+                        if (!canBreakAt(new Location(c.getWorld(),X+x,y,Z+z))) return false;
+                    }
+                }
+            }
+            return true;
+    }
+    
+    public boolean canBreakAt(Location loc) {
+        BlockBreakEvent event = new BlockBreakEvent(loc.getBlock(),getFakePlayer());
+        breakAndResult.put(loc, true);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        boolean result = breakAndResult.get(loc);
+        breakAndResult.remove(loc);
+        return result;
+    }
     // Returns a formatted string of Enabled or disabled
     
     public String getStatusForBoolean(boolean bool) {
@@ -109,7 +152,9 @@ public class RUtils extends RObject {
                 return false;
             }
         }
-
+        if (plugin.config.enableUnknownProtectionDetection && !plugin.utils.canBreakChunk(chunk)) {
+            return false;
+        }
         // Not blocked.
         return true;
     }

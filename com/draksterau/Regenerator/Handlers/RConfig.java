@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
@@ -25,6 +26,14 @@ public final class RConfig extends RObject {
     public RegeneratorPlugin getPlugin() {
         return plugin;
     }
+    
+    // Enables fake player detection.
+    
+    public boolean enableUnknownProtectionDetection = false;
+    
+    // UUID for fake player requests.
+    
+    public UUID fakePlayerUUID = UUID.randomUUID();
     
     // Should Regenerator cache chunks into the database when they are loaded?
     public boolean cacheChunksOnLoad = false;
@@ -123,6 +132,11 @@ public final class RConfig extends RObject {
         } else {
             this.targetLoadedChunks = config.getBoolean("targetLoadedChunks");
         }
+        if (!config.isSet("fakePlayerUUID")) {
+            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "fakePlayerUUID", this.configFile.getName()));
+        } else {
+            this.fakePlayerUUID = UUID.fromString(config.getString("fakePlayerUUID"));
+        }
         if (!config.isSet("targetUnloadedChunks")) {
             this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "targetUnloadedChunks", this.configFile.getName()));
         } else {
@@ -137,6 +151,11 @@ public final class RConfig extends RObject {
             this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "clearRegeneratedChunksOfEntities", this.configFile.getName()));
         } else {
             this.clearRegeneratedChunksOfEntities = config.getBoolean("clearRegeneratedChunksOfEntities");
+        }
+        if (!config.isSet("enableUnknownProtectionDetection")) {
+            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "enableUnknownProtectionDetection", this.configFile.getName()));
+        } else {
+            this.enableUnknownProtectionDetection = config.getBoolean("enableUnknownProtectionDetection");
         }
         if (!config.isSet("excludeEntityTypesFromRegeneration")) {
             this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "excludeEntityTypesFromRegeneration", this.configFile.getName()));
@@ -212,6 +231,8 @@ public final class RConfig extends RObject {
         config.set("excludeEntityTypesFromRegeneration", this.excludeEntityTypesFromRegeneration);
         config.set("warpDriveCompatibility", this.warpDriveCompatibility);
         config.set("cacheChunksOnLoad", this.cacheChunksOnLoad);
+        config.set("fakePlayerUUID", this.fakePlayerUUID.toString());
+        config.set("enableUnknownProtectionDetection", this.enableUnknownProtectionDetection);
         try {
             config.save(configFile);
         } catch (IOException ex) {

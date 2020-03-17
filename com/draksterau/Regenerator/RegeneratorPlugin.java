@@ -17,6 +17,7 @@ import com.draksterau.Regenerator.Handlers.RLang;
 import com.draksterau.Regenerator.Handlers.RUtils;
 import com.draksterau.Regenerator.Handlers.RWorld;
 import com.draksterau.Regenerator.commands.RegeneratorCommand;
+import org.bukkit.entity.Player;
 
 public class RegeneratorPlugin extends JavaPlugin implements Listener {
     
@@ -34,6 +35,7 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
     
     public List<RWorld> loadedWorlds = new ArrayList<RWorld>();
     
+    public Player fakePlayer = null;
     
     @Override
     public void onEnable () {
@@ -60,6 +62,7 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
                     this.disablePlugin();
             }
             utils.throwMessage("info", String.format(lang.getForKey("messages.pluginStarting"), config.configVersion));
+            if (config.enableUnknownProtectionDetection) utils.throwMessage("info", "Experimental Feature: UnknownProtectionDetection is active! Chunks will be treated as protected if any protection plugin disallows Regenerator breaking blocks in chunks!");
             if (loadedIntegrations.isEmpty()) {
                 if (config.noGriefRun) {
                     utils.throwMessage("warning", "No supported grief protection plugins found. No land will be protected from regeneration via external plugins!");
@@ -68,6 +71,7 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
                     utils.throwMessage("info", "Regenerator supports the following plugins:");
                     utils.iterateIntegrations();
                     utils.throwMessage("severe", "You must set 'noGriefRun' to true in config before Regenerator will load without integrations.");
+                    if (!config.enableUnknownProtectionDetection) utils.throwMessage("severe", "You may set 'enableUnknownProtectionDetection' to true if you have a grief prevention plugin that is not supported. This works by having Regenerator try and break blocks as an unknown player within a chunk to see if a protection plugin prevents this.");
                 }
             }
             if (this.isEnabled()) {
