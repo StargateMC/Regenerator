@@ -88,13 +88,16 @@ public class RUtils extends RObject {
     public boolean canBreakChunk(Chunk c) {
             int X = c.getX() * 16;
             int Z = c.getZ() * 16;
-            for (int x = 0; x < 16; x++) {
-                for (int z = 0; z < 16; z++) {
-                    for (int y = 0; y < 256; y++) {
-                        if (!canBreakAt(new Location(c.getWorld(),X+x,y,Z+z))) return false;
-                    }
-                }
-            }
+            int Y = c.getWorld().getHighestBlockAt(X,Z).getY() +1;
+            if (!canBreakAt(new Location(c.getWorld(), X,Y,Z))) return false;
+//            
+//            for (int x = 0; x < 16; x++) {
+//                for (int z = 0; z < 16; z++) {
+//                    for (int y = 0; y < 256; y++) {
+//                        if (!canBreakAt(new Location(c.getWorld(),X+x,y,Z+z))) return false;
+//                    }
+//                }
+//            }
             return true;
     }
     
