@@ -14,5 +14,6 @@ public enum RequestTrigger {
     Place,
     Explosion,
     Command,
+    ChunkLoad,
     Unknown;
 }

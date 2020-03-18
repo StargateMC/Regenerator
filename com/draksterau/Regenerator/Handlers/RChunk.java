@@ -27,7 +27,7 @@ public final class RChunk extends RObject {
     public String worldName;
     
     // Last activity time (in ms).
-    public long lastActivity = 0;
+    public long lastActivity = -1;
     
     private File chunkConfigFile;
     private FileConfiguration chunkConfig;

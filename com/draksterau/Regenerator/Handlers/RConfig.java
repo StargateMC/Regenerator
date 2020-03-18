@@ -31,6 +31,10 @@ public final class RConfig extends RObject {
     
     public boolean enableUnknownProtectionDetection = false;
     
+    // Enables regeneration of chunks on next chunk load, if they arent protected.
+    
+    public boolean enableRegenerationNextChunkLoad = true;
+    
     // UUID for fake player requests.
     
     public UUID fakePlayerUUID = UUID.randomUUID();
@@ -167,6 +171,11 @@ public final class RConfig extends RObject {
         } else {
             this.warpDriveCompatibility = config.getBoolean("warpDriveCompatibility");
         }
+        if (!config.isSet("enableRegenerationNextChunkLoad")) {
+            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "enableRegenerationNextChunkLoad", this.configFile.getName()));
+        } else {
+            this.enableRegenerationNextChunkLoad = config.getBoolean("enableRegenerationNextChunkLoad");
+        }
     }
 
     public void updateConfig() {
@@ -233,6 +242,7 @@ public final class RConfig extends RObject {
         config.set("cacheChunksOnLoad", this.cacheChunksOnLoad);
         config.set("fakePlayerUUID", this.fakePlayerUUID.toString());
         config.set("enableUnknownProtectionDetection", this.enableUnknownProtectionDetection);
+        config.set("enableRegenerationNextChunkLoad", this.enableRegenerationNextChunkLoad);
         try {
             config.save(configFile);
         } catch (IOException ex) {

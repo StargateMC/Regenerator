@@ -27,6 +27,7 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.Location;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 
@@ -71,6 +72,11 @@ public class eventListener implements Listener {
     public void onChunkLoad(ChunkLoadEvent event) {
         if (RegeneratorPlugin.config.cacheChunksOnLoad) {
             RChunk RChunk = new RChunk(RegeneratorPlugin, event.getChunk().getX(), event.getChunk().getZ(), event.getWorld().getName());
+            if (RegeneratorPlugin.config.enableRegenerationNextChunkLoad && RChunk.lastActivity == -1) {
+                Location loc = new Location(event.getWorld(), event.getChunk().getX() * 16, 100, event.getChunk().getZ() * 16);
+                RegenerationRequestEvent requestEvent = new RegenerationRequestEvent(loc, null, RequestTrigger.ChunkLoad, RegeneratorPlugin);
+                Bukkit.getServer().getPluginManager().callEvent(requestEvent);
+            }
         }
         // Do nothing. This constructor for the RChunk will generate its entry in the data file if needed.
     }
