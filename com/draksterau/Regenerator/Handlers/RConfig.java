@@ -234,6 +234,7 @@ public final class RConfig extends RObject {
                 if (config.getString("language").equals("ENGLISH")) {
                     this.plugin.utils.throwMessage("severe", "Loading default language, ENGLISH failed. No valid language is set & the default language of ENGLISH has been deleted, so Regenerator cannot load.");
                     this.plugin.disablePlugin();
+                    return;
                 }
                 this.plugin.utils.throwMessage("warning", "Loading language: " + config.getString("language") + " failed, there is no YML file called " + plugin.getDataFolder() + "/lang/" + config.getString("language") + ".yml" + "!");
                 this.plugin.utils.throwMessage("warning", "Contribute a messages.yml for : " + config.getString("language") + " on github (http://github.com/draksterau/regenerator/) to have it included in a future release!");
