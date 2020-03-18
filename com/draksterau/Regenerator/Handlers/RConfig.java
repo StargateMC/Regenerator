@@ -27,6 +27,11 @@ public final class RConfig extends RObject {
         return plugin;
     }
     
+    
+    // Defines the Language.
+    
+    public String language = "ENGLISH";
+    
     // Enables fake player detection.
     
     public boolean enableUnknownProtectionDetection = false;
@@ -219,6 +224,22 @@ public final class RConfig extends RObject {
             this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.numChunksPerParseInvalid"), String.valueOf((((this.parseInterval * 10)) * this.percentIntervalRuntime)/2)));
             this.numChunksPerParse = (((this.parseInterval * 5)) * this.percentIntervalRuntime);
         }
+        if (!config.isSet("language")) {
+            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "language", this.configFile.getName()));
+        } else {
+            if (new File(plugin.getDataFolder() + "/lang/" + config.getString("language") + ".yml").exists()) {
+                this.plugin.utils.throwMessage("info", "Loading language: " + config.getString("language"));
+                this.language = config.getString("language");
+            } else {
+                if (config.getString("language").equals("ENGLISH")) {
+                    this.plugin.utils.throwMessage("severe", "Loading default language, ENGLISH failed. No language is set, so Regenerator cannot load. The only circumstance this can occur is when someone deletes ENGLISH.yml and then sets an invalid language.");
+                    this.plugin.disablePlugin();
+                }
+                this.plugin.utils.throwMessage("warning", "Loading language: " + config.getString("language") + " failed, there is no YML file called " + plugin.getDataFolder() + "/lang/" + config.getString("language") + ".yml" + "!");
+                this.plugin.utils.throwMessage("warning", "Contribute a messages.yml for : " + config.getString("language") + " on github (http://github.com/draksterau/regenerator/) to have it included in a future release!");
+                this.language = "ENGLISH";
+            }
+        }
         this.saveData();
         this.loadData();
     }
@@ -243,6 +264,7 @@ public final class RConfig extends RObject {
         config.set("fakePlayerUUID", this.fakePlayerUUID.toString());
         config.set("enableUnknownProtectionDetection", this.enableUnknownProtectionDetection);
         config.set("enableRegenerationNextChunkLoad", this.enableRegenerationNextChunkLoad);
+        
         try {
             config.save(configFile);
         } catch (IOException ex) {
