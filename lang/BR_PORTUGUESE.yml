@@ -1,0 +1,32 @@
+## Arquivo de localização em português brasileiro.
+---
+
+messages:
+    pluginStarting: "Inicializando Regenerator v%s"
+    pluginLoading: "Carregando Regenerator v%s"
+    loadingWorld: "Carregando mundo: %s"
+    loadedWorld: "Mundo carregado: %s"
+    oldConfigFileUpdating: Arquivo de configuração antigo detectado.... atualizando!
+    validatingConfig: Validando configuração...
+    parseIntervalInsufficient: "Intervalo de checagem está abaixo do minimo permitido de %s segundos. Redefinindo valor da configuração para o padrão."
+    parseIntervalNotFrequent: "Intervalo de checagem está acima do máximo permitido de %s segundos. Redefinindo valor da configuração para o padrão."
+    parseSchedule: "Agendando a próxima checagem para %s segundos a partir de agora e checando a cada %s segundos"
+    tpsInvalid: "Medidor de TPS deve ter uma configuração de TPS válida, entre 1-20. Redefinindo para o valor padrão de  %s."
+    runtimeInvalid: "Tempo de checagem deve ser entre 0.1 e 1.0. Redefinindo para o valor padrão de  %s."
+    numChunksPerParseInvalid: "numChunksPerParse é invalálido. Regenerator processará no máximo 1 chunk a cada 0.1 segundos. Redefinindo para %s."
+    cantSaveGlobalConfig: "Não foi possível salvar a configuração global em %s. (Exceção: %s)"
+    cantSaveWorldConfig: "Não foi possível salvar a configuração do mundo em %s. (Exceção: %s)"
+    errorThrowingMessage: "Chamada fatal do método throwMessage(). Tipos válidos são info, warning, severe"
+    detectedAndLoadingIntegration: "Detectado o plugin: %s v%s : Carregando %s!"
+    detectedInvalidVersionForIntegration: "Detectado versão incompatível do plugin: %s (v%s), versão necessária: %s"
+    disableIntegration: "Desabilitando módulo do %s"
+    integrationUnsupported: "Falhou o carregamento da integração do plugin %s. Por favor, contate Bysokar para obter suporte!"
+    integrationUnsupportedShouldBe: "Falhou o carregamento da integração do plugin %s. Cheque o histórico do console e reporte qualquer erro para Bysokar!"
+    regenIntervalTooFrequent: "Mundo: %s está definido para regenerar mais rápido do que checagens do regenerador para chunks inativos (parseInterval em global.yml)"
+    regenIntervalTooFrequentSuggestion: "É recomendado que você aumente o regenInterval dos mundos ou diminua o parseInterval global"
+    regenIntervalAboveMax: "Intervalo de regeneração de %s é muito infrequente. Deve ser menos de %s dias. Redefinindo para o máximo."
+    regenIntervalBelowMin: "Intervalo de regeneração de %s é muito frequente. Deve ser mais de %s minutos. Redefinindo para o mínimo."
+    distanceNearbyTooClose: "Distância mínima para jogadores em relação a um evento de regeneração deve ser ao menos 1 chunk, redefinindo para %s blocos."
+    distanceNearbyTooFar: "Distância mínima máxima para jogadores em relação a um evento de regeneração deve ser não mais que 16 chunks, redefinindo para %s blocos."
+    mustTargetSomething: "Ambos chunks carregados e descarregados não estão sendo marcados para regeneração automática. Este plugin deve marcar algo e está ativando o targetUnloadedChunks."
+    addingNewConfig: "Nova opção de configuração encontrada: %s. Adicionando para %s!"
