@@ -27,6 +27,7 @@ public final class RChunk extends RObject {
     public String worldName;
     
     // Last activity time (in ms).
+    // Default is -1, because a chunk with its activity reset will be 0. We need to be able to target chunks without their value modified to support regen on initial chunk load.
     public long lastActivity = -1;
     
     private File chunkConfigFile;
