@@ -9,10 +9,6 @@ import com.draksterau.Regenerator.RegeneratorPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -40,7 +36,7 @@ public final class RLang extends RObject {
         // If the config file is null (due to the config file being invalid or not there) create a new one.
         // If the file doesnt exist, populate it from the template.
         if (!langConfigFile.exists()) {
-            langConfigFile = new File(plugin.getDataFolder() + "/messages.yml");
+            langConfigFile = new File(plugin.getDataFolder() + "/lang/" + plugin.config.language + ".yml");
             langConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("messages.yml")));
             saveData();
         }
@@ -49,16 +45,16 @@ public final class RLang extends RObject {
     public String getForKey(String key) {
         String value = langConfig.getString(key);
         if (value == null) {
-            langConfigFileTemp = new File(plugin.getDataFolder() + "/messages.yml");
+            langConfigFileTemp = new File(plugin.getDataFolder() + "/lang/" + plugin.config.language + ".yml");
             langConfigTemp = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("messages.yml")));
             if (langConfigTemp.isSet(key)) {
-                plugin.utils.throwMessage("new","Loading default value for " + key + " as it does not exist in messages.yml!");
+                plugin.utils.throwMessage("new","Loading default value for " + key + " as it does not exist in " + plugin.getDataFolder() + "/lang/" + plugin.config.language + ".yml" + "!");
                 String tempValue = langConfigTemp.getString(key);
                 langConfig.set(key, tempValue);
                 this.saveData();
                 return tempValue;
             } else {
-                return "ERROR - Key: " + key + " does not exist in the localisation file!";
+                return "ERROR - Key: " + key + " does not exist in " + plugin.getDataFolder() + "/lang/" + plugin.config.language + ".yml!";
             }
         } else {
             return value;
