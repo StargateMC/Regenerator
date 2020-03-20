@@ -175,6 +175,11 @@ public class RUtils extends RObject {
         throwMessage(MsgType.INFO, "Bukkit Server Version: " + Bukkit.getVersion());
         throwMessage(MsgType.INFO, "Regenerator version: v" + this.plugin.getDescription().getVersion());
         //TODO: Check WorldEdit version and add here.
+        if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit")) {
+            throwMessage(MsgType.INFO, "WorldEdit version: v" +  Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion());
+        } else {
+            throwMessage(MsgType.INFO, "WorldEdit version: None (You must install WorldEdit for Regenerator to work, please dont report this!)");
+        }
         for (Integration i : plugin.loadedIntegrations) {
             throwMessage(MsgType.INFO, "Integration enabled for: " + i.getPluginName() + " v" + i.getPluginVersion() + "");
         }

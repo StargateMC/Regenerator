@@ -32,7 +32,7 @@ messages:
     addingNewConfig: "New Configuration option found: %s. Adding to %s!"
     regenTaskCompleted: Regeneration task completed after processing %s chunks on %s worlds.
     regenTaskCompletedNothingDone: Regeneration task completed without regenerating any chunks
-    queueChunkTaskException: Regeneration of chunk at %s, %s on %s failed to be scheduled during parse with exception: %s.
+    queueChunkTaskException: Regeneration of chunk at %s, %s on %s failed to be scheduled during parse with exception - %s.
     regenParseStart: Regenerating 1 chunk per %s seconds, for a total of %s seconds.
     regenParseStarting: Regeneration Parse task is starting...
     regenPausedTPSLow: Regenerator is not beginning to parse inactive chunks for regeneration as TPS is below %s, as configured in global.yml.
