@@ -76,3 +76,5 @@ messages:
     cantSaveLang: "Could not save language file to %, error - %s."
     regenFailedWorldEdit: "Failed to regenerate chunk at %s,%s on %s, due to the following error whilst calling WorldEdits API - %s."
     entitiesRemovedCount: "Removed %s entities from chunk at %s,%s on %s."
+    unknownProtectionDetectionUnsupported: "Unknown Protection detection is not supported on your server version with this version of Regenerator. Required is: %s, found server: %s with bukkit api version: %s. Request support for your server version on Github!"
+    loadingLanguageDefault: Invalid language in configuration file %s, defaulting back to %s.

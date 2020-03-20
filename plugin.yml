@@ -1,7 +1,8 @@
 name: Regenerator
 main: com.draksterau.Regenerator.RegeneratorPlugin
 version: 3.4.4
-softdepend: [ WorldEdit, Factions, GriefPrevention, WorldGuard, RedProtect, Towny ]
+softdepend: [ Factions, GriefPrevention, WorldGuard, RedProtect, Towny ]
+depend: [ WorldEdit ]
 description: Regenerator is a perpetual world plugin that supports many grief prevention plugins.
 author: Bysokar
 website: https://www.spigotmc.org/resources/regenerator.23409/

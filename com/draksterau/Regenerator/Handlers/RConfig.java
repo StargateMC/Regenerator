@@ -102,7 +102,7 @@ public final class RConfig extends RObject {
         if (minTpsRegen > 20 || minTpsRegen < 1) minTpsRegen = 15;
     }
     @Override
-    void loadData() {
+    public void loadData() {
         // Attempt to load the config file.
         if (configFile == null) configFile = new File(plugin.getDataFolder() + "/global.yml");
         // Attempt to read the config in the config file.
@@ -201,8 +201,14 @@ public final class RConfig extends RObject {
     public void validateConfig() {
         if (!config.isSet("language")) {
             this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.getOrInitLang("ENGLISH").getForKey("messages.addingNewConfig"), "language", this.configFile.getName()));
-        } else {
+        } else { 
             this.plugin.getOrInitLang(config.getString("language")); // Initialises the language.
+            if (!language.equals(this.plugin.lang.getLanguage())) {
+                this.plugin.utils.throwMessage(MsgType.WARNING, String.format(plugin.lang.getForKey("messages.loadingLanguageDefault"), config.getString("language"), "ENGLISH"));
+                this.language = "ENGLISH";
+                this.saveData();
+                this.loadData();
+            }
             if (new File(plugin.getDataFolder() + "/lang/" + config.getString("language") + ".yml").exists()) {
                 this.plugin.utils.throwMessage(MsgType.INFO, String.format(plugin.lang.getForKey("messages.loadingLanguage"), config.getString("language")));
                 this.language = config.getString("language");
@@ -256,7 +262,7 @@ public final class RConfig extends RObject {
         this.loadData();
     }
     @Override
-    void saveData() {
+    public void saveData() {
         config.set("defaultManualRegen", this.defaultManualRegen);
         config.set("defaultAutoRegen", this.defaultAutoRegen);
         config.set("noGriefRun", this.noGriefRun);

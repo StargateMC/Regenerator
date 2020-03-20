@@ -112,7 +112,7 @@ public class ChunkTask extends BukkitRunnable {
             }
             
             if (RChunk.plugin.utils.regenerateChunk(RChunk.getChunk())) {
-                RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.regenSuccess"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
+                RChunk.plugin.utils.throwMessage(MsgType.SUCCESS, String.format(RChunk.plugin.lang.getForKey("messages.regenSuccess"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
             } else {
                 RChunk.plugin.utils.throwMessage(MsgType.SEVERE, String.format(RChunk.plugin.lang.getForKey("messages.regenFailed"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
             }

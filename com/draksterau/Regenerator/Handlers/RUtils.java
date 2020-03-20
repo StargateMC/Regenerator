@@ -9,14 +9,10 @@ import com.draksterau.Regenerator.RegeneratorPlugin;
 import com.draksterau.Regenerator.integration.Integration;
 import com.draksterau.Regenerator.tasks.lagTask;
 import com.mojang.authlib.GameProfile;
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.CuboidRegion;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -74,6 +70,11 @@ public class RUtils extends RObject {
         }
         return null;
     }
+    
+    public boolean uuidInUse(UUID id) {
+        return Bukkit.getPlayer(id) != null || Bukkit.getOfflinePlayer(id) != null;
+    }
+    
     public Player getFakePlayer(){
         if (plugin.fakePlayer == null) {
             MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
@@ -115,16 +116,16 @@ public class RUtils extends RObject {
         if (bool) return ChatColor.GREEN + "Enabled" + ChatColor.GRAY;
         return ChatColor.RED + "Disabled" + ChatColor.GRAY;
     }
-    
+
     public boolean regenerateChunk(Chunk chunk) {
         int bx = chunk.getX() << 4;
         int bz = chunk.getZ() << 4;
         try {
-            BlockVector3 pt1 =  BlockVector3.at(bx, 0, bz);
-            BlockVector3 pt2 = BlockVector3.at(bx + 15, 256, bz + 15);
-            BukkitWorld world = new BukkitWorld(chunk.getWorld());
-            CuboidRegion region = new CuboidRegion(world, pt1, pt2);   
-            EditSession session = WorldEdit.getInstance().getEditSessionFactory().getEditSession(world, 65536);
+            com.sk89q.worldedit.math.BlockVector3 pt1 =  com.sk89q.worldedit.math.BlockVector3.at(bx, 0, bz);
+            com.sk89q.worldedit.math.BlockVector3 pt2 = com.sk89q.worldedit.math.BlockVector3.at(bx + 15, 256, bz + 15);
+            com.sk89q.worldedit.bukkit.BukkitWorld world = new com.sk89q.worldedit.bukkit.BukkitWorld(chunk.getWorld());
+            com.sk89q.worldedit.regions.CuboidRegion region = new com.sk89q.worldedit.regions.CuboidRegion(world, pt1, pt2);   
+            com.sk89q.worldedit.EditSession session = com.sk89q.worldedit.WorldEdit.getInstance().getEditSessionFactory().getEditSession(world, 65536);
             boolean result = world.regenerate(region, session);
             session.flushSession();
             return result;
@@ -170,9 +171,9 @@ public class RUtils extends RObject {
     }
     
     public void printErrorReport(String error) {
-        throwMessage(MsgType.INFO, "A Severe error has been encountered (" + error + "). Please consider submitting this on github at https://github.com/Bysokar/Regenerator/Issues");
+        throwMessage(MsgType.INFO, ChatColor.RED + "A Severe error has been encountered (" + error + "). Please consider submitting this on github at https://github.com/Bysokar/Regenerator/Issues" + ChatColor.RESET);
         throwMessage(MsgType.INFO, "Please be sure to include the following:");
-        throwMessage(MsgType.INFO, "Bukkit Server Version: " + Bukkit.getVersion());
+        throwMessage(MsgType.INFO, "Bukkit Server Version: " + Bukkit.getVersion() + ", implementing Bukkit API version: " + Bukkit.getBukkitVersion());
         throwMessage(MsgType.INFO, "Regenerator version: v" + this.plugin.getDescription().getVersion());
         //TODO: Check WorldEdit version and add here.
         if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit")) {
@@ -181,8 +182,11 @@ public class RUtils extends RObject {
             throwMessage(MsgType.INFO, "WorldEdit version: None (You must install WorldEdit for Regenerator to work, please dont report this!)");
         }
         for (Integration i : plugin.loadedIntegrations) {
-            throwMessage(MsgType.INFO, "Integration enabled for: " + i.getPluginName() + " v" + i.getPluginVersion() + "");
+            throwMessage(MsgType.INFO, "Integration " + ChatColor.GREEN + "enabled" + ChatColor.DARK_AQUA + " for: " + ChatColor.GOLD + i.getPluginName() + " v" + i.getPluginVersion() + "");
         }
+        throwMessage(MsgType.INFO, ChatColor.RED + "Please also include a link to your configuration, as well as any log files which may be relavent." + ChatColor.RESET);
+        throwMessage(MsgType.INFO, ChatColor.RED + "Please ensure you reproduce the error with debug mode enabled to capture all details in logs first!" + ChatColor.RESET);
+        
     }
     
     // Formats a message and categorises it instead of using logger directly.
@@ -203,7 +207,11 @@ public class RUtils extends RObject {
                     if (MsgType.NEW.equals(type)) {
                         console.sendMessage(getFancyName() + ChatColor.LIGHT_PURPLE + "[" + type.name() + "]: " + message);
                     } else {
-                        this.throwMessage(MsgType.SEVERE,String.format(this.plugin.lang.getForKey("messages.errorThrowingMessage")));
+                        if (MsgType.SUCCESS.equals(type)) {
+                            console.sendMessage(getFancyName() + ChatColor.GREEN + "[" + type.name() + "]: " + message);
+                        } else {
+                            this.throwMessage(MsgType.SEVERE,String.format(this.plugin.lang.getForKey("messages.errorThrowingMessage")));
+                        }
                     }
                 }
             }
@@ -465,10 +473,10 @@ public class RUtils extends RObject {
                     if (Integration.class.isAssignableFrom(integrationClass)) {
                         Integration integration = (Integration) integrationClass.newInstance();
                         integration.plugin = module[0];
-                        integration.RegeneratorPlugin = plugin;
+                        integration.RegeneratorPlugin = plugin;                        
+                        throwMessage(MsgType.INFO, "[" + module[2] + "] " + String.format(plugin.lang.getForKey("messages.detectedAndLoadingIntegration"), integration.getPluginName(), integration.getPluginVersion(), module[2]));
                         integration.validateConfig();
                         plugin.loadedIntegrations.add(integration);
-                        throwMessage(MsgType.INFO, "[" + module[2] + "] " + String.format(plugin.lang.getForKey("messages.detectedAndLoadingIntegration"), integration.getPluginName(), integration.getPluginVersion(), module[2]));
                         if (!integration.supportsUnknownProtectionDetection() && plugin.config.enableUnknownProtectionDetection) {
                             throwMessage(MsgType.WARNING, String.format(plugin.lang.getForKey("messages.integrationConflictFound"), integration.getPluginName()));
                             plugin.config.enableUnknownProtectionDetection = false;

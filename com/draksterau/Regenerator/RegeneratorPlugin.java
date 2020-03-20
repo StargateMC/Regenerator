@@ -18,6 +18,7 @@ import com.draksterau.Regenerator.Handlers.RLang;
 import com.draksterau.Regenerator.Handlers.RUtils;
 import com.draksterau.Regenerator.Handlers.RWorld;
 import com.draksterau.Regenerator.commands.RegeneratorCommand;
+import java.io.File;
 import org.bukkit.entity.Player;
 
 public class RegeneratorPlugin extends JavaPlugin implements Listener {
@@ -42,19 +43,22 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
         if (this.lang == null) this.lang = new RLang(this, language);
         return this.lang;
     }
-    
+    public RConfig getOrInitConfig() {
+        if (this.config == null) this.config = new RConfig(this);
+        return this.config;
+    }
     @Override
     public void onEnable () {
         // Load the RUtils module.
         utils = new RUtils(this);
         // Config gets loaded here in onEnable()
-        config = new RConfig(this);
+        getOrInitConfig();
         if (!this.isEnabled()) return; // If Config or lang loading fails, stop enabling the plugin.
         utils.throwMessage(MsgType.INFO, String.format(lang.getForKey("messages.pluginLoading"), config.configVersion));
         utils.initAvailableIntegrations();
         utils.loadIntegrations();
         if (this.isEnabled()) {
-            utils.throwMessage(MsgType.INFO, "Detected server version: " + Bukkit.getVersion());
+            utils.throwMessage(MsgType.INFO, "Detected server version: " + Bukkit.getVersion() + ", Bukkit API Version: " + Bukkit.getBukkitVersion());
             if (getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
                 if (Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion().startsWith("7")) {
                     utils.throwMessage(MsgType.INFO, String.format(lang.getForKey("messages.WorldEditLoaded"), Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion()));
@@ -80,7 +84,19 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
             }
             
             if (!config.enableUnknownProtectionDetection) utils.throwMessage(MsgType.INFO, lang.getForKey("messages.unknownProtectionDetectionInactive"));
-            if (config.enableUnknownProtectionDetection) utils.throwMessage(MsgType.INFO, lang.getForKey("messages.unknownProtectionDetectionActive"));
+            if (config.enableUnknownProtectionDetection) {
+                if (!Bukkit.getBukkitVersion().contains("1.15.2")) {
+                    utils.throwMessage(MsgType.WARNING, String.format(lang.getForKey("messages.unknownProtectionDetectionUnsupported"), "1.15.2", Bukkit.getVersion(),Bukkit.getBukkitVersion()));
+                    config.enableUnknownProtectionDetection = false;
+                } else {
+                    utils.throwMessage(MsgType.INFO, lang.getForKey("messages.unknownProtectionDetectionActive"));
+                    if (utils.uuidInUse(config.fakePlayerUUID)) {
+                        utils.throwMessage(MsgType.WARNING, String.format(lang.getForKey("messages.fakePlayerUUIDInUse"), config.fakePlayerUUID));
+                    } else {
+                        utils.throwMessage(MsgType.INFO, String.format(lang.getForKey("messages.fakePlayerUUIDNotInUse"), config.fakePlayerUUID));
+                    }
+                }
+            }
             
             if (config.debugMode) utils.throwMessage(MsgType.INFO, lang.getForKey("messages.debugModeEnabled"));
             if (!config.debugMode) utils.throwMessage(MsgType.INFO, lang.getForKey("messages.debugModeDisabled"));

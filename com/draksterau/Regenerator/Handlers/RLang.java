@@ -29,19 +29,26 @@ public final class RLang extends RObject {
         this.language = language;
         this.loadData();
     }
+    
     @Override
     void loadData() {
         // Attempt to load the config file.
         langConfigFile = new File(plugin.getDataFolder() + "/lang/" + this.language + ".yml");
-        // Attempt to read the config in the config file.
-        langConfig = YamlConfiguration.loadConfiguration(langConfigFile);
         // If the config file is null (due to the config file being invalid or not there) create a new one.
         // If the file doesnt exist, populate it from the template.
         if (!langConfigFile.exists()) {
             langConfigFile = new File(plugin.getDataFolder() + "/lang/" + this.language + ".yml");
-            langConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("lang/" + this.language + ".yml")));
+                if (plugin.getResource("lang/" + this.language + ".yml") != null) {
+                    langConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("lang/" + this.language + ".yml")));
+                } else {
+                    plugin.utils.throwMessage(MsgType.WARNING,"Language: " + language + " is not available. Defaulting back to ENGLISH...");
+                    this.language = "ENGLISH";
+                    langConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("lang/" + this.language + ".yml")));
+                }
             saveData();
         }
+        // Attempt to read the config in the config file.
+        langConfig = YamlConfiguration.loadConfiguration(langConfigFile);
     }
     
     public String getLanguage() {
@@ -50,6 +57,10 @@ public final class RLang extends RObject {
     
     public void setLanguage(String s) {
         this.language = s;
+    }
+    
+    public YamlConfiguration getDefaultLanguage() {
+        return YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("lang/ENGLISH.yml")));   
     }
 
     public String getForKey(String key) {
@@ -65,7 +76,17 @@ public final class RLang extends RObject {
                         this.saveData();
                         return tempValue;
                     } else {
-                        return String.format(this.getForKey("messages.langEntryUnsupported"), key,this.language);
+                        langConfigTemp = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("lang/ENGLISH.yml")));
+                        if (langConfigTemp.isSet(key)) {
+                            plugin.utils.throwMessage(MsgType.SEVERE,"Loading default lang value for : " + key + " from ENGLISH language, as " + language + " does not have one set.");
+                            String tempValue = langConfigTemp.getString(key);
+                            langConfig.set(key, tempValue);
+                            this.saveData();
+                            return tempValue;
+                        } else {
+                            plugin.utils.throwMessage(MsgType.SEVERE, "Could not locate lang key for : " + key + " in either language: " + language + " or ENGLISH!");
+                            return "Error.LangKey." + key;
+                        }
                     }
                 } else {
                     return value;

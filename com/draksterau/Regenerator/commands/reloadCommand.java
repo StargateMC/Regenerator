@@ -5,6 +5,7 @@
  */
 package com.draksterau.Regenerator.commands;
 
+import com.draksterau.Regenerator.Handlers.RLang;
 import com.draksterau.Regenerator.Handlers.RWorld;
 import com.draksterau.Regenerator.tasks.regenTask;
 import org.bukkit.Bukkit;
@@ -29,8 +30,8 @@ public class reloadCommand {
        command.plugin.loadedIntegrations.clear();
        command.sender.sendMessage(ChatColor.GRAY + "Cancelling all regen tasks...");
         Bukkit.getScheduler().cancelTasks(command.plugin);
-       command.plugin.lang = null;
-       command.plugin.config = null;
+       command.plugin.config.loadData(); // Reinitialises configuration.
+       command.plugin.lang = new RLang(command.plugin, command.plugin.config.language); // Reinitialises language.
         command.plugin.onEnable();
         if (command.plugin.isEnabled()) {
             command.sender.sendMessage(ChatColor.GREEN + "Regenerator has been reloaded!");
