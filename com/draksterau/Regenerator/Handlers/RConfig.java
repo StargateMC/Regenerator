@@ -45,7 +45,7 @@ public final class RConfig extends RObject {
     public UUID fakePlayerUUID = UUID.randomUUID();
     
     // Should Regenerator cache chunks into the database when they are loaded?
-    public boolean cacheChunksOnLoad = false;
+    public boolean cacheChunksOnLoad = true;
     
     // Interval between task parses on worlds.
     public long parseInterval = 300;
@@ -60,7 +60,7 @@ public final class RConfig extends RObject {
     public boolean defaultManualRegen = false;
     
     // Whether or not new worlds that are loaded should have auto regen enabled by default
-    public boolean defaultAutoRegen = false;
+    public boolean defaultAutoRegen = true;
     
     // Minimum TPS for regenerator to continue running parses.
     public int minTpsRegen = 15;
@@ -69,18 +69,18 @@ public final class RConfig extends RObject {
     public boolean noGriefRun = false;
     
     // Distance at which players will prevent a chunk regenerating (too close)
-    public int distanceNearbyMinimum = 16;
+    public int distanceNearbyMinimum = 32;
     
     // Set this to true to allow loaded chunks to regenerate.
-    public boolean targetLoadedChunks = false;
+    public boolean targetLoadedChunks = true;
     // Set this to true to allow unloaded chunks to regenerate.
     public boolean targetUnloadedChunks = true;
     
     // Should this plugin respect that chunks are in use by players.
-    public boolean regenerateChunksInUseByPlayers = false;
+    public boolean regenerateChunksInUseByPlayers = true;
     
     // Should this plugin clear the chunk of all entities? This includes dropped items, villagers, zombies and all!
-    public boolean clearRegeneratedChunksOfEntities = false;
+    public boolean clearRegeneratedChunksOfEntities = true;
     
     // Should this plugin not regenerate near WarpDrive ships?
     public boolean warpDriveCompatibility = false;
