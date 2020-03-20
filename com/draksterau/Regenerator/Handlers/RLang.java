@@ -38,7 +38,7 @@ public final class RLang extends RObject {
         // If the config file is null (due to the config file being invalid or not there) create a new one.
         // If the file doesnt exist, populate it from the template.
         if (!langConfigFile.exists()) {
-            langConfigFile = new File(plugin.getDataFolder() + "lang/" + this.language + ".yml");
+            langConfigFile = new File(plugin.getDataFolder() + "/lang/" + this.language + ".yml");
             langConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("lang/" + this.language + ".yml")));
             saveData();
         }
@@ -55,7 +55,7 @@ public final class RLang extends RObject {
     public String getForKey(String key) {
         String value = langConfig.getString(key);
         if (value == null) {
-            langConfigFileTemp = new File(plugin.getDataFolder() + "lang/" + this.language + ".yml");
+            langConfigFileTemp = new File(plugin.getDataFolder() + "/lang/" + this.language + ".yml");
             langConfigTemp = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("lang/ENGLISH.yml")));
             if (langConfigTemp.isSet(key)) {
                 plugin.utils.throwMessage("new","Loading default value for " + key + " as it does not exist in " + plugin.getDataFolder() + "/lang/" + this.language + ".yml" + "!");
@@ -64,7 +64,7 @@ public final class RLang extends RObject {
                 this.saveData();
                 return tempValue;
             } else {
-                return "ERROR - Key: " + key + " does not exist in " + plugin.getDataFolder() + "lang/" + this.language + ".yml!";
+                return "ERROR - Key: " + key + " does not exist in " + plugin.getDataFolder() + "/lang/" + this.language + ".yml!";
             }
         } else {
             return value;

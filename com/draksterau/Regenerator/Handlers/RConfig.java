@@ -265,7 +265,7 @@ public final class RConfig extends RObject {
         config.set("fakePlayerUUID", this.fakePlayerUUID.toString());
         config.set("enableUnknownProtectionDetection", this.enableUnknownProtectionDetection);
         config.set("enableRegenerationNextChunkLoad", this.enableRegenerationNextChunkLoad);
-        
+        config.set("language", this.language);
         try {
             config.save(configFile);
         } catch (IOException ex) {
