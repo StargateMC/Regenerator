@@ -174,6 +174,7 @@ public class RUtils extends RObject {
         throwMessage(MsgType.INFO, "Please be sure to include the following:");
         throwMessage(MsgType.INFO, "Bukkit Server Version: " + Bukkit.getVersion());
         throwMessage(MsgType.INFO, "Regenerator version: v" + this.plugin.getDescription().getVersion());
+        //TODO: Check WorldEdit version and add here.
         for (Integration i : plugin.loadedIntegrations) {
             throwMessage(MsgType.INFO, "Integration enabled for: " + i.getPluginName() + " v" + i.getPluginVersion() + "");
         }
