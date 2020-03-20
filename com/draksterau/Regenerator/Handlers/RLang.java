@@ -76,7 +76,7 @@ public final class RLang extends RObject {
         try {
             langConfig.save(langConfigFile);
         } catch (IOException ex) {
-            plugin.utils.throwMessage(MsgType.SEVERE,String.format(this.getForKey("messages.cantSaveLang"), langConfigFile.getAbsolutePath(), ex.getMessage());
+            plugin.utils.throwMessage(MsgType.SEVERE,String.format(this.getForKey("messages.cantSaveLang"), langConfigFile.getAbsolutePath(), ex.getMessage()));
             if (plugin.config.debugMode) ex.printStackTrace();
         }    
     }

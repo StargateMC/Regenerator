@@ -7,6 +7,7 @@ package com.draksterau.Regenerator.integration;
 
 import br.net.fabiozumbi12.RedProtect.Bukkit.RedProtect;
 import br.net.fabiozumbi12.RedProtect.Bukkit.Region;
+import com.draksterau.Regenerator.Handlers.MsgType;
 import com.draksterau.Regenerator.config.integrationConfigHandler;
 import java.util.ArrayList;
 import java.util.Arrays;

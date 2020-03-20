@@ -5,6 +5,7 @@
  */
 package com.draksterau.Regenerator.commands;
 
+import com.draksterau.Regenerator.Handlers.MsgType;
 import com.draksterau.Regenerator.Handlers.RChunk;
 import com.draksterau.Regenerator.event.RegenerationRequestEvent;
 import com.draksterau.Regenerator.event.RequestTrigger;

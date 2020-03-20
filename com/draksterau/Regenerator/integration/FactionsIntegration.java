@@ -5,6 +5,7 @@
  */
 package com.draksterau.Regenerator.integration;
 
+import com.draksterau.Regenerator.Handlers.MsgType;
 import com.draksterau.Regenerator.config.integrationConfigHandler;
 import com.massivecraft.factions.Rel;
 import com.massivecraft.factions.entity.BoardColl;

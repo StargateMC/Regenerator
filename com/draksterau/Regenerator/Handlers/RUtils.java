@@ -172,8 +172,8 @@ public class RUtils extends RObject {
     public void printErrorReport(String error) {
         throwMessage(MsgType.SEVERE, "A Severe error has been encountered (" + error + "). Please consider submitting this on github at https://github.com/Bysokar/Regenerator/Issues");
         throwMessage(MsgType.SEVERE, "Please be sure to include the following:");
-        throwMessasge(MsgType.SEVERE, "Bukkit Server Version: " + Bukkit.getVersion());
-        throwMessasge(MsgType.SEVERE, "Regenerator version: v" + this.plugin.getDescription().getVersion());
+        throwMessage(MsgType.SEVERE, "Bukkit Server Version: " + Bukkit.getVersion());
+        throwMessage(MsgType.SEVERE, "Regenerator version: v" + this.plugin.getDescription().getVersion());
         for (Integration i : plugin.loadedIntegrations) {
             throwMessage(MsgType.SEVERE, "Integration enabled for: " + i.getPluginName() + " v" + i.getPluginVersion() + "");
         }
@@ -185,17 +185,17 @@ public class RUtils extends RObject {
         ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
 
         if (MsgType.INFO.equals(type)) {
-            console.sendMessage(getFancyName() + ChatColor.DARK_AQUA + "[" + type.toUpperCase() + "]: " + message);
+            console.sendMessage(getFancyName() + ChatColor.DARK_AQUA + "[" + type.name() + "]: " + message);
         } else {
             if (MsgType.WARNING.equals(type)) {
-                console.sendMessage(getFancyName() + ChatColor.YELLOW + "[" + type.toUpperCase() + "]: " + message);
+                console.sendMessage(getFancyName() + ChatColor.YELLOW + "[" + type.name() + "]: " + message);
             } else {
                 if (MsgType.SEVERE.equals(type)) {
-                    console.sendMessage(getFancyName() + ChatColor.RED + "[" + type.toUpperCase() + "]: " + message);
+                    console.sendMessage(getFancyName() + ChatColor.RED + "[" + type.name() + "]: " + message);
                     printErrorReport(message);
                 } else {
                     if (MsgType.NEW.equals(type)) {
-                        console.sendMessage(getFancyName() + ChatColor.LIGHT_PURPLE + "[" + type.toUpperCase() + "]: " + message);
+                        console.sendMessage(getFancyName() + ChatColor.LIGHT_PURPLE + "[" + type.name() + "]: " + message);
                     } else {
                         this.throwMessage(MsgType.SEVERE,String.format(this.plugin.lang.getForKey("messages.errorThrowingMessage")));
                     }

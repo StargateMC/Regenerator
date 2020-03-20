@@ -5,6 +5,7 @@
  */
 package com.draksterau.Regenerator.config;
 
+import com.draksterau.Regenerator.Handlers.MsgType;
 import com.draksterau.Regenerator.RegeneratorPlugin;
 import com.draksterau.Regenerator.integration.Integration;
 import java.io.File;

@@ -5,6 +5,7 @@
  */
 package com.draksterau.Regenerator.listeners;
 
+import com.draksterau.Regenerator.Handlers.MsgType;
 import com.draksterau.Regenerator.RegeneratorPlugin;
 import com.draksterau.Regenerator.Handlers.RChunk;
 import com.draksterau.Regenerator.Handlers.RUtils;

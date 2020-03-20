@@ -5,6 +5,7 @@
  */
 package com.draksterau.Regenerator.tasks;
 
+import com.draksterau.Regenerator.Handlers.MsgType;
 import com.draksterau.Regenerator.Handlers.RChunk;
 import com.draksterau.Regenerator.Handlers.RWorld;
 import com.draksterau.Regenerator.RegeneratorPlugin;

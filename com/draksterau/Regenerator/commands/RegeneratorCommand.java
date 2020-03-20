@@ -5,6 +5,7 @@
  */
 package com.draksterau.Regenerator.commands;
 
+import com.draksterau.Regenerator.Handlers.MsgType;
 import com.draksterau.Regenerator.RegeneratorPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -76,7 +77,7 @@ public class RegeneratorCommand {
                             sender.sendMessage(plugin.utils.getFancyName() + ChatColor.RED + "This command requires the regenerator.integrations permission node.");
                         }
                         break;
-                    case MsgType.INFO:
+                    case "info":
                         new infoCommand(this).doCommand();
                         break;
                     default:

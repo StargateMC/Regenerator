@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package com.draksterau.Regenerator.integration;
+import com.draksterau.Regenerator.Handlers.MsgType;
 import com.draksterau.Regenerator.config.integrationConfigHandler;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldguard.WorldGuard;
