@@ -53,21 +53,27 @@ public final class RLang extends RObject {
     }
 
     public String getForKey(String key) {
-            String value = langConfig.getString(key);
-            if (value == null) {
-                langConfigFileTemp = new File(plugin.getDataFolder() + "/lang/" + this.language + ".yml");
-                langConfigTemp = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("lang/" + this.language + ".yml")));
-                if (langConfigTemp.isSet(key)) {
-                    plugin.utils.throwMessage(MsgType.NEW,String.format(this.getForKey("messages.langMissingEntries"),key,plugin.getDataFolder() + "/lang/" + this.language + ".yml"));
-                    String tempValue = langConfigTemp.getString(key);
-                    langConfig.set(key, tempValue);
-                    this.saveData();
-                    return tempValue;
+            try {
+                String value = langConfig.getString(key);
+                if (value == null) {
+                    langConfigFileTemp = new File(plugin.getDataFolder() + "/lang/" + this.language + ".yml");
+                    langConfigTemp = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("lang/" + this.language + ".yml")));
+                    if (langConfigTemp.isSet(key)) {
+                        plugin.utils.throwMessage(MsgType.NEW,String.format(this.getForKey("messages.langMissingEntries"),key,plugin.getDataFolder() + "/lang/" + this.language + ".yml"));
+                        String tempValue = langConfigTemp.getString(key);
+                        langConfig.set(key, tempValue);
+                        this.saveData();
+                        return tempValue;
+                    } else {
+                        return String.format(this.getForKey("messages.langEntryUnsupported"), key,this.language);
+                    }
                 } else {
-                    return String.format(this.getForKey("messages.langEntryUnsupported"), key,this.language);
+                    return value;
                 }
-            } else {
-                return value;
+            } catch (Exception e) {
+                plugin.utils.throwMessage(MsgType.SEVERE,"Language file : " langConfigFile.getAbsolutePath() + " is invalid. Exception: " + e.getMessage() + "!");
+                if (plugin.config.debugMode) e.printStackTrace();
+                plugin.disablePlugin();
             }
     }
     
