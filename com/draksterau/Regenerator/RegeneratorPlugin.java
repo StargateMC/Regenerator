@@ -37,10 +37,13 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
     
     public Player fakePlayer = null;
     
+    public RLang getOrInitLang(String language) {
+        if (this.lang == null) this.lang = new RLang(this, language);
+        return this.lang;
+    }
+    
     @Override
     public void onEnable () {
-        // Loads the language file.
-        lang = new RLang(this);
         // Load the RUtils module.
         utils = new RUtils(this);
         // Config gets loaded here in onEnable()

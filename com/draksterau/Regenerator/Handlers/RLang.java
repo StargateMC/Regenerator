@@ -22,39 +22,49 @@ public final class RLang extends RObject {
     private FileConfiguration langConfig;
     private File langConfigFileTemp;
     private FileConfiguration langConfigTemp;
+    private String language;
     
-    public RLang(RegeneratorPlugin plugin) {
+    public RLang(RegeneratorPlugin plugin, String language) {
         super(plugin);
+        this.language = language;
         this.loadData();
     }
     @Override
     void loadData() {
         // Attempt to load the config file.
-        langConfigFile = new File(plugin.getDataFolder() + "/lang/" + plugin.config.language + ".yml");
+        langConfigFile = new File(plugin.getDataFolder() + "lang/" + this.language + ".yml");
         // Attempt to read the config in the config file.
         langConfig = YamlConfiguration.loadConfiguration(langConfigFile);
         // If the config file is null (due to the config file being invalid or not there) create a new one.
         // If the file doesnt exist, populate it from the template.
         if (!langConfigFile.exists()) {
-            langConfigFile = new File(plugin.getDataFolder() + "/lang/" + plugin.config.language + ".yml");
-            langConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("messages.yml")));
+            langConfigFile = new File(plugin.getDataFolder() + "lang/" + this.language + ".yml");
+            langConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("lang/" + this.language + ".yml")));
             saveData();
         }
+    }
+    
+    public String getLanguage() {
+        return this.language;
+    }
+    
+    public void setLanguage(String s) {
+        this.language = s;
     }
 
     public String getForKey(String key) {
         String value = langConfig.getString(key);
         if (value == null) {
-            langConfigFileTemp = new File(plugin.getDataFolder() + "/lang/" + plugin.config.language + ".yml");
-            langConfigTemp = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("messages.yml")));
+            langConfigFileTemp = new File(plugin.getDataFolder() + "lang/" + this.language + ".yml");
+            langConfigTemp = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("lang/ENGLISH.yml")));
             if (langConfigTemp.isSet(key)) {
-                plugin.utils.throwMessage("new","Loading default value for " + key + " as it does not exist in " + plugin.getDataFolder() + "/lang/" + plugin.config.language + ".yml" + "!");
+                plugin.utils.throwMessage("new","Loading default value for " + key + " as it does not exist in " + plugin.getDataFolder() + "/lang/" + this.language + ".yml" + "!");
                 String tempValue = langConfigTemp.getString(key);
                 langConfig.set(key, tempValue);
                 this.saveData();
                 return tempValue;
             } else {
-                return "ERROR - Key: " + key + " does not exist in " + plugin.getDataFolder() + "/lang/" + plugin.config.language + ".yml!";
+                return "ERROR - Key: " + key + " does not exist in " + plugin.getDataFolder() + "lang/" + this.language + ".yml!";
             }
         } else {
             return value;

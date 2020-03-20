@@ -190,6 +190,23 @@ public final class RConfig extends RObject {
     }
     
     public void validateConfig() {
+        if (!config.isSet("language")) {
+            this.plugin.utils.throwMessage("new",String.format(this.plugin.getOrInitLang("ENGLISH").getForKey("messages.addingNewConfig"), "language", this.configFile.getName()));
+        } else {
+            if (new File(plugin.getDataFolder() + "/lang/" + config.getString("language") + ".yml").exists()) {
+                this.plugin.utils.throwMessage("info", "Loading language: " + config.getString("language"));
+                this.language = config.getString("language");
+            } else {
+                if (config.getString("language").equals("ENGLISH")) {
+                    this.plugin.utils.throwMessage("severe", "Loading default language, ENGLISH failed. No valid language is set & the default language of ENGLISH has been deleted, so Regenerator cannot load.");
+                    this.plugin.disablePlugin();
+                    return;
+                }
+                this.plugin.utils.throwMessage("warning", "Loading language: " + config.getString("language") + " failed, there is no YML file called " + plugin.getDataFolder() + "/lang/" + config.getString("language") + ".yml" + "!");
+                this.plugin.utils.throwMessage("warning", "Contribute a messages.yml for : " + config.getString("language") + " on github (http://github.com/draksterau/regenerator/) to have it included in a future release!");
+                this.language = "ENGLISH";
+            }
+        }
         this.plugin.utils.throwMessage("info", this.plugin.lang.getForKey("messages.validatingConfig"));
         if (this.distanceNearbyMinimum < 16) {
             this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.distanceNearbyTooClose"), "16"));
@@ -223,23 +240,6 @@ public final class RConfig extends RObject {
         if (this.numChunksPerParse > (((this.parseInterval * 10)) * this.percentIntervalRuntime) || this.numChunksPerParse < 1) {
             this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.numChunksPerParseInvalid"), String.valueOf((((this.parseInterval * 10)) * this.percentIntervalRuntime)/2)));
             this.numChunksPerParse = (((this.parseInterval * 5)) * this.percentIntervalRuntime);
-        }
-        if (!config.isSet("language")) {
-            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "language", this.configFile.getName()));
-        } else {
-            if (new File(plugin.getDataFolder() + "/lang/" + config.getString("language") + ".yml").exists()) {
-                this.plugin.utils.throwMessage("info", "Loading language: " + config.getString("language"));
-                this.language = config.getString("language");
-            } else {
-                if (config.getString("language").equals("ENGLISH")) {
-                    this.plugin.utils.throwMessage("severe", "Loading default language, ENGLISH failed. No valid language is set & the default language of ENGLISH has been deleted, so Regenerator cannot load.");
-                    this.plugin.disablePlugin();
-                    return;
-                }
-                this.plugin.utils.throwMessage("warning", "Loading language: " + config.getString("language") + " failed, there is no YML file called " + plugin.getDataFolder() + "/lang/" + config.getString("language") + ".yml" + "!");
-                this.plugin.utils.throwMessage("warning", "Contribute a messages.yml for : " + config.getString("language") + " on github (http://github.com/draksterau/regenerator/) to have it included in a future release!");
-                this.language = "ENGLISH";
-            }
         }
         this.saveData();
         this.loadData();
