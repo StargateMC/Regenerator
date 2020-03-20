@@ -110,4 +110,8 @@ public class TownyIntegration extends Integration {
         return null;
     }
     
+    @Override
+    public boolean supportsUnknownProtectionDetection() {
+        return false;
+    }
 }

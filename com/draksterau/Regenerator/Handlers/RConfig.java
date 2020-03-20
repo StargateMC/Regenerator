@@ -34,7 +34,11 @@ public final class RConfig extends RObject {
     
     // Enables fake player detection.
     
-    public boolean enableUnknownProtectionDetection = false;
+    public boolean enableUnknownProtectionDetection = true;
+    
+    // Enables stack traces during errors.
+    
+    public boolean debugMode = false;
     
     // Enables regeneration of chunks on next chunk load, if they arent protected.
     
@@ -111,7 +115,7 @@ public final class RConfig extends RObject {
             saveData();
         }
         if (!config.isSet("configVersion")) {
-            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "configVersion", this.configFile.getName()));
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "configVersion", this.configFile.getName()));
         } else {
             if (!config.getString("configVersion").equals(this.plugin.getDescription().getVersion())) {
                 updateConfig();
@@ -127,120 +131,125 @@ public final class RConfig extends RObject {
         this.numChunksPerParse =config.getInt("numChunksPerParse");
         this.percentIntervalRuntime = config.getDouble("percentIntervalRuntime");
         if (!config.isSet("cacheChunksOnLoad")) {
-            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "cacheChunksOnLoad", this.configFile.getName()));
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "cacheChunksOnLoad", this.configFile.getName()));
         } else {
             this.cacheChunksOnLoad = config.getBoolean("cacheChunksOnLoad");
         }
         if (!config.isSet("distanceNearbyMinimum")) {
-            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "distanceNearbyMinimum", this.configFile.getName()));
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "distanceNearbyMinimum", this.configFile.getName()));
         } else {
             this.distanceNearbyMinimum = config.getInt("distanceNearbyMinimum");
         }
         if (!config.isSet("targetLoadedChunks")) {
-            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "targetLoadedChunks", this.configFile.getName()));
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "targetLoadedChunks", this.configFile.getName()));
         } else {
             this.targetLoadedChunks = config.getBoolean("targetLoadedChunks");
         }
         if (!config.isSet("fakePlayerUUID")) {
-            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "fakePlayerUUID", this.configFile.getName()));
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "fakePlayerUUID", this.configFile.getName()));
         } else {
             this.fakePlayerUUID = UUID.fromString(config.getString("fakePlayerUUID"));
         }
         if (!config.isSet("targetUnloadedChunks")) {
-            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "targetUnloadedChunks", this.configFile.getName()));
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "targetUnloadedChunks", this.configFile.getName()));
         } else {
             this.targetUnloadedChunks = config.getBoolean("targetUnloadedChunks");
         }
         if (!config.isSet("regenerateChunksInUseByPlayers")) {
-            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "regenerateChunksInUseByPlayers", this.configFile.getName()));
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "regenerateChunksInUseByPlayers", this.configFile.getName()));
         } else {
             this.regenerateChunksInUseByPlayers = config.getBoolean("regenerateChunksInUseByPlayers");
         }
         if (!config.isSet("clearRegeneratedChunksOfEntities")) {
-            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "clearRegeneratedChunksOfEntities", this.configFile.getName()));
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "clearRegeneratedChunksOfEntities", this.configFile.getName()));
         } else {
             this.clearRegeneratedChunksOfEntities = config.getBoolean("clearRegeneratedChunksOfEntities");
         }
         if (!config.isSet("enableUnknownProtectionDetection")) {
-            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "enableUnknownProtectionDetection", this.configFile.getName()));
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "enableUnknownProtectionDetection", this.configFile.getName()));
         } else {
             this.enableUnknownProtectionDetection = config.getBoolean("enableUnknownProtectionDetection");
         }
         if (!config.isSet("excludeEntityTypesFromRegeneration")) {
-            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "excludeEntityTypesFromRegeneration", this.configFile.getName()));
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "excludeEntityTypesFromRegeneration", this.configFile.getName()));
         } else {
             this.excludeEntityTypesFromRegeneration = config.getStringList("excludeEntityTypesFromRegeneration");
         }
         if (!config.isSet("warpDriveCompatibility")) {
-            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "warpDriveCompatibility", this.configFile.getName()));
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "warpDriveCompatibility", this.configFile.getName()));
         } else {
             this.warpDriveCompatibility = config.getBoolean("warpDriveCompatibility");
         }
         if (!config.isSet("enableRegenerationNextChunkLoad")) {
-            this.plugin.utils.throwMessage("new",String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "enableRegenerationNextChunkLoad", this.configFile.getName()));
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "enableRegenerationNextChunkLoad", this.configFile.getName()));
         } else {
             this.enableRegenerationNextChunkLoad = config.getBoolean("enableRegenerationNextChunkLoad");
+        }
+        if (!config.isSet("debugMode")) {
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "debugMode", this.configFile.getName()));
+        } else {
+            this.debugMode = config.getBoolean("debugMode");
         }
     }
 
     public void updateConfig() {
-        this.plugin.utils.throwMessage("info",this.plugin.lang.getForKey("messages.oldConfigFileUpdating"));
+        this.plugin.utils.throwMessage(MsgType.INFO,this.plugin.lang.getForKey("messages.oldConfigFileUpdating"));
         // For now, we just update the config version.
         this.configVersion = this.plugin.getDescription().getVersion();
     }
     
     public void validateConfig() {
         if (!config.isSet("language")) {
-            this.plugin.utils.throwMessage("new",String.format(this.plugin.getOrInitLang("ENGLISH").getForKey("messages.addingNewConfig"), "language", this.configFile.getName()));
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.getOrInitLang("ENGLISH").getForKey("messages.addingNewConfig"), "language", this.configFile.getName()));
         } else {
             this.plugin.getOrInitLang(config.getString("language")); // Initialises the language.
             if (new File(plugin.getDataFolder() + "/lang/" + config.getString("language") + ".yml").exists()) {
-                this.plugin.utils.throwMessage("info", String.format(plugin.lang.getForKey("messages.loadingLanguage"), config.getString("language")));
+                this.plugin.utils.throwMessage(MsgType.INFO, String.format(plugin.lang.getForKey("messages.loadingLanguage"), config.getString("language")));
                 this.language = config.getString("language");
             } else {
                 if (config.getString("language").equals("ENGLISH")) {
-                    this.plugin.utils.throwMessage("severe", String.format(plugin.lang.getForKey("messages.defaultLanguageFailure")));
+                    this.plugin.utils.throwMessage(MsgType.SEVERE, String.format(plugin.lang.getForKey("messages.defaultLanguageFailure")));
                     this.plugin.disablePlugin();
                     return;
                 }
 
-                this.plugin.utils.throwMessage("severe", String.format(plugin.lang.getForKey("messages.languageNotAvailable"), config.getString("language"), (plugin.getDataFolder() + "/lang/" + config.getString("language") + ".yml")));
-                this.plugin.utils.throwMessage("info", String.format(plugin.lang.getForKey("messages.contributeLanguageNotice", config.getString("language")));
+                this.plugin.utils.throwMessage(MsgType.WARNING, String.format(plugin.lang.getForKey("messages.languageNotAvailable"), config.getString("language"), (plugin.getDataFolder() + "/lang/" + config.getString("language") + ".yml")));
+                this.plugin.utils.throwMessage(MsgType.INFO, String.format(plugin.lang.getForKey("messages.contributeLanguageNotice"), config.getString("language")));
                 this.language = "ENGLISH";
             }
         }
-        this.plugin.utils.throwMessage("info", this.plugin.lang.getForKey("messages.validatingConfig"));
+        this.plugin.utils.throwMessage(MsgType.INFO, this.plugin.lang.getForKey("messages.validatingConfig"));
         if (this.distanceNearbyMinimum < 16) {
-            this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.distanceNearbyTooClose"), "16"));
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.distanceNearbyTooClose"), "16"));
             this.distanceNearbyMinimum = 16;
         }
         if (this.distanceNearbyMinimum > 256) {
-            this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.distanceNearbyTooFar"), "256"));
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.distanceNearbyTooFar"), "256"));
             this.distanceNearbyMinimum = 256;
         }
         
         if (this.parseInterval < 60) {
-            this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.parseIntervalInsufficient"), "60"));
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.parseIntervalInsufficient"), "60"));
             this.parseInterval = 60;
         }
         if (!this.targetLoadedChunks && !this.targetUnloadedChunks) {
-            this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.mustTargetSomething")));
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.mustTargetSomething")));
             this.targetUnloadedChunks = true;
         }
         if (this.parseInterval > 3600) {
-            this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.parseIntervalNotFrequent"), "3600"));
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.parseIntervalNotFrequent"), "3600"));
             this.parseInterval = 3600;
         }
         if (this.minTpsRegen > 20 || this.minTpsRegen < 1) {
-            this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.tpsInvalid"), "15"));
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.tpsInvalid"), "15"));
             this.minTpsRegen = 15;
         }
         if (this.percentIntervalRuntime > 1.0 || this.percentIntervalRuntime < 0.1) {
-            this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.runtimeInvalid"), "0.5"));
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.runtimeInvalid"), "0.5"));
             this.percentIntervalRuntime = 0.5;
         }
         if (this.numChunksPerParse > (((this.parseInterval * 10)) * this.percentIntervalRuntime) || this.numChunksPerParse < 1) {
-            this.plugin.utils.throwMessage("warning", String.format(this.plugin.lang.getForKey("messages.numChunksPerParseInvalid"), String.valueOf((((this.parseInterval * 10)) * this.percentIntervalRuntime)/2)));
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.numChunksPerParseInvalid"), String.valueOf((((this.parseInterval * 10)) * this.percentIntervalRuntime)/2)));
             this.numChunksPerParse = (((this.parseInterval * 5)) * this.percentIntervalRuntime);
         }
         this.saveData();
@@ -268,10 +277,11 @@ public final class RConfig extends RObject {
         config.set("enableUnknownProtectionDetection", this.enableUnknownProtectionDetection);
         config.set("enableRegenerationNextChunkLoad", this.enableRegenerationNextChunkLoad);
         config.set("language", this.language);
+        config.set("debugMode", this.debugMode);
         try {
             config.save(configFile);
         } catch (IOException ex) {
-            plugin.utils.throwMessage("severe",String.format(plugin.lang.getForKey("messages.cantSaveGlobalConfig"), configFile.getAbsolutePath(), ex.getMessage()));
+            plugin.utils.throwMessage(MsgType.SEVERE,String.format(plugin.lang.getForKey("messages.cantSaveGlobalConfig"), configFile.getAbsolutePath(), ex.getMessage()));
         }    
     }
     

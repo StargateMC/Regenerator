@@ -98,4 +98,9 @@ public class GriefPreventionIntegration extends Integration {
         }
         return true;
     }
+    
+    @Override
+    public boolean supportsUnknownProtectionDetection() {
+        return true;
+    }
 }

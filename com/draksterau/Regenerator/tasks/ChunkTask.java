@@ -40,7 +40,7 @@ public class ChunkTask extends BukkitRunnable {
             if (!isManual) {
                 // Lets check if the world the chunk is on is loaded still.
                 if (Bukkit.getServer().getWorld(RChunk.worldName) == null) {
-                    RChunk.plugin.utils.throwMessage("info", String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenWorldUnloaded"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
+                    RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenWorldUnloaded"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
                     return;
                 }
                 
@@ -53,67 +53,67 @@ public class ChunkTask extends BukkitRunnable {
                 Bukkit.getServer().getPluginManager().callEvent(actionEvent);
                 if (actionEvent.isCancelled()) {
                     int reasonCount = 1;                                            
-                    RChunk.plugin.utils.throwMessage("info", String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenDueToActionEventCancellation"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
+                    RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenDueToActionEventCancellation"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
                     for (String s : actionEvent.getCancelledReasons().keySet()) {
-                        RChunk.plugin.utils.throwMessage("info", String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenActionEventResult"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName(), reasonCount, s, actionEvent.getCancelledReasons().get(s).getName()));
+                        RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenActionEventResult"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName(), reasonCount, s, actionEvent.getCancelledReasons().get(s).getName()));
                         reasonCount++;
                     }
                     RChunk.resetActivity();
                     return;        
                 }
                 if (RChunk.plugin.config.enableUnknownProtectionDetection && !RChunk.plugin.utils.canBreakChunk(RChunk.getChunk())) {
-                    RChunk.plugin.utils.throwMessage("info", String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenProtectedUnknownSource"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
+                    RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenProtectedUnknownSource"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
                     RChunk.resetActivity();
                     return;
                 }
                 // Now checking if a chunk is claimed at the point of regenerating only.
                 if (!RChunk.plugin.utils.autoRegenRequirementsMet(RChunk.getChunk())) {
-                    RChunk.plugin.utils.throwMessage("info", String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenAutoRegenRequirementFail"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName(),RChunk.plugin.config.distanceNearbyMinimum));
+                    RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenAutoRegenRequirementFail"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName(),RChunk.plugin.config.distanceNearbyMinimum));
                     RChunk.resetActivity();
                     return;
                 }
                 if (!RChunk.plugin.utils.isLagOK()) {
-                    RChunk.plugin.utils.throwMessage("warning", String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenTPSToLow"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName(),RChunk.plugin.config.minTpsRegen));
+                    RChunk.plugin.utils.throwMessage(MsgType.WARNING, String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenTPSToLow"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName(),RChunk.plugin.config.minTpsRegen));
                     return;
                 }
                 if (!RChunk.plugin.utils.getPlayersNearChunk(RChunk, RChunk.plugin.config.distanceNearbyMinimum).isEmpty()) {
-                    RChunk.plugin.utils.throwMessage("info", String.format(RChunk.plugin.lang.getForKey("messages.distanceNearbyMinimum"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName(),RChunk.plugin.config.distanceNearbyMinimum));
+                    RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.distanceNearbyMinimum"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName(),RChunk.plugin.config.distanceNearbyMinimum));
                     return;
                 }
                 if (RChunk.getChunk().isLoaded() && !RChunk.plugin.config.targetLoadedChunks) {
-                    RChunk.plugin.utils.throwMessage("info", String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenOfLoadedChunk"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
+                    RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenOfLoadedChunk"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
                    return;
                 }
                 if (!RChunk.getChunk().isLoaded() && !RChunk.plugin.config.targetUnloadedChunks) {
-                    RChunk.plugin.utils.throwMessage("info", String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenOfUnloadedChunk"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
+                    RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenOfUnloadedChunk"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
                    return;
                 }
                 if (RChunk.getChunk().getWorld().isChunkInUse(RChunk.chunkX, RChunk.chunkZ) && !RChunk.plugin.config.regenerateChunksInUseByPlayers) {
-                    RChunk.plugin.utils.throwMessage("info", String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenOfChunkInUseByPlayers"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
+                    RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenOfChunkInUseByPlayers"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
                     return;
                 }
                 if (RChunk.plugin.config.warpDriveCompatibility && RChunk.plugin.utils.isWarpCoreNearby(RChunk.getChunk()) != null) {
-                    RChunk.plugin.utils.throwMessage("info", String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenOfChunkNearWarpCore"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
+                    RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenOfChunkNearWarpCore"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
                     return;
                 }
             }
             if (!RChunk.getChunk().isLoaded()) {
-            RChunk.plugin.utils.throwMessage("info", String.format(RChunk.plugin.lang.getForKey("messages.loadingToRegen"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
+            RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.loadingToRegen"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
                 RChunk.getChunk().load();
                 wasUnloaded = true;
             }
             
-            RChunk.plugin.utils.throwMessage("info", String.format(RChunk.plugin.lang.getForKey("messages.startingRegenChunk"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
+            RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.startingRegenChunk"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
             
             if (RChunk.plugin.config.clearRegeneratedChunksOfEntities) {
-                RChunk.plugin.utils.throwMessage("info", String.format(RChunk.plugin.lang.getForKey("messages.regenClearEntities"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
+                RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.regenClearEntities"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
                 RChunk.plugin.utils.clearEntitiesFromChunk(RChunk);
             }
             
             if (RChunk.plugin.utils.regenerateChunk(RChunk.getChunk())) {
-                RChunk.plugin.utils.throwMessage("info", String.format(RChunk.plugin.lang.getForKey("messages.regenSuccess"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
+                RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.regenSuccess"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
             } else {
-                RChunk.plugin.utils.throwMessage("severe", String.format(RChunk.plugin.lang.getForKey("messages.regenFailed"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
+                RChunk.plugin.utils.throwMessage(MsgType.SEVERE, String.format(RChunk.plugin.lang.getForKey("messages.regenFailed"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
             }
             
             Random random = new Random(RChunk.getChunk().getWorld().getSeed());
@@ -123,7 +123,7 @@ public class ChunkTask extends BukkitRunnable {
             random.setSeed((long) RChunk.chunkX * xRand + (long) RChunk.chunkZ * zRand ^ RChunk.getWorld().getSeed());
             RChunk.resetActivity();
             if (wasUnloaded) {
-                RChunk.plugin.utils.throwMessage("info", String.format(RChunk.plugin.lang.getForKey("messages.unloadingChunkLoadedForRegen"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
+                RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.unloadingChunkLoadedForRegen"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
                 RChunk.getChunk().unload();
             }
     }

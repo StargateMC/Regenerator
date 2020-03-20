@@ -76,7 +76,7 @@ public class RegeneratorCommand {
                             sender.sendMessage(plugin.utils.getFancyName() + ChatColor.RED + "This command requires the regenerator.integrations permission node.");
                         }
                         break;
-                    case "info":
+                    case MsgType.INFO:
                         new infoCommand(this).doCommand();
                         break;
                     default:

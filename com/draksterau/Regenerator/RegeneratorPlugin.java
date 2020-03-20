@@ -1,6 +1,7 @@
 package com.draksterau.Regenerator;
 
 //import com.draksterau.Regenerator.commands.RegeneratorCommand;
+import com.draksterau.Regenerator.Handlers.MsgType;
 import com.draksterau.Regenerator.listeners.eventListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -49,66 +50,72 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
         // Config gets loaded here in onEnable()
         config = new RConfig(this);
         if (!this.isEnabled()) return; // If Config or lang loading fails, stop enabling the plugin.
-        utils.throwMessage("info", String.format(lang.getForKey("messages.pluginLoading"), config.configVersion));
+        utils.throwMessage(MsgType.INFO, String.format(lang.getForKey("messages.pluginLoading"), config.configVersion));
         utils.initAvailableIntegrations();
         utils.loadIntegrations();
         if (this.isEnabled()) {
+            utils.throwMessage(MsgType.INFO, "Detected server version: " + Bukkit.getVersion());
             if (getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
                 if (Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion().startsWith("7")) {
-                    utils.throwMessage("info", String.format(lang.getForKey("messages.WorldEditLoaded"), Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion()));
+                    utils.throwMessage(MsgType.INFO, String.format(lang.getForKey("messages.WorldEditLoaded"), Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion()));
                 } else {
-                    utils.throwMessage("severe", String.format(lang.getForKey("messages.WorldEditIncompatible"), Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion(), "7.x"));
+                    utils.throwMessage(MsgType.SEVERE, String.format(lang.getForKey("messages.WorldEditIncompatible"), Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion(), "7.x"));
 
                     this.disablePlugin();
                 }
             } else {
-                    utils.throwMessage("severe", String.format(lang.getForKey("messages.WorldEditMissing"), "v7.x"));
+                    utils.throwMessage(MsgType.SEVERE, String.format(lang.getForKey("messages.WorldEditMissing"), "v7.x"));
                     this.disablePlugin();
             }
-            utils.throwMessage("info", String.format(lang.getForKey("messages.pluginStarting"), config.configVersion));
-            if (config.enableUnknownProtectionDetection) utils.throwMessage("info", "Experimental Feature: UnknownProtectionDetection is active! Chunks will be treated as protected if any protection plugin disallows Regenerator breaking blocks in chunks!");
+            utils.throwMessage(MsgType.INFO, String.format(lang.getForKey("messages.pluginStarting"), config.configVersion));
             if (loadedIntegrations.isEmpty()) {
                 if (config.noGriefRun) {
-                    utils.throwMessage("warning", "No supported grief protection plugins found. No land will be protected from regeneration via external plugins!");
+                    utils.throwMessage(MsgType.WARNING, lang.getForKey("messages.warningNoIntegrationsNoGriefRunEnabled"));
                 } else {
-                    utils.throwMessage("warning", "No supported grief protection plugins found. You must acknowledge that you must configure the plugin properly or risk losing chunks.");
-                    utils.throwMessage("info", "Regenerator supports the following plugins:");
+                    utils.throwMessage(MsgType.WARNING, lang.getForKey("messages.warningNoIntegrationsNoGriefRunDisabled"));
+                    utils.throwMessage(MsgType.INFO, lang.getForKey("messages.integrationSupportMessage"));
                     utils.iterateIntegrations();
-                    utils.throwMessage("severe", "You must set 'noGriefRun' to true in config before Regenerator will load without integrations.");
-                    if (!config.enableUnknownProtectionDetection) utils.throwMessage("severe", "You may set 'enableUnknownProtectionDetection' to true if you have a grief prevention plugin that is not supported. This works by having Regenerator try and break blocks as an unknown player within a chunk to see if a protection plugin prevents this.");
+                    utils.throwMessage(MsgType.SEVERE, lang.getForKey("messages.noGriefRunPrompt"));
                 }
             }
+            
+            if (!config.enableUnknownProtectionDetection) utils.throwMessage(MsgType.INFO, lang.getForKey("messages.unknownProtectionDetectionInactive"));
+            if (config.enableUnknownProtectionDetection) utils.throwMessage(MsgType.INFO, lang.getForKey("messages.unknownProtectionDetectionActive"));
+            
+            if (config.debugMode) utils.throwMessage(MsgType.INFO, lang.getForKey("messages.debugModeEnabled"));
+            if (!config.debugMode) utils.throwMessage(MsgType.INFO, lang.getForKey("messages.debugModeDisabled"));
+            
             if (this.isEnabled()) {
                 utils.loadWorlds();
                 
                 // This registers all event listeners.
                 try {
                     getServer().getPluginManager().registerEvents(new eventListener(this), this);
-                    utils.throwMessage("info", "Successfully registered Event Listeners!");
+                    utils.throwMessage(MsgType.INFO, "Successfully registered Event Listeners!");
                 } catch (Exception e) {
-                    utils.throwMessage("severe", "Failed to start event listeners. Please report this (and the below error) to the developer!");
-                    e.printStackTrace();
+                    utils.throwMessage(MsgType.SEVERE, "Failed to start event listeners. Please report this (and the below error) to the developer!");
+                    if (config.debugMode) e.printStackTrace();
                     this.disablePlugin();
                 }
                 // This registers a repeating task to measure 1 tick, so we can accurately  get TPS.
                 try {
                     new lagTask().runTaskTimer(this, 100L, 1L);
-                    utils.throwMessage("info", "Successfully registered TPS Monitor!");
+                    utils.throwMessage(MsgType.INFO, "Successfully registered TPS Monitor!");
                 } catch (Exception e) {
-                    utils.throwMessage("severe", "Failed to start TPS monitor. Please report this (and the below error) to the developer!");
-                    e.printStackTrace();
+                    utils.throwMessage(MsgType.SEVERE, "Failed to start TPS monitor. Please report this (and the below error) to the developer!");
+                    if (config.debugMode) e.printStackTrace();
                     this.disablePlugin();
                 }
                 // This registers the regeneration task.
                 try {
                     new regenTask(this).runTaskTimerAsynchronously(this,1200, config.parseInterval * 20);
-                    utils.throwMessage("info", "Successfully registered Regeneration Task!");
+                    utils.throwMessage(MsgType.INFO, "Successfully registered Regeneration Task!");
                 } catch (Exception e) {
-                    utils.throwMessage("severe", "Failed to start regeneration task. Please report this (and the below error) to the developer!");
-                    e.printStackTrace();
+                    utils.throwMessage(MsgType.SEVERE, "Failed to start regeneration task. Please report this (and the below error) to the developer!");
+                    if (config.debugMode) e.printStackTrace();
                     this.disablePlugin();
                 }
-                utils.throwMessage("info", String.format(this.lang.getForKey("messages.parseSchedule"), "30", String.valueOf(config.parseInterval)));
+                utils.throwMessage(MsgType.INFO, String.format(this.lang.getForKey("messages.parseSchedule"), "30", String.valueOf(config.parseInterval)));
             }
         }
     }

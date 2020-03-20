@@ -53,22 +53,22 @@ public final class RLang extends RObject {
     }
 
     public String getForKey(String key) {
-        String value = langConfig.getString(key);
-        if (value == null) {
-            langConfigFileTemp = new File(plugin.getDataFolder() + "/lang/" + this.language + ".yml");
-            langConfigTemp = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("lang/ENGLISH.yml")));
-            if (langConfigTemp.isSet(key)) {
-                plugin.utils.throwMessage("new","Loading default value for " + key + " as it does not exist in " + plugin.getDataFolder() + "/lang/" + this.language + ".yml" + "!");
-                String tempValue = langConfigTemp.getString(key);
-                langConfig.set(key, tempValue);
-                this.saveData();
-                return tempValue;
+            String value = langConfig.getString(key);
+            if (value == null) {
+                langConfigFileTemp = new File(plugin.getDataFolder() + "/lang/" + this.language + ".yml");
+                langConfigTemp = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("lang/" + this.language + ".yml")));
+                if (langConfigTemp.isSet(key)) {
+                    plugin.utils.throwMessage(MsgType.NEW,String.format(this.getForKey("messages.langMissingEntries"),key,plugin.getDataFolder() + "/lang/" + this.language + ".yml"));
+                    String tempValue = langConfigTemp.getString(key);
+                    langConfig.set(key, tempValue);
+                    this.saveData();
+                    return tempValue;
+                } else {
+                    return String.format(this.getForKey("messages.langEntryUnsupported"), key,this.language);
+                }
             } else {
-                return "ERROR - Key: " + key + " does not exist in " + plugin.getDataFolder() + "/lang/" + this.language + ".yml!";
+                return value;
             }
-        } else {
-            return value;
-        }
     }
     
     @Override
@@ -76,7 +76,8 @@ public final class RLang extends RObject {
         try {
             langConfig.save(langConfigFile);
         } catch (IOException ex) {
-            plugin.utils.throwMessage("severe","Could not save localisation config to " + langConfigFile.getAbsolutePath() + " (Exception: " + ex.getMessage() + ")");
+            plugin.utils.throwMessage(MsgType.SEVERE,String.format(this.getForKey("messages.cantSaveLang"), langConfigFile.getAbsolutePath(), ex.getMessage());
+            if (plugin.config.debugMode) ex.printStackTrace();
         }    
     }
 

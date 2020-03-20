@@ -44,7 +44,7 @@ public class regenTask extends BukkitRunnable {
     public void run() {
         
         if (!this.plugin.utils.isLagOK()) {
-            plugin.utils.throwMessage("warning", String.format(plugin.lang.getForKey("messages.regenPausedTPSLow"),plugin.config.minTpsRegen));
+            plugin.utils.throwMessage(MsgType.WARNING, String.format(plugin.lang.getForKey("messages.regenPausedTPSLow"),plugin.config.minTpsRegen));
             return;
         }
         
@@ -55,7 +55,7 @@ public class regenTask extends BukkitRunnable {
         numChunks = 0;
         secsTotal = 0;
         
-        plugin.utils.throwMessage("info", String.format(plugin.lang.getForKey("messages.regenParseStarting")));
+        plugin.utils.throwMessage(MsgType.INFO, String.format(plugin.lang.getForKey("messages.regenParseStarting")));
         for (RWorld RWorld : plugin.loadedWorlds) {
             if (!getChunksToRegen(RWorld).isEmpty()) {
                 numWorlds++;
@@ -66,14 +66,14 @@ public class regenTask extends BukkitRunnable {
             if (numChunks == 0) numChunks = 1;
             secsTotal = (plugin.config.parseInterval * plugin.config.percentIntervalRuntime);
             secsBetweenChunks = (secsTotal / numChunks);
-            plugin.utils.throwMessage("info", String.format(plugin.lang.getForKey("messages.regenParseStart"), secsBetweenChunks, secsTotal));
+            plugin.utils.throwMessage(MsgType.INFO, String.format(plugin.lang.getForKey("messages.regenParseStart"), secsBetweenChunks, secsTotal));
             for (RChunk rChunk : chunksToRegenerate) {
                 try {
                     new ChunkTask(rChunk, false).runTaskLater(plugin, (long)offsetTicks);
                     offsetTicks = offsetTicks + (secsBetweenChunks * 20);
                 } catch (Exception e) {
-                    plugin.utils.throwMessage("severe", String.format(plugin.lang.getForKey("messages.queueChunkTaskException"), rChunk.getChunk().getX(), rChunk.getChunk().getZ(), rChunk.getWorldName(), e.getMessage()));
-                    e.printStackTrace();
+                    plugin.utils.throwMessage(MsgType.SEVERE, String.format(plugin.lang.getForKey("messages.queueChunkTaskException"), rChunk.getChunk().getX(), rChunk.getChunk().getZ(), rChunk.getWorldName(), e.getMessage()));
+                    if (plugin.config.debugMode) e.printStackTrace();
                 }
                 
             }
@@ -85,10 +85,10 @@ public class regenTask extends BukkitRunnable {
             Logger.getLogger(regenTask.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (chunksToRegenerate.isEmpty()) {
-            plugin.utils.throwMessage("info", String.format(plugin.lang.getForKey("messages.regenTaskCompletedNothingDone")));
+            plugin.utils.throwMessage(MsgType.INFO, String.format(plugin.lang.getForKey("messages.regenTaskCompletedNothingDone")));
         }
         if (!chunksToRegenerate.isEmpty()) {
-            plugin.utils.throwMessage("info", String.format(plugin.lang.getForKey("messages.regenTaskCompleted"), numChunks, numWorlds));
+            plugin.utils.throwMessage(MsgType.INFO, String.format(plugin.lang.getForKey("messages.regenTaskCompleted"), numChunks, numWorlds));
         }
  
     }

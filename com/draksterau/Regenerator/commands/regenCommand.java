@@ -42,8 +42,8 @@ public class regenCommand {
                         try {
                             new ChunkTask(rChunk, true).runTask(command.plugin);
                         } catch (Exception e) {
-                            command.plugin.utils.throwMessage("severe", "Failed to regenerate chunk : " + rChunk.getChunk().getX() + "," + rChunk.getChunk().getZ() + " on world: " + rChunk.getWorldName());
-                            e.printStackTrace();
+                            command.plugin.utils.throwMessage(MsgType.SEVERE, "Failed to regenerate chunk : " + rChunk.getChunk().getX() + "," + rChunk.getChunk().getZ() + " on world: " + rChunk.getWorldName());
+                            if (command.plugin.config.debugMode) e.printStackTrace();
                         }
                         rChunk.resetActivity();
                         Integration integration = command.plugin.utils.getIntegrationForChunk(player.getLocation().getChunk());

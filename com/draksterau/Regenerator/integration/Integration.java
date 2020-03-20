@@ -51,4 +51,7 @@ public abstract class Integration {
     // This returns the permission required to regenerate a chunk, regardless of if the player has it.
     public abstract String getPermissionRequiredToRegen(Player player, Chunk chunk);
     
+    // This returns true or false if the integration will conflict with unknown protection detection.
+    public abstract boolean supportsUnknownProtectionDetection();
+    
 }

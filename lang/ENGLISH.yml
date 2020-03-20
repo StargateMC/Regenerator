@@ -62,3 +62,17 @@ messages:
     WorldEditLoaded: Loading dependency WorldEdit v%s
     WorldEditIncompatible: Loading dependency WorldEdit v%s failed, v%s is required!
     WorldEditMissing: Regenerator v3.4.0 and higher depends on WorldEdit to perform regeneration tasks. This is due to limitations in the Bukkit/Spigot API. Please install WorldEdit v%s to enable Regenerator on your server.
+    warningNoIntegrationsNoGriefRunEnabled: No supported grief prevention plugins found, but noGriefRun is enabled. No land will be protected from regeneration by Integrated plugins.
+    warningNoIntegrationsNoGriefRunDisabled: No supported grief prevention plugins found, and noGriefRun is disabled. Regenerator will now be disabled.
+    integrationSupportMessage: Regenerator supports the following plugins:
+    noGriefRunPrompt: You must set 'noGriefRun' to true in global.yml before Regenerator will load without any integrations to acknowledge that you need to configure the plugin correctly to avoid regenerating your builds.
+    unknownProtectionDetectionInactive: UnknownProtectionDetection  is inactive. You can set 'enableUnknownProtectionDetection' to true in global.yml if you have a chunk based grief prevention plugin that is not integrated with Regenerator to ensure your builds are not regenerated. Unknown Region based plugins are not supported at this time.
+    unknownProtectionDetectionActive: UnknownProtectionDetection is active. Regenerator will fake an attempt to break blocks in chunks before queuing or actioning regeneration of them. If this fails, it will assume an unknown protection plugin is preventing this.
+    integrationConflictFound: Integration with %s whilst having unknown protection detection enabled is not supported. Unknown protection detection will now be disabled.
+    debugModeDisabled: Debug mode is turned off. Detailed logging & stack traces will not be displayed when an exception is thrown by Regenerator. Please ensure this is turned on when you capture logs for troubleshooting any issues and reporting them on Github.
+    debugModeEnabled: Debug mode is turned on. Detailed logging & stack traces will be displayed in server logs when an exception is thrown by Regenerator.
+    langMissingEntries: Loading default value for lang key %s, as it is missing from %s. If this fails, please submit an issue at https://github.com/Bysokar/Regenerator/issues
+    langEntryUnsupported: Lang Key %s is missing from the official file for %s. Please report this to at https://github.com/Bysokar/Regenerator/issues.
+    cantSaveLang: Could not save language file to %, error: %s.
+    regenFailedWorldEdit: Failed to regenerate chunk at %s,%s on %s, due to the following error whilst calling WorldEdits API: %s.
+    entitiesRemovedCount: Removed %s entities from chunk at %s,%s on %s.

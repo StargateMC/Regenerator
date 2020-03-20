@@ -53,7 +53,7 @@ public class eventListener implements Listener {
         // If the Plugin currently hasnt got the RWorld registered, register it.
         if (!RegeneratorPlugin.loadedWorlds.contains(RWorld)) RegeneratorPlugin.loadedWorlds.add(RWorld);
         RChunk RChunk = new RChunk(RegeneratorPlugin, event.getWorld().getSpawnLocation().getBlockX(), event.getWorld().getSpawnLocation().getBlockX(), event.getWorld().getName());
-        RegeneratorPlugin.utils.throwMessage("info", "Loaded World : " + event.getWorld().getName());
+        RegeneratorPlugin.utils.throwMessage(MsgType.INFO, "Loaded World : " + event.getWorld().getName());
     }
     
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -61,7 +61,7 @@ public class eventListener implements Listener {
         RWorld RWorld = new RWorld(RegeneratorPlugin, event.getWorld());
         // If the Plugin currently has the RWorld registered, removed it.
         if (RegeneratorPlugin.loadedWorlds.contains(RWorld)) RegeneratorPlugin.loadedWorlds.remove(RWorld);
-        RegeneratorPlugin.utils.throwMessage("info", "Unloaded World : " + event.getWorld().getName());
+        RegeneratorPlugin.utils.throwMessage(MsgType.INFO, "Unloaded World : " + event.getWorld().getName());
     }
     
     /// END WORLD EVENTS ///
@@ -95,7 +95,7 @@ public class eventListener implements Listener {
     public void onBreakCheck(BlockBreakEvent event) {
         if (!event.getPlayer().equals(RegeneratorPlugin.fakePlayer)) return;
         if (RUtils.breakAndResult.containsKey(event.getBlock().getLocation())) {
-            RegeneratorPlugin.utils.throwMessage("info", "Found result for break check: " + event.isCancelled() + " at : " + event.getBlock().getLocation().toString());
+            RegeneratorPlugin.utils.throwMessage(MsgType.INFO, "Found result for break check: " + event.isCancelled() + " at : " + event.getBlock().getLocation().toString());
             RUtils.breakAndResult.replace(event.getBlock().getLocation(), !event.isCancelled());
             event.setCancelled(true);
         }
@@ -109,8 +109,8 @@ public class eventListener implements Listener {
                 try {
                     new ChunkTask(rChunk, false).runTask(RegeneratorPlugin);
                 } catch (Exception e) {
-                    RegeneratorPlugin.utils.throwMessage("severe", "Failed to regenerate chunk : " + rChunk.getChunk().getX() + "," + rChunk.getChunk().getZ() + " on world: " + rChunk.getWorldName());
-                    e.printStackTrace();
+                    RegeneratorPlugin.utils.throwMessage(MsgType.SEVERE, "Failed to regenerate chunk : " + rChunk.getChunk().getX() + "," + rChunk.getChunk().getZ() + " on world: " + rChunk.getWorldName());
+                    if (RegeneratorPlugin.config.debugMode) e.printStackTrace();
                 }
             } else {
                 if (RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk())) rChunk.updateActivity();

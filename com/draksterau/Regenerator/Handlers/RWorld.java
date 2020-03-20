@@ -116,15 +116,15 @@ public final class RWorld extends RObject {
 
     public void validateWorld() {
         if (regenInterval < plugin.config.parseInterval) {
-            this.plugin.utils.throwMessage("warning", String.format(plugin.lang.getForKey("messages.regenIntervalTooFrequent"), this.world.getName()));
-            this.plugin.utils.throwMessage("warning", String.format(plugin.lang.getForKey("messages.regenIntervalTooFrequentSuggestion")));
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(plugin.lang.getForKey("messages.regenIntervalTooFrequent"), this.world.getName()));
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(plugin.lang.getForKey("messages.regenIntervalTooFrequentSuggestion")));
         }
         if (regenInterval > (86400 * 30)) {
-            this.plugin.utils.throwMessage("warning", String.format(plugin.lang.getForKey("messages.regenIntervalAboveMax"), this.world.getName(), "30"));
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(plugin.lang.getForKey("messages.regenIntervalAboveMax"), this.world.getName(), "30"));
             this.regenInterval = 86400*30;
         }
         if (regenInterval < 600) {
-            this.plugin.utils.throwMessage("warning", String.format(plugin.lang.getForKey("messages.regenIntervalBelowMin"), this.world.getName(), "10"));
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(plugin.lang.getForKey("messages.regenIntervalBelowMin"), this.world.getName(), "10"));
             this.regenInterval = 600;
         }
         this.saveData();
@@ -140,7 +140,7 @@ public final class RWorld extends RObject {
         try {
             worldConfig.save(worldConfigFile);
         } catch (IOException ex) {
-            plugin.utils.throwMessage("severe",String.format(plugin.lang.getForKey("messages.cantSaveWorldConfig"), configFile.getAbsolutePath(), ex.getMessage()));
+            plugin.utils.throwMessage(MsgType.SEVERE,String.format(plugin.lang.getForKey("messages.cantSaveWorldConfig"), configFile.getAbsolutePath(), ex.getMessage()));
         }
     }
 }

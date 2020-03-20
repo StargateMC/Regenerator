@@ -76,10 +76,10 @@ public class RedProtectIntegration extends Integration {
         }
         for (String claimName : iConfig.integrationConfig.getStringList("claimsAutoRegen")) {
             if (!claimExists(claimName)) {
-                RegeneratorPlugin.utils.throwMessage("warning", "[" + this.getClass().getSimpleName() + "] Claim: " + claimName + " does not exist!");
+                RegeneratorPlugin.utils.throwMessage(MsgType.WARNING, "[" + this.getClass().getSimpleName() + "] Claim: " + claimName + " does not exist!");
                 RegeneratorPlugin.utils.disableIntegrationFor(RegeneratorPlugin.utils.convertToModule(plugin));
             } else {
-                RegeneratorPlugin.utils.throwMessage("info", "[" + this.getClass().getSimpleName() + "] Claim: " + claimName + " detected. Whitelisting for automatic regeneration!");
+                RegeneratorPlugin.utils.throwMessage(MsgType.INFO, "[" + this.getClass().getSimpleName() + "] Claim: " + claimName + " detected. Whitelisting for automatic regeneration!");
             }
         }
         iConfig.saveIntegrationConfig();
@@ -167,5 +167,10 @@ public class RedProtectIntegration extends Integration {
             }
         }
         return false;
+    }
+    
+    @Override
+    public boolean supportsUnknownProtectionDetection() {
+        return true;
     }
 }
