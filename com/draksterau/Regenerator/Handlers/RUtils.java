@@ -170,12 +170,12 @@ public class RUtils extends RObject {
     }
     
     public void printErrorReport(String error) {
-        throwMessage(MsgType.SEVERE, "A Severe error has been encountered (" + error + "). Please consider submitting this on github at https://github.com/Bysokar/Regenerator/Issues");
-        throwMessage(MsgType.SEVERE, "Please be sure to include the following:");
-        throwMessage(MsgType.SEVERE, "Bukkit Server Version: " + Bukkit.getVersion());
-        throwMessage(MsgType.SEVERE, "Regenerator version: v" + this.plugin.getDescription().getVersion());
+        throwMessage(MsgType.INFO, "A Severe error has been encountered (" + error + "). Please consider submitting this on github at https://github.com/Bysokar/Regenerator/Issues");
+        throwMessage(MsgType.INFO, "Please be sure to include the following:");
+        throwMessage(MsgType.INFO, "Bukkit Server Version: " + Bukkit.getVersion());
+        throwMessage(MsgType.INFO, "Regenerator version: v" + this.plugin.getDescription().getVersion());
         for (Integration i : plugin.loadedIntegrations) {
-            throwMessage(MsgType.SEVERE, "Integration enabled for: " + i.getPluginName() + " v" + i.getPluginVersion() + "");
+            throwMessage(MsgType.INFO, "Integration enabled for: " + i.getPluginName() + " v" + i.getPluginVersion() + "");
         }
     }
     
