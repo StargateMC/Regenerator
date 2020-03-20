@@ -100,7 +100,7 @@ public final class RChunk extends RObject {
         try {
             chunkConfig.save(chunkConfigFile);
         } catch (IOException ex) {
-            plugin.utils.throwMessage("severe","Could not save chunk data to " + chunkConfigFile + " (Exception: " + ex.getMessage() + ")");
+            plugin.utils.throwMessage("severe",String.format(plugin.lang.getForKey("messages.chunkDataSaveFail"), chunkConfigFile.getAbsolutePath(), ex.getMessage());
         }
     }
 

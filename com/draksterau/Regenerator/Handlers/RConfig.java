@@ -195,16 +195,17 @@ public final class RConfig extends RObject {
         } else {
             this.plugin.getOrInitLang(config.getString("language")); // Initialises the language.
             if (new File(plugin.getDataFolder() + "/lang/" + config.getString("language") + ".yml").exists()) {
-                this.plugin.utils.throwMessage("info", "Loading language: " + config.getString("language"));
+                this.plugin.utils.throwMessage("info", String.format(plugin.lang.getForKey("messages.loadingLanguage"), config.getString("language")));
                 this.language = config.getString("language");
             } else {
                 if (config.getString("language").equals("ENGLISH")) {
-                    this.plugin.utils.throwMessage("severe", "Loading default language, ENGLISH failed. No valid language is set & the default language of ENGLISH has been deleted, so Regenerator cannot load.");
+                    this.plugin.utils.throwMessage("severe", String.format(plugin.lang.getForKey("messages.defaultLanguageFailure")));
                     this.plugin.disablePlugin();
                     return;
                 }
-                this.plugin.utils.throwMessage("warning", "Loading language: " + config.getString("language") + " failed, there is no YML file called " + plugin.getDataFolder() + "/lang/" + config.getString("language") + ".yml" + "!");
-                this.plugin.utils.throwMessage("warning", "Contribute a messages.yml for : " + config.getString("language") + " on github (http://github.com/draksterau/regenerator/) to have it included in a future release!");
+
+                this.plugin.utils.throwMessage("severe", String.format(plugin.lang.getForKey("messages.languageNotAvailable"), config.getString("language"), (plugin.getDataFolder() + "/lang/" + config.getString("language") + ".yml")));
+                this.plugin.utils.throwMessage("info", String.format(plugin.lang.getForKey("messages.contributeLanguageNotice", config.getString("language")));
                 this.language = "ENGLISH";
             }
         }

@@ -28,5 +28,37 @@ messages:
     regenIntervalBelowMin: "The regeneration interval for %s is too frequent. It must be more than %s minutes.Resetting to minimum."
     distanceNearbyTooClose: "Min Minimum distance for players from a regeneration event must be at least 1 chunk, resetting to %s blocks."
     distanceNearbyTooFar: "Max Minimum distance for players from a regeneration event must be no more than 16 chunks, resetting to %s blocks."
-    mustTargetSomething: "Both unloaded and loaded chunks are not being targeted for automatic regeneration. This plugin must target something and is enabling targetUnloadedChunks."
+    mustTargetSomething: Both unloaded and loaded chunks are not being targeted for automatic regeneration. This plugin must target something and is enabling targetUnloadedChunks.
     addingNewConfig: "New Configuration option found: %s. Adding to %s!"
+    regenTaskCompleted: Regeneration task completed after processing %s chunks on %s worlds.
+    regenTaskCompletedNothingDone: Regeneration task completed without regenerating any chunks
+    queueChunkTaskException: Regeneration of chunk at %s, %s on %s failed to be scheduled during parse with exception: %s.
+    regenParseStart: Regenerating 1 chunk per %s seconds, for a total of %s seconds.
+    regenParseStarting: Regeneration Parse task is starting...
+    regenPausedTPSLow: Regenerator is not beginning to parse inactive chunks for regeneration as TPS is below %s, as configured in global.yml.
+    unloadingChunkLoadedForRegen: Unloading chunk at %s, %s on %s, as it was only loaded for regeneration.
+    regenFailed: Regeneration of chunk at %s, %s on %s failed.
+    regenSuccess: Regeneration of chunk at %s, %s on %s succeeded.
+    regenClearEntities: Clearing entities from chunk at %s, %s on %s as part of regeneration.
+    startingRegenChunk: Regeneration of chunk at %s, %s on %s is starting...
+    loadingToRegen: Loading chunk at %s, %s on %s for regeneration.
+    skippingRegenWithReason: Skipping regeneration of chunk at %s, %s on %s, due to %s.
+    skippingRegenOfLoadedChunk: Skipping regeneration of chunk at %s, %s on %s, due to chunk being loaded. This check can be disabled by setting targetLoadedChunks to true in global.yml
+    skippingRegenOfUnloadedChunk: Skipping regeneration of chunk at %s, %s on %s, due to chunk being unloaded. This check can be disabled by setting targetUnloadedChunks to true in global.yml
+    skippingRegenOfChunkInUseByPlayers: Skipping regeneration of chunk at %s, %s on %s, due to chunk being loaded by a players client. This check can be disabled by setting regenerateChunksInUseByPlayers to true in global.yml
+    skippingRegenOfChunkNearWarpCore: Skipping regeneration of chunk at %s, %s on %s, due to chunk being too close to a WarpDrive ship controller. This check can be disabled by setting warpDriveCompatibility to false in global.yml
+    skippingRegenOfChunkNearPlayers: Skipping regeneration of chunk at %s, %s on %s, due to chunk being within %s blocks of a player. This checks's range can be changed by modifying distanceNearbyMinimum in global.yml.
+    skippingRegenAutoRegenRequirementFail: Skipping regeneration of chunk at %s, %s on %s, as automated regeneration criteria are no longer met by this chunk.
+    skippingRegenTPSToLow: Skipping regeneration of chunk at %s, %s on %s, as TPS is below %s. Minimum TPS for regeneration can be modified by editing minTpsRegen in global.yml.
+    skippingRegenProtectedUnknownSource: Skipping regeneration of chunk at %s, %s on %s, as it is protected by an unknown source. This check can be disabled by setting enableUnknownProtectionDetection to false in global.yml.
+    skippingRegenDueToActionEventCancellation: Skipping regeneration of chunk at %s, %s on %s, for the following reason(s):
+    skippingRegenActionEventResult: Skip reason %s: %s, provided by %s.
+    skippingRegenWorldUnloaded: Skipping regeneration of chunk at %s, %s as world: %s is currently unloaded/missing. Regenerator will process regeneration of this chunk next time the world is found to be loaded.
+    chunkDataSaveFail: Could not save chunk data to %s, error is %s.
+    loadingLanguage: Loading Language: %s
+    languageNotAvailable: Loading language: %s failed, Regenerator does not currently support it natively and there is no YML file located at %s available. Defaulting back to ENGLISH.
+    contributeLanguageNotice: Contribute a %s.yml file to Regenerator by submitting it at https://github.com/Bysokar/Regenerator to enable native support for your language.
+    defaultLanguageFailure: Loading default language, ENGLISH failed. No valid language is set & the default language of ENGLISH is unvailable... Regenerator cannot load. If downloading the plugin again does not fix this, contact the author.
+    WorldEditLoaded: Loading dependency WorldEdit v%s
+    WorldEditIncompatible: Loading dependency WorldEdit v%s failed, v%s is required!
+    WorldEditMissing: Regenerator v3.4.0 and higher depends on WorldEdit to perform regeneration tasks. This is due to limitations in the Bukkit/Spigot API. Please install WorldEdit v%s to enable Regenerator on your server.

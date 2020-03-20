@@ -44,7 +44,7 @@ public class regenTask extends BukkitRunnable {
     public void run() {
         
         if (!this.plugin.utils.isLagOK()) {
-            plugin.utils.throwMessage("info", "Regenerator is not beginning to parse inactive chunks as the TPS is below " + plugin.config.minTpsRegen + " (defined in global.yml).");
+            plugin.utils.throwMessage("warning", String.format(plugin.lang.getForKey("messages.regenPausedTPSLow"),plugin.config.minTpsRegen));
             return;
         }
         
@@ -55,7 +55,7 @@ public class regenTask extends BukkitRunnable {
         numChunks = 0;
         secsTotal = 0;
         
-        plugin.utils.throwMessage("info", "Regeneration task is starting...");
+        plugin.utils.throwMessage("info", String.format(plugin.lang.getForKey("messages.regenParseStarting")));
         for (RWorld RWorld : plugin.loadedWorlds) {
             if (!getChunksToRegen(RWorld).isEmpty()) {
                 numWorlds++;
@@ -66,13 +66,13 @@ public class regenTask extends BukkitRunnable {
             if (numChunks == 0) numChunks = 1;
             secsTotal = (plugin.config.parseInterval * plugin.config.percentIntervalRuntime);
             secsBetweenChunks = (secsTotal / numChunks);
-            plugin.utils.throwMessage("info", "Regenerator will regenerate 1 chunk per " + secsBetweenChunks + " seconds for " + secsTotal + " seconds.");
+            plugin.utils.throwMessage("info", String.format(plugin.lang.getForKey("messages.regenParseStart"), secsBetweenChunks, secsTotal));
             for (RChunk rChunk : chunksToRegenerate) {
                 try {
                     new ChunkTask(rChunk, false).runTaskLater(plugin, (long)offsetTicks);
                     offsetTicks = offsetTicks + (secsBetweenChunks * 20);
                 } catch (Exception e) {
-                    plugin.utils.throwMessage("severe", "Failed to regenerate chunk : " + rChunk.getChunk().getX() + "," + rChunk.getChunk().getZ() + " on world: " + rChunk.getWorldName());
+                    plugin.utils.throwMessage("severe", String.format(plugin.lang.getForKey("messages.queueChunkTaskException"), rChunk.getChunk().getX(), rChunk.getChunk().getZ(), rChunk.getWorldName(), e.getMessage()));
                     e.printStackTrace();
                 }
                 
@@ -85,10 +85,10 @@ public class regenTask extends BukkitRunnable {
             Logger.getLogger(regenTask.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (chunksToRegenerate.isEmpty()) {
-            plugin.utils.throwMessage("info", "Regeneration task completed without regenerating any chunks.");
+            plugin.utils.throwMessage("info", String.format(plugin.lang.getForKey("messages.regenTaskCompletedNothingDone")));
         }
         if (!chunksToRegenerate.isEmpty()) {
-            plugin.utils.throwMessage("info", "Regeneration task completed after processing " +  numChunks + " chunks on " + numWorlds + " worlds.");
+            plugin.utils.throwMessage("info", String.format(plugin.lang.getForKey("messages.regenTaskCompleted"), numChunks, numWorlds));
         }
  
     }
