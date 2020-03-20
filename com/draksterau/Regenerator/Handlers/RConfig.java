@@ -193,6 +193,7 @@ public final class RConfig extends RObject {
         if (!config.isSet("language")) {
             this.plugin.utils.throwMessage("new",String.format(this.plugin.getOrInitLang("ENGLISH").getForKey("messages.addingNewConfig"), "language", this.configFile.getName()));
         } else {
+            this.plugin.getOrInitLang(config.getString("language")); // Initialises the language.
             if (new File(plugin.getDataFolder() + "/lang/" + config.getString("language") + ".yml").exists()) {
                 this.plugin.utils.throwMessage("info", "Loading language: " + config.getString("language"));
                 this.language = config.getString("language");

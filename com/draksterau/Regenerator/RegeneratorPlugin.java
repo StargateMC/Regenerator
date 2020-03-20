@@ -48,7 +48,7 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
         utils = new RUtils(this);
         // Config gets loaded here in onEnable()
         config = new RConfig(this);
-        
+        if (!this.isEnabled()) return; // If Config or lang loading fails, stop enabling the plugin.
         utils.throwMessage("info", String.format(lang.getForKey("messages.pluginLoading"), config.configVersion));
         utils.initAvailableIntegrations();
         utils.loadIntegrations();

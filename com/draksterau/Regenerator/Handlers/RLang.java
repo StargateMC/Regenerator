@@ -32,7 +32,7 @@ public final class RLang extends RObject {
     @Override
     void loadData() {
         // Attempt to load the config file.
-        langConfigFile = new File(plugin.getDataFolder() + "lang/" + this.language + ".yml");
+        langConfigFile = new File(plugin.getDataFolder() + "/lang/" + this.language + ".yml");
         // Attempt to read the config in the config file.
         langConfig = YamlConfiguration.loadConfiguration(langConfigFile);
         // If the config file is null (due to the config file being invalid or not there) create a new one.
