@@ -74,6 +74,7 @@ public final class RLang extends RObject {
                 plugin.utils.throwMessage(MsgType.SEVERE,"Language file : " + langConfigFile.getAbsolutePath() + " is invalid. Exception: " + e.getMessage() + "!");
                 if (plugin.config.debugMode) e.printStackTrace();
                 plugin.disablePlugin();
+                return null;
             }
     }
     
