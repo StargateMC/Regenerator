@@ -184,6 +184,10 @@ public final class RConfig extends RObject {
             this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "enableRegenerationNextChunkLoad", this.configFile.getName()));
         } else {
             this.enableRegenerationNextChunkLoad = config.getBoolean("enableRegenerationNextChunkLoad");
+            if (enableRegenerationNextChunkLoad && !cacheChunksOnLoad) {
+                this.plugin.utils.throwMessage(MsgType.INFO,String.format(this.plugin.lang.getForKey("messages.chunkCachingDisabledOnLoad"));
+                cacheChunksOnLoad = true;
+            }
         }
         if (!config.isSet("debugMode")) {
             this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "debugMode", this.configFile.getName()));
