@@ -52,7 +52,7 @@ messages:
     skippingRegenTPSToLow: Skipping regeneration of chunk at %s, %s on %s, as TPS is below %s. Minimum TPS for regeneration can be modified by editing minTpsRegen in global.yml.
     skippingRegenProtectedUnknownSource: Skipping regeneration of chunk at %s, %s on %s, as it is protected by an unknown source. This check can be disabled by setting enableUnknownProtectionDetection to false in global.yml.
     skippingRegenDueToActionEventCancellation: Skipping regeneration of chunk at %s, %s on %s, for the following reason(s)
-    skippingRegenActionEventResult: Skip reason %s: %s, provided by %s.
+    skippingRegenActionEventResult: Skip reason %s - %s, provided by %s.
     skippingRegenWorldUnloaded: Skipping regeneration of chunk at %s, %s as world: %s is currently unloaded/missing. Regenerator will process regeneration of this chunk next time the world is found to be loaded.
     chunkDataSaveFail: Could not save chunk data to %s, error is %s.
     loadingLanguage: Loading Language: %s
