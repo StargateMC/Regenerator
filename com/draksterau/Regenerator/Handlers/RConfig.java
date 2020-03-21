@@ -56,7 +56,7 @@ public final class RConfig extends RObject {
     public boolean cacheChunksOnLoad = true;
     
     // Interval between task parses on worlds.
-    public long parseInterval = 300;
+    public long parseInterval = 60;
     
     // How much of the interval in percent can be used for processing?
     public double percentIntervalRuntime = 0.5;
@@ -65,7 +65,7 @@ public final class RConfig extends RObject {
     public double numChunksPerParse = 25;
     
     // Default regenInterval
-    public long defaultRegenInterval = 3600;
+    public long defaultRegenInterval = 300;
     
     // Whether or not new worlds that are loaded should have manual regen enabled by default
     public boolean defaultManualRegen = false;
@@ -80,7 +80,7 @@ public final class RConfig extends RObject {
     public boolean noGriefRun = false;
     
     // Distance at which players will prevent a chunk regenerating (too close)
-    public int distanceNearbyMinimum = 32;
+    public int distanceNearbyMinimum = 16;
     
     // Set this to true to allow loaded chunks to regenerate.
     public boolean targetLoadedChunks = true;

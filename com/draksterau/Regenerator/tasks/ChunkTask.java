@@ -108,7 +108,7 @@ public class ChunkTask extends BukkitRunnable {
             RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.startingRegenChunk"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
             
             if (RChunk.plugin.config.clearRegeneratedChunksOfEntities) {
-                RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.regenClearEntities"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
+                RChunk.plugin.utils.throwMessage(MsgType.DEBUG, String.format(RChunk.plugin.lang.getForKey("messages.regenClearEntities"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
                 RChunk.plugin.utils.clearEntitiesFromChunk(RChunk);
             }
             

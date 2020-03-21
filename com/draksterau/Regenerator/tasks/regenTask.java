@@ -82,7 +82,7 @@ public class regenTask extends BukkitRunnable {
 
         }
         try {
-            Thread.sleep(1000 + ((long)secsTotal * 1000));
+            Thread.sleep(1000 + ((long)secsTotal * 1000) + 1000);
         } catch (InterruptedException ex) {
             Logger.getLogger(regenTask.class.getName()).log(Level.SEVERE, null, ex);
         }

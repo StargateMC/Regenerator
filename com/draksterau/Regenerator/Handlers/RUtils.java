@@ -449,7 +449,7 @@ public class RUtils extends RObject {
             e.remove();
             count++;
         }   
-        throwMessage(MsgType.INFO, String.format(plugin.lang.getForKey("messages.entitiesRemovedCount"), count,rChunk.chunkX, rChunk.chunkZ, rChunk.getWorldName()));
+        throwMessage(MsgType.DEBUG, String.format(plugin.lang.getForKey("messages.entitiesRemovedCount"), count,rChunk.chunkX, rChunk.chunkZ, rChunk.getWorldName()));
     }
     
     public boolean validateChunkInactivity (RChunk rChunk) {
