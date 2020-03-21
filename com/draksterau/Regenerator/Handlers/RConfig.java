@@ -34,7 +34,7 @@ public final class RConfig extends RObject {
     
     // Enables fake player detection.
     
-    public boolean enableUnknownProtectionDetection = true;
+    public boolean enableUnknownProtectionDetection = false;
     
     // Enables stack traces during errors.
     
