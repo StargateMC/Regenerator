@@ -185,7 +185,7 @@ public final class RConfig extends RObject {
         } else {
             this.enableRegenerationNextChunkLoad = config.getBoolean("enableRegenerationNextChunkLoad");
             if (enableRegenerationNextChunkLoad && !cacheChunksOnLoad) {
-                this.plugin.utils.throwMessage(MsgType.INFO,String.format(this.plugin.lang.getForKey("messages.chunkCachingDisabledOnLoad"));
+                this.plugin.utils.throwMessage(MsgType.INFO,String.format(this.plugin.lang.getForKey("messages.chunkCachingDisabledOnLoad")));
                 cacheChunksOnLoad = true;
             }
         }

@@ -96,7 +96,7 @@ public class eventListener implements Listener {
     public void onBreakCheck(BlockBreakEvent event) {
         if (!event.getPlayer().equals(RegeneratorPlugin.fakePlayer)) return;
         if (RUtils.breakAndResult.containsKey(event.getBlock().getLocation())) {
-            RegeneratorPlugin.utils.throwMessage(MsgType.INFO, "Found result for break check: " + event.isCancelled() + " at : " + event.getBlock().getLocation().toString());
+            RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Found result for break check: " + event.isCancelled() + " at : " + event.getBlock().getLocation().toString());
             RUtils.breakAndResult.replace(event.getBlock().getLocation(), !event.isCancelled());
             event.setCancelled(true);
         }
@@ -108,16 +108,25 @@ public class eventListener implements Listener {
         if (!event.isCancelled() && !event.getTrigger().equals(RequestTrigger.Command)) {
             if (event.isImmediate()) {
                 try {
+                    RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Requesting regeneration of chunk: " + rChunk.chunkX + "," + rChunk.chunkZ + " on world: " + rChunk.worldName);
                     new ChunkTask(rChunk, false).runTask(RegeneratorPlugin);
                 } catch (Exception e) {
                     RegeneratorPlugin.utils.throwMessage(MsgType.SEVERE, "Failed to regenerate chunk : " + rChunk.getChunk().getX() + "," + rChunk.getChunk().getZ() + " on world: " + rChunk.getWorldName());
                     if (RegeneratorPlugin.config.debugMode) e.printStackTrace();
                 }
             } else {
-                if (RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk())) rChunk.updateActivity();
+                if (RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk())) {
+                    RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Updating activity of chunk chunk: " + rChunk.chunkX + "," + rChunk.chunkZ + " on world: " + rChunk.worldName);
+                    rChunk.updateActivity();
+                } else {
+                    RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Not updating activity of chunk: " + rChunk.chunkX + "," + rChunk.chunkZ + " on world: " + rChunk.worldName + " as auto regen requirements are not met.");
+                }
             }
         }
-        if (!RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk()) && rChunk.lastActivity != 0) rChunk.resetActivity();
+        if (!RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk()) && rChunk.lastActivity != 0) {
+            if (RegeneratorPlugin.config.debugMode) RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Resetting activity of chunk: " + rChunk.chunkX + "," + rChunk.chunkZ + " on world: " + rChunk.worldName + " as auto regen requirements are no longer met.");
+            rChunk.resetActivity();
+        }
     }
     
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

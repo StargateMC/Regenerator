@@ -79,3 +79,5 @@ messages:
     unknownProtectionDetectionUnsupported: "Unknown Protection detection is not supported on your server version with this version of Regenerator. Required is: %s, found server: %s with bukkit api version: %s. Request support for your server version on Github!"
     loadingLanguageDefault: Invalid language in configuration file %s, defaulting back to %s.
     chunkCachingDisabledOnLoad: Initial Regeneration of unprotected chunks (enableRegenerationNextChunkLoad) requires chunk caching be enabled. Setting cacheChunksOnLoad to true...
+    fakePlayerUUIDInUse: "Fake player with UUID %s appears to be in use, please change this in Regenerators Global.yml"
+    fakePlayerUUIDNotInUse: "Fake player with UUID %s does not appear to be in use!"

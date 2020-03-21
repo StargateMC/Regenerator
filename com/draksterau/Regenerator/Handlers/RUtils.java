@@ -141,9 +141,13 @@ public class RUtils extends RObject {
         RWorld RWorld = getRWorldForWorld(chunk.getWorld());
         
         // If the world is not loaded, do nothing.
-        if (RWorld == null) return false;
+        if (RWorld == null) {
+            plugin.utils.throwMessage(MsgType.DEBUG, "Not allowing autoregen of chunk: " + chunk.getX() + "," + chunk.getZ() + " on world: " + chunk.getWorld().getName() + " as the world is not correctly initialised. Report this  to Devs!");
+            return false;
+        }
         // Blocked at the world level.
         if (!RWorld.canAutoRegen()) {
+            plugin.utils.throwMessage(MsgType.DEBUG, "Not allowing autoregen of chunk: " + chunk.getX() + "," + chunk.getZ() + " on world: " + chunk.getWorld().getName() + " as the world has autoregen disabled.");
             return false;
         }
                 
@@ -153,10 +157,12 @@ public class RUtils extends RObject {
         // Blocked at the integration level.
         for (Integration integration : plugin.loadedIntegrations) {
             if (!integration.shouldChunkAutoRegen(chunk)) {
+                plugin.utils.throwMessage(MsgType.DEBUG, "Not allowing autoregen of chunk: " + chunk.getX() + "," + chunk.getZ() + " on world: " + chunk.getWorld().getName() + " as " + integration.getPluginName() + " is preventing it.");
                 return false;
             }
         }
         if (plugin.config.enableUnknownProtectionDetection && !plugin.utils.canBreakChunk(chunk)) {
+            plugin.utils.throwMessage(MsgType.DEBUG, "Not allowing autoregen of chunk: " + chunk.getX() + "," + chunk.getZ() + " on world: " + chunk.getWorld().getName() + " as an unknown plugin is preventing it.");
             return false;
         }
         // Not blocked.
@@ -210,7 +216,11 @@ public class RUtils extends RObject {
                         if (MsgType.SUCCESS.equals(type)) {
                             console.sendMessage(getFancyName() + ChatColor.GREEN + "[" + type.name() + "]: " + message);
                         } else {
-                            this.throwMessage(MsgType.SEVERE,String.format(this.plugin.lang.getForKey("messages.errorThrowingMessage")));
+                            if (MsgType.DEBUG.equals(type) && plugin.config.debugMode) {
+                                console.sendMessage(getFancyName() + ChatColor.DARK_RED + "[" + type.name() + "]: " + message);
+                            } else {
+                                if (!MsgType.DEBUG.equals(type)) this.throwMessage(MsgType.SEVERE,String.format(this.plugin.lang.getForKey("messages.errorThrowingMessage")));
+                            }
                         }
                     }
                 }

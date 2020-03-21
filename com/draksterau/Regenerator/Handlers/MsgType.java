@@ -14,5 +14,6 @@ public enum MsgType {
     SUCCESS,
     WARNING,
     SEVERE,
+    DEBUG,
     NEW;    
 }
