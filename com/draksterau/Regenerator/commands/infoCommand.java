@@ -48,10 +48,11 @@ public class infoCommand {
                         command.sender.sendMessage(command.plugin.utils.getFancyName() + " Last Activity: " + ChatColor.RED + "Never / Untracked");
                     } else {
                         command.sender.sendMessage(command.plugin.utils.getFancyName() + " Last Activity: " + (timeSinceRegenSecs) + " secs ago");
-                        if (TimeToRegenSecs == 0) {
+                        if (TimeToRegenSecs == 0 && rWorld.autoRegen) {
                             command.sender.sendMessage(command.plugin.utils.getFancyName() + " Flagged for regen: " + ChatColor.RED + "Now");
                         } else {
-                            command.sender.sendMessage(command.plugin.utils.getFancyName() + " Flagged for regen in :" + (TimeToRegenSecs) + " secs");
+                            if (rWorld.autoRegen) command.sender.sendMessage(command.plugin.utils.getFancyName() + " Flagged for regen in :" + (TimeToRegenSecs) + " secs");
+                            if (!rWorld.autoRegen) command.sender.sendMessage(command.plugin.utils.getFancyName() + ChatColor.RED + "This chunk will not automatically regenerate as the world has automated regeneration disabled!");
                         }
                     }
                     if (command.plugin.config.enableUnknownProtectionDetection && !command.plugin.utils.canBreakChunk(rChunk.getChunk())) {

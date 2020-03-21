@@ -108,7 +108,7 @@ public class eventListener implements Listener {
         RChunk rChunk = new RChunk(RegeneratorPlugin, event.getBlock().getChunk().getX(), event.getBlock().getChunk().getZ(), event.getBlock().getWorld().getName());
         RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Handling regeneration request for : " + event.getChunk().getX() + "," + event.getChunk().getZ() + " on world: " + event.getWorld().getName() + " with trigger: " + event.getTrigger().name() + " that " + (event.isImmediate() ? " is immediate " : " is not immediate ") + " and " + (event.isCancelled() ? "is cancelled" : " is not cancelled"));
         if (!event.isCancelled() && !event.getTrigger().equals(RequestTrigger.Command)) {
-            if (event.isImmediate()) {
+            if (event.isImmediate() && RegeneratorPlugin.utils.isLagOK()) {
                 try {
                     RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Requesting regeneration of chunk: " + rChunk.chunkX + "," + rChunk.chunkZ + " on world: " + rChunk.worldName);
                     new ChunkTask(rChunk, false).runTask(RegeneratorPlugin);
@@ -117,6 +117,9 @@ public class eventListener implements Listener {
                     if (RegeneratorPlugin.config.debugMode) e.printStackTrace();
                 }
             } else {
+                if (event.isImmediate()) {
+                    RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Queueing regeneration of chunk: " + rChunk.chunkX + "," + rChunk.chunkZ + " on world: " + rChunk.worldName + " as immediate regeneration was not possible due to the current TPS of the server.");
+                }
                 if (RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk())) {
                     RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Updating activity of chunk chunk: " + rChunk.chunkX + "," + rChunk.chunkZ + " on world: " + rChunk.worldName);
                     rChunk.updateActivity();
