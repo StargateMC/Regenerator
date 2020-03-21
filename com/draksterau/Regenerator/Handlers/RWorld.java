@@ -36,6 +36,8 @@ public final class RWorld extends RObject {
         super(Regenerator);
         this.world = world;
         this.regenInterval = plugin.config.defaultRegenInterval;
+        this.autoRegen = plugin.config.defaultAutoRegen;
+        this.manualRegen = plugin.config.defaultManualRegen;
         this.loadData();
         this.validateWorld();
     }

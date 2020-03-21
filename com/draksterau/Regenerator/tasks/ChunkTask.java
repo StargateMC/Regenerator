@@ -117,12 +117,6 @@ public class ChunkTask extends BukkitRunnable {
             } else {
                 RChunk.plugin.utils.throwMessage(MsgType.SEVERE, String.format(RChunk.plugin.lang.getForKey("messages.regenFailed"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
             }
-            
-            Random random = new Random(RChunk.getChunk().getWorld().getSeed());
-            // The below code is for testing if a chunk is needing to be populated.
-            long xRand = random.nextLong() / 2 * 2 + 1;
-            long zRand = (long) (random() / 2 * 2 + 1);
-            random.setSeed((long) RChunk.chunkX * xRand + (long) RChunk.chunkZ * zRand ^ RChunk.getWorld().getSeed());
             RChunk.resetActivity();
             if (wasUnloaded) {
                 RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.unloadingChunkLoadedForRegen"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));

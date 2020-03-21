@@ -49,6 +49,10 @@ public class eventListener implements Listener {
     
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onWorldLoad(WorldLoadEvent event) {
+        if (event.getWorld().getName().equals("worldeditregentempworld")) {
+            RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Skipping " + event.getEventName() + " for: worldeditregentempworld");
+            return;
+        }
         // Load the RWorld from the filesystem.
         RWorld RWorld = new RWorld(RegeneratorPlugin, event.getWorld());
         // If the Plugin currently hasnt got the RWorld registered, register it.
@@ -59,6 +63,10 @@ public class eventListener implements Listener {
     
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onWorldUnload(WorldUnloadEvent event) {
+        if (event.getWorld().getName().equals("worldeditregentempworld")) {
+            RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Skipping " + event.getEventName() + " for: worldeditregentempworld");
+            return;
+        }
         RWorld RWorld = new RWorld(RegeneratorPlugin, event.getWorld());
         // If the Plugin currently has the RWorld registered, removed it.
         if (RegeneratorPlugin.loadedWorlds.contains(RWorld)) RegeneratorPlugin.loadedWorlds.remove(RWorld);
@@ -71,6 +79,10 @@ public class eventListener implements Listener {
     
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onChunkLoad(ChunkLoadEvent event) {
+        if (event.getWorld().getName().equals("worldeditregentempworld")) {
+            RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Skipping " + event.getEventName() + " for: worldeditregentempworld");
+            return;
+        }
         if (RegeneratorPlugin.config.cacheChunksOnLoad) {
             RChunk RChunk = new RChunk(RegeneratorPlugin, event.getChunk().getX(), event.getChunk().getZ(), event.getWorld().getName());
             if (RegeneratorPlugin.config.enableRegenerationNextChunkLoad && RChunk.lastActivity == -1) {
@@ -78,7 +90,11 @@ public class eventListener implements Listener {
                 RegenerationRequestEvent requestEvent = new RegenerationRequestEvent(loc, null, RequestTrigger.ChunkLoad, RegeneratorPlugin);
                 if (RegeneratorPlugin.config.regenerationNextChunkLoadInstant) requestEvent.setIsImmediate(true);
                 Bukkit.getServer().getPluginManager().callEvent(requestEvent);
+            } else {
+                RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Initialised " + (RChunk.lastActivity == -1 ? " new " : " existing ") + " chunk: " + event.getChunk().getX() + "," + event.getChunk().getZ() + " on world: " + event.getChunk().getWorld().getName());
             }
+        } else {
+            RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Skipping " + event.getEventName() + " as cacheChunksOnLoad is disabled");
         }
         // Do nothing. This constructor for the RChunk will generate its entry in the data file if needed.
     }
@@ -118,7 +134,7 @@ public class eventListener implements Listener {
                 }
             } else {
                 if (event.isImmediate()) {
-                    RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Queueing regeneration of chunk: " + rChunk.chunkX + "," + rChunk.chunkZ + " on world: " + rChunk.worldName + " as immediate regeneration was not possible due to the current TPS of the server.");
+                    RegeneratorPlugin.utils.throwMessage(MsgType.WARNING, "Queueing regeneration of chunk: " + rChunk.chunkX + "," + rChunk.chunkZ + " on world: " + rChunk.worldName + " as immediate regeneration was not possible due to the current TPS of the server.");
                 }
                 if (RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk())) {
                     RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Updating activity of chunk chunk: " + rChunk.chunkX + "," + rChunk.chunkZ + " on world: " + rChunk.worldName);

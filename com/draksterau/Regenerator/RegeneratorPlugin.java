@@ -39,6 +39,8 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
     
     public Player fakePlayer = null;
     
+    public eventListener listener = null;
+    
     public RLang getOrInitLang(String language) {
         if (this.lang == null) this.lang = new RLang(this, language);
         return this.lang;
@@ -108,8 +110,13 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
                 
                 // This registers all event listeners.
                 try {
-                    getServer().getPluginManager().registerEvents(new eventListener(this), this);
-                    utils.throwMessage(MsgType.INFO, "Successfully registered Event Listeners!");
+                    if (this.listener == null) {
+                        this.listener = new eventListener(this);
+                        getServer().getPluginManager().registerEvents(this.listener, this);
+                        utils.throwMessage(MsgType.INFO, "Successfully registered Event Listeners!");
+                    } else {
+                        utils.throwMessage(MsgType.INFO, "Skipping registering of event listeners, not required for a reload!");
+                    }
                 } catch (Exception e) {
                     utils.throwMessage(MsgType.SEVERE, "Failed to start event listeners. Please report this (and the below error) to the developer!");
                     if (config.debugMode) e.printStackTrace();

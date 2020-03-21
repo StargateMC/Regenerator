@@ -461,7 +461,7 @@ public class RUtils extends RObject {
         // IF the chunk doesnt exist, do nothing.
         if (rChunk == null) return false;
         
-        if (rChunk.lastActivity != 0) {
+        if (rChunk.lastActivity != 0 && rChunk.lastActivity != -1) {
             secSinceLastActive = (System.currentTimeMillis() - rChunk.lastActivity) / 1000;
         }
         

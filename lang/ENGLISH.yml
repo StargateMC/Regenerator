@@ -81,4 +81,4 @@ messages:
     chunkCachingDisabledOnLoad: Initial Regeneration of unprotected chunks (enableRegenerationNextChunkLoad) requires chunk caching be enabled. Setting cacheChunksOnLoad to true...
     fakePlayerUUIDInUse: "Fake player with UUID %s appears to be in use, please change this in Regenerators Global.yml"
     fakePlayerUUIDNotInUse: "Fake player with UUID %s does not appear to be in use!"
-    regenerationNextChunkLoadInstantEnabled: "Regenerator is configured to immediately regenerate unprotected chunks the first time they load after installation. This may cause some lag!"
+    regenerationNextChunkLoadInstantEnabled: "Regenerator is configured to immediately regenerate unprotected chunks where possible the first time they load after installation. If the TPS of the server drops below minTpsRegen in global.yml the regeneration will queued to be completed later instead."

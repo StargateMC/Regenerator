@@ -101,7 +101,7 @@ public class regenTask extends BukkitRunnable {
         List<RChunk> chunksToRegen = new ArrayList<RChunk>();
         int count = 0;
         for (RChunk rChunk : rChunks) {
-            if ((System.currentTimeMillis() - rChunk.lastActivity) >= (rWorld.regenInterval * 1000) && rChunk.lastActivity != 0) {
+            if ((System.currentTimeMillis() - rChunk.lastActivity) >= (rWorld.regenInterval * 1000) && rChunk.lastActivity != 0 && rChunk.lastActivity != -1) {
                 if (rChunk.canAutoRegen() && count <= plugin.config.numChunksPerParse) {
                     chunksToRegenerate.add(rChunk);
                     chunksToRegen.add(rChunk);
