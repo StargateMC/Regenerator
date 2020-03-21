@@ -60,6 +60,9 @@ public final class RConfig extends RObject {
     // Maximum chunks per parse
     public double numChunksPerParse = 25;
     
+    // Default regenInterval
+    public long defaultRegenInterval = 3600;
+    
     // Whether or not new worlds that are loaded should have manual regen enabled by default
     public boolean defaultManualRegen = false;
     
@@ -114,6 +117,11 @@ public final class RConfig extends RObject {
             config = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("global.yml")));
             saveData();
         }
+        if (!config.isSet("language")) {
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.getOrInitLang(this.language).getForKey("messages.addingNewConfig"), "language", this.configFile.getName()));
+        } else {
+            this.language = config.getString("language");
+        }
         if (!config.isSet("configVersion")) {
             this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "configVersion", this.configFile.getName()));
         } else {
@@ -149,6 +157,11 @@ public final class RConfig extends RObject {
             this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "fakePlayerUUID", this.configFile.getName()));
         } else {
             this.fakePlayerUUID = UUID.fromString(config.getString("fakePlayerUUID"));
+        }
+        if (!config.isSet("defaultRegenInterval")) {
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "defaultRegenInterval", this.configFile.getName()));
+        } else {
+            this.defaultRegenInterval = config.getLong("defaultRegenInterval");
         }
         if (!config.isSet("targetUnloadedChunks")) {
             this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "targetUnloadedChunks", this.configFile.getName()));
@@ -197,7 +210,7 @@ public final class RConfig extends RObject {
     }
 
     public void updateConfig() {
-        this.plugin.utils.throwMessage(MsgType.INFO,this.plugin.lang.getForKey("messages.oldConfigFileUpdating"));
+        this.plugin.utils.throwMessage(MsgType.INFO,this.plugin.getOrInitLang(this.language).getForKey("messages.oldConfigFileUpdating"));
         // For now, we just update the config version.
         this.configVersion = this.plugin.getDescription().getVersion();
     }
@@ -288,6 +301,7 @@ public final class RConfig extends RObject {
         config.set("enableRegenerationNextChunkLoad", this.enableRegenerationNextChunkLoad);
         config.set("language", this.language);
         config.set("debugMode", this.debugMode);
+        config.set("defaultRegenInterval", this.defaultRegenInterval);
         try {
             config.save(configFile);
         } catch (IOException ex) {

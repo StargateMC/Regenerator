@@ -70,10 +70,13 @@ public final class RChunk extends RObject {
     }
     
     public void updateActivity() {
+        Long oldLastActivity = this.lastActivity;
         this.lastActivity = System.currentTimeMillis();
+        this.plugin.utils.throwMessage(MsgType.DEBUG, "Updating activity for chunk : " + this.chunkX + "," + this.chunkZ + " on world: " + worldName + " from : " + oldLastActivity + " to : " + lastActivity + ".");
         this.saveData();
     }
     public void resetActivity() {
+        this.plugin.utils.throwMessage(MsgType.DEBUG, "Resetting activity for chunk : " + this.chunkX + "," + this.chunkZ + " on world: " + worldName + ", previous value : " + lastActivity);
         this.lastActivity = 0;
         this.saveData();
     }

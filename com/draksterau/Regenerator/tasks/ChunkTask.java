@@ -38,6 +38,7 @@ public class ChunkTask extends BukkitRunnable {
     @Override
     
     public void run() {   
+            RChunk.plugin.utils.throwMessage(MsgType.DEBUG, "Beginning chunk regeneration task for : " + RChunk.chunkX + "," + RChunk.chunkZ + " on world : " + RChunk.getWorldName() + "...");
             if (!isManual) {
                 // Lets check if the world the chunk is on is loaded still.
                 if (Bukkit.getServer().getWorld(RChunk.worldName) == null) {

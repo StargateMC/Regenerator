@@ -343,15 +343,20 @@ public class RUtils extends RObject {
         RWorld RWorld = getRWorldForWorld(chunk.getWorld());
         
         // If the world is not loaded, do nothing.
-        if (RWorld == null) return false;
+        if (RWorld == null) {
+            plugin.utils.throwMessage(MsgType.DEBUG, "Denying player: " + player.getName() + " rights to regenerate as world: " + chunk.getWorld().getName() + " is not initialised in Regenrator. Report this to Devs!");
+            return false;
+        }
         
         // If the world has manual regen disabled, do not allow it.
         if (!RWorld.canManualRegen()) {
+            plugin.utils.throwMessage(MsgType.DEBUG, "Denying player: " + player.getName() + " rights to regenerate as world: " + chunk.getWorld().getName() + " has manual regen disabled.");
             return false;
         }
         
         // This returns true if the player has the override permission node but only for claimed land.
         if (player.hasPermission("regenerator.regen.override") && getIntegrationForChunk(chunk) != null) {
+            plugin.utils.throwMessage(MsgType.DEBUG, "Denying player: " + player.getName() + " rights to regenerate as they do not have regenerator.regen.override permission.");
             return true;
         }
 
@@ -360,12 +365,15 @@ public class RUtils extends RObject {
         if (getIntegrationForChunk(chunk) == null) {
             if (player.hasPermission("regenerator.regen.unclaimed")) {
                 return true;
+            } else {
+                plugin.utils.throwMessage(MsgType.DEBUG, "Denying player: " + player.getName() + " rights to regenerate as they do not have regenerator.regen.unclaimed permission.");
             }
         }
         
         // Blocked at the integration level.
         for (Integration integration : plugin.loadedIntegrations) {
             if (!integration.canPlayerRegen(player,chunk)) {
+                plugin.utils.throwMessage(MsgType.DEBUG, "Denying player: " + player.getName() + " rights to regenerate as integration with : " + integration.getPluginName() + " is demanding the " + integration.getPermissionRequiredToRegen(player, chunk) + " permission node, which they do not have.");
                 return false;
             }
         }

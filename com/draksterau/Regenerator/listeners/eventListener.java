@@ -96,7 +96,7 @@ public class eventListener implements Listener {
     public void onBreakCheck(BlockBreakEvent event) {
         if (!event.getPlayer().equals(RegeneratorPlugin.fakePlayer)) return;
         if (RUtils.breakAndResult.containsKey(event.getBlock().getLocation())) {
-            RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Found result for break check: " + event.isCancelled() + " at : " + event.getBlock().getLocation().toString());
+            RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Found result for unknownProtectionDetection break check: " + event.isCancelled() + " at : " + event.getBlock().getLocation().toString());
             RUtils.breakAndResult.replace(event.getBlock().getLocation(), !event.isCancelled());
             event.setCancelled(true);
         }
@@ -105,6 +105,7 @@ public class eventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
     public void onRegenerationRequest(RegenerationRequestEvent event) {
         RChunk rChunk = new RChunk(RegeneratorPlugin, event.getBlock().getChunk().getX(), event.getBlock().getChunk().getZ(), event.getBlock().getWorld().getName());
+        RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Handling regeneration request for : " + event.getChunk().getX() + "," + event.getChunk().getZ() + " on world: " + event.getWorld().getName() + " with trigger: " + event.getTrigger().name() + " that " + (event.isImmediate() ? " is immediate " : " is not immediate ") + " and " + (event.isCancelled() ? "is cancelled" : " is not cancelled"));
         if (!event.isCancelled() && !event.getTrigger().equals(RequestTrigger.Command)) {
             if (event.isImmediate()) {
                 try {
