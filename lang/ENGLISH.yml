@@ -82,5 +82,5 @@ messages:
     fakePlayerUUIDInUse: "Fake player with UUID %s appears to be in use, please change this in Regenerators Global.yml"
     fakePlayerUUIDNotInUse: "Fake player with UUID %s does not appear to be in use!"
     parseChunksPerMax: "Regenerator will regenerate %s chunks per parse (1 chunk per %s second(s)) when a regeneration task is active"
-    totalChunksToRegen: "Parse task detected a total of %s chunks to regenerate. Selecting the first %s per world."
+    totalChunksToRegen: "Parse task detected a total of %s chunks to regenerate. Selecting the first %s."
     regenerationNextChunkLoadInstantEnabled: "Regenerator is configured to immediately regenerate unprotected chunks where possible the first time they load after installation. If the TPS of the server drops below minTpsRegen in global.yml the regeneration will queued to be completed later instead."

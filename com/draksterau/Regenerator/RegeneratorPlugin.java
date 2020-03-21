@@ -20,7 +20,6 @@ import com.draksterau.Regenerator.Handlers.RWorld;
 import com.draksterau.Regenerator.commands.RegeneratorCommand;
 import java.io.File;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 
 public class RegeneratorPlugin extends JavaPlugin implements Listener {
     
@@ -38,13 +37,15 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
     
     public List<RWorld> loadedWorlds = new ArrayList<RWorld>();
     
+    
+    public int chunksToRegenCached = 0;
+    
     public Player fakePlayer = null;
     
     public eventListener listener = null;
     
     public boolean isParseActive = false;
     public regenTask regenerationTask = null;
-    public BukkitTask bukkitTask = null;
     
     public RLang getOrInitLang(String language) {
         if (this.lang == null) this.lang = new RLang(this, language);
@@ -144,7 +145,7 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
                 // This registers the regeneration task.
                 try {
                     this.regenerationTask = new regenTask(this);
-                    this.bukkitTask = this.getTask().runTaskTimerAsynchronously(this,1200, config.parseInterval * 20);
+                    this.getTask().runTaskTimerAsynchronously(this,1200, config.parseInterval * 20);
                     utils.throwMessage(MsgType.INFO, "Successfully registered Regeneration Task!");
                 } catch (Exception e) {
                     utils.throwMessage(MsgType.SEVERE, "Failed to start regeneration task. Please report this (and the below error) to the developer!");
@@ -166,6 +167,26 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         RegeneratorCommand RegeneratorCommand = new RegeneratorCommand(this, sender, cmd, label, args);
         return RegeneratorCommand.doCommand();
+    }
+    
+
+    
+    public boolean isBacklogged() {
+        return (this.chunksToRegenCached > config.numChunksPerParse);
+    }
+    public double parseQueue() {
+        try {
+            return (this.chunksToRegenCached / config.numChunksPerParse);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+    public long getQueueDelay() {
+        try {
+            return (long) ((this.chunksToRegenCached / config.numChunksPerParse) * config.parseInterval);
+        } catch (Exception e) {
+            return 1;
+        }
     }
 
 }

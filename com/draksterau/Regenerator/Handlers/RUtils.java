@@ -199,7 +199,6 @@ public class RUtils extends RObject {
     public  void throwMessage(MsgType type, String message) {
 
         ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-
         if (MsgType.INFO.equals(type)) {
             console.sendMessage(getFancyName() + ChatColor.DARK_AQUA + "[" + type.name() + "]: " + message);
         } else {

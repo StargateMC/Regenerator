@@ -23,9 +23,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class regenTask extends BukkitRunnable {
     
     RegeneratorPlugin plugin;
-
-    public int totalChunksToRegenCached = 0;
-    
     List<RChunk> chunksToRegenerate = new ArrayList<RChunk>();
         
     double offsetTicks = 0;
@@ -54,9 +51,10 @@ public class regenTask extends BukkitRunnable {
             return;
         }
         
-        totalChunksToRegenCached = getNumChunksToRegen().size();
-        plugin.utils.throwMessage(MsgType.INFO, String.format(plugin.lang.getForKey("messages.totalChunksToRegen"),totalChunksToRegenCached, plugin.config.numChunksPerParse));
-        
+        this.plugin.chunksToRegenCached = getNumChunksToRegen().size();
+        plugin.utils.throwMessage(MsgType.INFO, String.format(plugin.lang.getForKey("messages.totalChunksToRegen"),this.plugin.chunksToRegenCached, plugin.config.numChunksPerParse));
+        if (this.plugin.isBacklogged()) plugin.utils.throwMessage(MsgType.WARNING,"Regeneration queue is currently backlogged. It will catch up in approximately " + Math.floor(plugin.parseQueue() * plugin.config.parseInterval) + " seconds (" + Math.ceil(plugin.parseQueue()) + " executions of the Regeneration Task).");
+
         numWorlds = 0;
         chunksToRegenerate.clear();
         offsetTicks = 0;
@@ -133,23 +131,5 @@ public class regenTask extends BukkitRunnable {
             }
         }
         return chunksToRegen;
-    }
-    
-    public boolean isBacklogged() {
-        return (this.totalChunksToRegenCached > plugin.config.numChunksPerParse);
-    }
-    public double parseQueue() {
-        try {
-            return (totalChunksToRegenCached / plugin.config.numChunksPerParse);
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-    public long getQueueDelay() {
-        try {
-            return (long) ((totalChunksToRegenCached / plugin.config.numChunksPerParse) * plugin.config.parseInterval);
-        } catch (Exception e) {
-            return 0;
-        }
     }
 }
