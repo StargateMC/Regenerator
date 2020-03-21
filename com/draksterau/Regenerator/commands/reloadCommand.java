@@ -25,6 +25,10 @@ public class reloadCommand {
     }
     
     public void doCommand() {
+        if (command.plugin.isParseActive) {
+            command.sender.sendMessage(ChatColor.RED + "You cannot reload regenerator when the regeneration task is active...");
+            return;
+        }
        command.sender.sendMessage(ChatColor.GRAY + "Unloading integrations...");
        command.plugin.availableIntergrations.clear();
        command.plugin.loadedIntegrations.clear();

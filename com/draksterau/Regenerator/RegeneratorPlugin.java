@@ -41,6 +41,8 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
     
     public eventListener listener = null;
     
+    public boolean isParseActive = false;
+    
     public RLang getOrInitLang(String language) {
         if (this.lang == null) this.lang = new RLang(this, language);
         return this.lang;

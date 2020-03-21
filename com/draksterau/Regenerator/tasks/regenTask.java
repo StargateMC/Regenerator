@@ -44,8 +44,11 @@ public class regenTask extends BukkitRunnable {
     @Override
     public void run() {
         
+        this.plugin.isParseActive = true;
+        
         if (!this.plugin.utils.isLagOK()) {
             plugin.utils.throwMessage(MsgType.WARNING, String.format(plugin.lang.getForKey("messages.regenPausedTPSLow"),plugin.config.minTpsRegen));
+            this.plugin.isParseActive = false;
             return;
         }
         
@@ -92,7 +95,7 @@ public class regenTask extends BukkitRunnable {
         if (!chunksToRegenerate.isEmpty()) {
             plugin.utils.throwMessage(MsgType.INFO, String.format(plugin.lang.getForKey("messages.regenTaskCompleted"), numChunks, numWorlds));
         }
- 
+        plugin.isParseActive = false;
     }
     
     

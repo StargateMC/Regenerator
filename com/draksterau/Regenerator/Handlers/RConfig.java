@@ -91,7 +91,7 @@ public final class RConfig extends RObject {
     public boolean regenerateChunksInUseByPlayers = true;
     
     // Should this plugin clear the chunk of all entities? This includes dropped items, villagers, zombies and all!
-    public boolean clearRegeneratedChunksOfEntities = true;
+    public boolean clearRegeneratedChunksOfEntities = false;
     
     // Should this plugin not regenerate near WarpDrive ships?
     public boolean warpDriveCompatibility = false;
@@ -280,9 +280,9 @@ public final class RConfig extends RObject {
             this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.runtimeInvalid"), "0.5"));
             this.percentIntervalRuntime = 0.5;
         }
-        if (this.numChunksPerParse > (((this.parseInterval * 10)) * this.percentIntervalRuntime) || this.numChunksPerParse < 1) {
-            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.numChunksPerParseInvalid"), String.valueOf((((this.parseInterval * 10)) * this.percentIntervalRuntime)/2)));
-            this.numChunksPerParse = (((this.parseInterval * 5)) * this.percentIntervalRuntime);
+        if (this.numChunksPerParse > (((this.parseInterval * 2)) * this.percentIntervalRuntime) || this.numChunksPerParse < 1) {
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.numChunksPerParseInvalid"), String.valueOf((((this.parseInterval * 2)) * this.percentIntervalRuntime)/2)));
+            this.numChunksPerParse = (((this.parseInterval * 2)) * this.percentIntervalRuntime);
         }
         this.saveData();
         this.loadData();
