@@ -46,7 +46,7 @@ public final class RConfig extends RObject {
     
     // Instantly regenrates new chunks as they load
     
-    public boolean regenerationNextChunkLoadInstant = true;
+    public boolean regenerationNextChunkLoadInstant = false;
     
     // UUID for fake player requests.
     

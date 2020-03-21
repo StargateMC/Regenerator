@@ -50,7 +50,7 @@ public class eventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onWorldLoad(WorldLoadEvent event) {
         if (event.getWorld().getName().equals("worldeditregentempworld")) {
-            RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Skipping " + event.getEventName() + " for: worldeditregentempworld");
+            //RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Skipping " + event.getEventName() + " for: worldeditregentempworld");
             return;
         }
         // Load the RWorld from the filesystem.
@@ -64,7 +64,7 @@ public class eventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onWorldUnload(WorldUnloadEvent event) {
         if (event.getWorld().getName().equals("worldeditregentempworld")) {
-            RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Skipping " + event.getEventName() + " for: worldeditregentempworld");
+            //RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Skipping " + event.getEventName() + " for: worldeditregentempworld");
             return;
         }
         RWorld RWorld = new RWorld(RegeneratorPlugin, event.getWorld());
@@ -80,7 +80,7 @@ public class eventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onChunkLoad(ChunkLoadEvent event) {
         if (event.getWorld().getName().equals("worldeditregentempworld")) {
-            RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Skipping " + event.getEventName() + " for: worldeditregentempworld");
+            //RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Skipping " + event.getEventName() + " for: worldeditregentempworld");
             return;
         }
         if (RegeneratorPlugin.config.cacheChunksOnLoad) {
@@ -122,12 +122,12 @@ public class eventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
     public void onRegenerationRequest(RegenerationRequestEvent event) {
         RChunk rChunk = new RChunk(RegeneratorPlugin, event.getBlock().getChunk().getX(), event.getBlock().getChunk().getZ(), event.getBlock().getWorld().getName());
-        RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Handling regeneration request for : " + event.getChunk().getX() + "," + event.getChunk().getZ() + " on world: " + event.getWorld().getName() + " with trigger: " + event.getTrigger().name() + " that " + (event.isImmediate() ? " is immediate " : " is not immediate ") + " and " + (event.isCancelled() ? "is cancelled" : " is not cancelled"));
+        RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Handling regeneration request for : " + event.getChunk().getX() + "," + event.getChunk().getZ() + " on behalf of " + (event.getRequestor() != null ? event.getRequestor().getName() : " No-one" ) + " on world: " + event.getWorld().getName() + " with trigger: " + event.getTrigger().name() + " that " + (event.isImmediate() ? " is immediate " : " is not immediate ") + " and " + (event.isCancelled() ? "is cancelled" : " is not cancelled"));
         if (!event.isCancelled() && !event.getTrigger().equals(RequestTrigger.Command)) {
             if (event.isImmediate() && RegeneratorPlugin.utils.isLagOK()) {
                 try {
                     RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Requesting regeneration of chunk: " + rChunk.chunkX + "," + rChunk.chunkZ + " on world: " + rChunk.worldName);
-                    new ChunkTask(rChunk, false).runTask(RegeneratorPlugin);
+                    new ChunkTask(rChunk, false).runTaskAsynchronously(RegeneratorPlugin);
                 } catch (Exception e) {
                     RegeneratorPlugin.utils.throwMessage(MsgType.SEVERE, "Failed to regenerate chunk : " + rChunk.getChunk().getX() + "," + rChunk.getChunk().getZ() + " on world: " + rChunk.getWorldName());
                     if (RegeneratorPlugin.config.debugMode) e.printStackTrace();

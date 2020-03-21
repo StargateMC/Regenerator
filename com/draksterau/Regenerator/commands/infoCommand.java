@@ -44,7 +44,7 @@ public class infoCommand {
                         TimeToRegenSecs = (rWorld.regenInterval - timeSinceRegenSecs);
                     }
                     command.sender.sendMessage(command.plugin.utils.getFancyName() + ChatColor.GOLD + "Loading Chunk information....");
-                    if (rChunk.lastActivity == 0) {
+                    if (rChunk.lastActivity == 0 || rChunk.lastActivity == -1) {
                         command.sender.sendMessage(command.plugin.utils.getFancyName() + " Last Activity: " + ChatColor.RED + "Never / Untracked");
                     } else {
                         command.sender.sendMessage(command.plugin.utils.getFancyName() + " Last Activity: " + (timeSinceRegenSecs) + " secs ago");

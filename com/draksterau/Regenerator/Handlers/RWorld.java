@@ -126,9 +126,9 @@ public final class RWorld extends RObject {
             this.plugin.utils.throwMessage(MsgType.WARNING, String.format(plugin.lang.getForKey("messages.regenIntervalAboveMax"), this.world.getName(), "30"));
             this.regenInterval = 86400*30;
         }
-        if (regenInterval < 600) {
-            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(plugin.lang.getForKey("messages.regenIntervalBelowMin"), this.world.getName(), "10"));
-            this.regenInterval = 600;
+        if (regenInterval < 60) {
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(plugin.lang.getForKey("messages.regenIntervalBelowMin"), this.world.getName(), "1"));
+            this.regenInterval = 60;
         }
         this.saveData();
         this.loadData();

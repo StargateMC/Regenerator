@@ -93,7 +93,9 @@ public final class RChunk extends RObject {
             chunkConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("chunk.yml")));
             saveData();
         }
-        this.lastActivity = chunkConfig.getLong("chunks." + chunkX + "," + chunkZ);
+        if (chunkConfig.isSet("chunks." + chunkX + "," + chunkZ)) {
+            this.lastActivity = chunkConfig.getLong("chunks." + chunkX + "," + chunkZ);
+        }
     }
 
     @Override
