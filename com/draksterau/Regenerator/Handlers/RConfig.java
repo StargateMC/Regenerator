@@ -44,6 +44,10 @@ public final class RConfig extends RObject {
     
     public boolean enableRegenerationNextChunkLoad = true;
     
+    // Instantly regenrates new chunks as they load
+    
+    public boolean regenerationNextChunkLoadInstant = true;
+    
     // UUID for fake player requests.
     
     public UUID fakePlayerUUID = UUID.randomUUID();
@@ -202,6 +206,11 @@ public final class RConfig extends RObject {
                 cacheChunksOnLoad = true;
             }
         }
+        if (!config.isSet("regenerationNextChunkLoadInstant")) {
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "regenerationNextChunkLoadInstant", this.configFile.getName()));
+        } else {
+            this.regenerationNextChunkLoadInstant = config.getBoolean("regenerationNextChunkLoadInstant");
+        }
         if (!config.isSet("debugMode")) {
             this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "debugMode", this.configFile.getName()));
         } else {
@@ -302,6 +311,7 @@ public final class RConfig extends RObject {
         config.set("language", this.language);
         config.set("debugMode", this.debugMode);
         config.set("defaultRegenInterval", this.defaultRegenInterval);
+        config.set("regenerationNextChunkLoadInstant", this.regenerationNextChunkLoadInstant);
         try {
             config.save(configFile);
         } catch (IOException ex) {

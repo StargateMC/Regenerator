@@ -76,6 +76,7 @@ public class eventListener implements Listener {
             if (RegeneratorPlugin.config.enableRegenerationNextChunkLoad && RChunk.lastActivity == -1) {
                 Location loc = new Location(event.getWorld(), event.getChunk().getX() * 16, 100, event.getChunk().getZ() * 16);
                 RegenerationRequestEvent requestEvent = new RegenerationRequestEvent(loc, null, RequestTrigger.ChunkLoad, RegeneratorPlugin);
+                if (RegeneratorPlugin.config.regenerationNextChunkLoadInstant) requestEvent.setIsImmediate(true);
                 Bukkit.getServer().getPluginManager().callEvent(requestEvent);
             }
         }

@@ -97,7 +97,9 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
                     }
                 }
             }
-            
+            if (config.regenerationNextChunkLoadInstant) {
+                utils.throwMessage(MsgType.WARNING, lang.getForKey("messages.regenerationNextChunkLoadInstantEnabled"));
+            }
             if (config.debugMode) utils.throwMessage(MsgType.INFO, lang.getForKey("messages.debugModeEnabled"));
             if (!config.debugMode) utils.throwMessage(MsgType.INFO, lang.getForKey("messages.debugModeDisabled"));
             

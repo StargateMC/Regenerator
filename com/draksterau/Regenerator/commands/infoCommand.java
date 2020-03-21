@@ -54,10 +54,15 @@ public class infoCommand {
                             command.sender.sendMessage(command.plugin.utils.getFancyName() + " Flagged for regen in :" + (TimeToRegenSecs) + " secs");
                         }
                     }
-                    if (command.plugin.utils.getIntegrationForChunk(chunk) != null) {
-                        command.sender.sendMessage(command.plugin.utils.getFancyName() + " Protected by: " + ChatColor.BLUE + command.plugin.utils.getIntegrationForChunk(chunk).getPluginName());
+                    if (command.plugin.config.enableUnknownProtectionDetection && !command.plugin.utils.canBreakChunk(rChunk.getChunk())) {
+                        command.sender.sendMessage(command.plugin.utils.getFancyName() + " Protected by: " + ChatColor.BLUE + "Unknown Plugin");
+                        command.sender.sendMessage(command.plugin.utils.getFancyName() + ChatColor.RED + "UnknownProtectionDetection is protecting this chunk from regeneration. This overrides all integrations.");
                     } else {
-                        command.sender.sendMessage(command.plugin.utils.getFancyName() + " Protected by: " + ChatColor.RED + "None");
+                        if (command.plugin.utils.getIntegrationForChunk(chunk) != null) {
+                            command.sender.sendMessage(command.plugin.utils.getFancyName() + " Protected by: " + ChatColor.BLUE + command.plugin.utils.getIntegrationForChunk(chunk).getPluginName());
+                        } else {
+                            command.sender.sendMessage(command.plugin.utils.getFancyName() + " Protected by: " + ChatColor.RED + "None");
+                        }
                     }
                     if (rChunk.canManualRegen()) {
                         if (command.plugin.utils.canManuallyRegen(command.plugin.utils.getSenderPlayer(command.sender), chunk)) {
