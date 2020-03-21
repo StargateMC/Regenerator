@@ -59,13 +59,13 @@ public final class RConfig extends RObject {
     public long parseInterval = 60;
     
     // How much of the interval in percent can be used for processing?
-    public double percentIntervalRuntime = 0.5;
+    public double percentIntervalRuntime = 0.9;
     
     // Maximum chunks per parse
-    public double numChunksPerParse = 25;
+    public double numChunksPerParse = 9;
     
     // Default regenInterval
-    public long defaultRegenInterval = 300;
+    public long defaultRegenInterval = 86400;
     
     // Whether or not new worlds that are loaded should have manual regen enabled by default
     public boolean defaultManualRegen = false;
@@ -74,7 +74,7 @@ public final class RConfig extends RObject {
     public boolean defaultAutoRegen = true;
     
     // Minimum TPS for regenerator to continue running parses.
-    public int minTpsRegen = 15;
+    public int minTpsRegen = 18;
     
     // Should Regenerator run without grief prevention plugins enabled?
     public boolean noGriefRun = false;
@@ -129,6 +129,7 @@ public final class RConfig extends RObject {
         if (!config.isSet("configVersion")) {
             this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "configVersion", this.configFile.getName()));
         } else {
+            if (Integer.valueOf(config.getString("configVersion").replace(".","")) < 350) this.plugin.utils.throwMessage(MsgType.WARNING, "It is recommended to perform a fresh install when updating from versions prior to v3.5.0. Language and configuration files may not be updated properly.");
             if (!config.getString("configVersion").equals(this.plugin.getDescription().getVersion())) {
                 updateConfig();
             } else {
@@ -276,13 +277,13 @@ public final class RConfig extends RObject {
             this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.tpsInvalid"), "15"));
             this.minTpsRegen = 15;
         }
-        if (this.percentIntervalRuntime > 1.0 || this.percentIntervalRuntime < 0.1) {
-            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.runtimeInvalid"), "0.5"));
-            this.percentIntervalRuntime = 0.5;
+        if (this.percentIntervalRuntime > 0.9 || this.percentIntervalRuntime < 0.1) {
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.runtimeInvalid"), "0.25"));
+            this.percentIntervalRuntime = 0.25;
         }
-        if (this.numChunksPerParse > (((this.parseInterval * 2)) * this.percentIntervalRuntime) || this.numChunksPerParse < 1) {
-            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.numChunksPerParseInvalid"), String.valueOf((((this.parseInterval * 2)) * this.percentIntervalRuntime)/2)));
-            this.numChunksPerParse = (((this.parseInterval * 2)) * this.percentIntervalRuntime);
+        if (this.numChunksPerParse > Math.floor((((this.parseInterval)) * this.percentIntervalRuntime)/5) || this.numChunksPerParse < 1) {
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.numChunksPerParseInvalid"), String.valueOf(Math.floor((((this.parseInterval)) * this.percentIntervalRuntime)/5))));
+            this.numChunksPerParse = (Math.floor((((this.parseInterval)) * this.percentIntervalRuntime)/5) >= 1 ? Math.floor((((this.parseInterval)) * this.percentIntervalRuntime)/5) : 1);
         }
         this.saveData();
         this.loadData();

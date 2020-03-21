@@ -36,12 +36,20 @@ public class infoCommand {
                 command.sender.sendMessage(command.plugin.utils.getFancyName() + "AutoRegen: " + command.plugin.utils.getStatusForBoolean(rWorld.canAutoRegen()));
                 command.sender.sendMessage(command.plugin.utils.getFancyName() + "ManualRegen: " + command.plugin.utils.getStatusForBoolean(rWorld.canManualRegen()));
                 command.sender.sendMessage(command.plugin.utils.getFancyName() + "Regeneration Interval: " + rWorld.getFormattedInterval());
+                if (command.plugin.getTask().isBacklogged()) {
+                    command.sender.sendMessage(command.plugin.utils.getFancyName() + ChatColor.RED + "Regeneration queue is currently backlogged. It will catch up in approximately " + command.plugin.getTask().parseQueue() * command.plugin.config.parseInterval + " seconds (" + command.plugin.getTask().parseQueue() + " executions of the Regeneration Task).");
+                    command.sender.sendMessage(command.plugin.utils.getFancyName() + ChatColor.RED + "Until regeneration is caught up, queued regeneration timers may not be 100% accurate!");
+                }
                 break;
                 case "chunk":
                     long TimeToRegenSecs = 0;
                     long timeSinceRegenSecs = (command.plugin.utils.convertMsToSecond(System.currentTimeMillis(), rChunk.lastActivity));
+                    boolean isBacklogged = command.plugin.getTask().isBacklogged();  
+                    double parsesToComplete = command.plugin.getTask().parseQueue();  
+                    long includingQueueTimeOf = 0;
                     if (rWorld.regenInterval > timeSinceRegenSecs) {
                         TimeToRegenSecs = (rWorld.regenInterval - timeSinceRegenSecs);
+                        includingQueueTimeOf = (command.plugin.utils.convertMsToSecond(System.currentTimeMillis(), (TimeToRegenSecs*1000)+command.plugin.getTask().getQueueDelay()));
                     }
                     command.sender.sendMessage(command.plugin.utils.getFancyName() + ChatColor.GOLD + "Loading Chunk information....");
                     if (rChunk.lastActivity == 0 || rChunk.lastActivity == -1) {
@@ -50,8 +58,10 @@ public class infoCommand {
                         command.sender.sendMessage(command.plugin.utils.getFancyName() + " Last Activity: " + (timeSinceRegenSecs) + " secs ago");
                         if (TimeToRegenSecs == 0 && rWorld.autoRegen) {
                             command.sender.sendMessage(command.plugin.utils.getFancyName() + " Flagged for regen: " + ChatColor.RED + "Now");
+                            command.sender.sendMessage(command.plugin.utils.getFancyName() + " Regen will occur no later than: " + ChatColor.RED + includingQueueTimeOf + " seconds from now");
                         } else {
                             if (rWorld.autoRegen) command.sender.sendMessage(command.plugin.utils.getFancyName() + " Flagged for regen in :" + (TimeToRegenSecs) + " secs");
+                            if (rWorld.autoRegen) command.sender.sendMessage(command.plugin.utils.getFancyName() + " Regen will occur no later than: " + ChatColor.RED + includingQueueTimeOf + " seconds from now");
                             if (!rWorld.autoRegen) command.sender.sendMessage(command.plugin.utils.getFancyName() + ChatColor.RED + "This chunk will not automatically regenerate as the world has automated regeneration disabled!");
                         }
                     }
@@ -64,6 +74,10 @@ public class infoCommand {
                         } else {
                             command.sender.sendMessage(command.plugin.utils.getFancyName() + " Protected by: " + ChatColor.RED + "None");
                         }
+                    }
+                    if (isBacklogged) {
+                        command.sender.sendMessage(command.plugin.utils.getFancyName() + ChatColor.RED + "Regeneration queue is currently backlogged. It will catch up in approximately " + parsesToComplete * command.plugin.config.parseInterval + " seconds (" + parsesToComplete + " executions of the Regeneration Task).");
+                        command.sender.sendMessage(command.plugin.utils.getFancyName() + ChatColor.RED + "Until regeneration is caught up, regeneration timers may not be 100% accurate!");
                     }
                     if (rChunk.canManualRegen()) {
                         if (command.plugin.utils.canManuallyRegen(command.plugin.utils.getSenderPlayer(command.sender), chunk)) {

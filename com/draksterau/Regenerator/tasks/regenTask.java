@@ -24,6 +24,8 @@ public class regenTask extends BukkitRunnable {
     
     RegeneratorPlugin plugin;
 
+    public int totalChunksToRegenCached = 0;
+    
     List<RChunk> chunksToRegenerate = new ArrayList<RChunk>();
         
     double offsetTicks = 0;
@@ -51,6 +53,9 @@ public class regenTask extends BukkitRunnable {
             this.plugin.isParseActive = false;
             return;
         }
+        
+        totalChunksToRegenCached = getNumChunksToRegen().size();
+        plugin.utils.throwMessage(MsgType.INFO, String.format(plugin.lang.getForKey("messages.totalChunksToRegen"),totalChunksToRegenCached, plugin.config.numChunksPerParse));
         
         numWorlds = 0;
         chunksToRegenerate.clear();
@@ -113,5 +118,38 @@ public class regenTask extends BukkitRunnable {
             }
         }
         return chunksToRegen;
+    }
+    
+    public List<RChunk> getNumChunksToRegen() {
+        List<RChunk> chunksToRegen = new ArrayList<RChunk>();
+        for (RWorld rWorld : plugin.loadedWorlds) {
+            List<RChunk> rChunks = rWorld.getAllRChunks();
+            for (RChunk rChunk : rChunks) {
+                if ((System.currentTimeMillis() - rChunk.lastActivity) >= (rWorld.regenInterval * 1000) && rChunk.lastActivity != 0 && rChunk.lastActivity != -1) {
+                    if (rChunk.canAutoRegen()) {
+                        chunksToRegen.add(rChunk);
+                    }
+                }
+            }
+        }
+        return chunksToRegen;
+    }
+    
+    public boolean isBacklogged() {
+        return (this.totalChunksToRegenCached > plugin.config.numChunksPerParse);
+    }
+    public double parseQueue() {
+        try {
+            return (totalChunksToRegenCached / plugin.config.numChunksPerParse);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+    public long getQueueDelay() {
+        try {
+            return (long) ((totalChunksToRegenCached / plugin.config.numChunksPerParse) * plugin.config.parseInterval);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 }

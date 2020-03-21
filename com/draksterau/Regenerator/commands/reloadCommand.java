@@ -36,6 +36,7 @@ public class reloadCommand {
        command.sender.sendMessage(ChatColor.GRAY + "Cancelling all regen tasks...");
         Bukkit.getScheduler().cancelTasks(command.plugin);
        command.plugin.config.loadData(); // Reinitialises configuration.
+       command.plugin.config.validateConfig();
        command.plugin.lang = new RLang(command.plugin, command.plugin.config.language); // Reinitialises language.
         command.plugin.onEnable();
         if (command.plugin.isEnabled()) {

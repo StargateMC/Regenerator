@@ -12,8 +12,8 @@ messages:
     parseIntervalNotFrequent: "Parse interval is above the maximum allowed %s seconds. Resetting configuration to value to defaults."
     parseSchedule: "Scheduling next parse for %s seconds from now and parsing every %s seconds"
     tpsInvalid: "TPS meter must have a valid TPS setting, between 1-20. Resetting this to the default of  %s."
-    runtimeInvalid: "Parse runtime must be between 0.1 and 1.0. Resetting this to the default of  %s."
-    numChunksPerParseInvalid: "numChunksPerParse is invalid. Regenerator will process a maximum of 1 chunk per 0.5 seconds. Resetting to %s."
+    runtimeInvalid: "Parse runtime must be between 0.1 and 0.9. Resetting this to the default of  %s."
+    numChunksPerParseInvalid: "numChunksPerParse is invalid. Regenerator will process a maximum of 1 chunk per 5 seconds. Resetting to %s."
     cantSaveGlobalConfig: "Unable to save global configuration to %s. (Exception: %s)"
     cantSaveWorldConfig: "Unable to save world configuration to %s. (Exception: %s)"
     errorThrowingMessage: "Fatal call to throwMessage() method. Valid types are info, warning, severe"
@@ -81,4 +81,6 @@ messages:
     chunkCachingDisabledOnLoad: Initial Regeneration of unprotected chunks (enableRegenerationNextChunkLoad) requires chunk caching be enabled. Setting cacheChunksOnLoad to true...
     fakePlayerUUIDInUse: "Fake player with UUID %s appears to be in use, please change this in Regenerators Global.yml"
     fakePlayerUUIDNotInUse: "Fake player with UUID %s does not appear to be in use!"
+    parseChunksPerMax: "Regenerator will regenerate %s chunks per parse (1 chunk per %s second(s)) when a regeneration task is active"
+    totalChunksToRegen: "Parse task detected a total of %s chunks to regenerate. Selecting the first %s per world."
     regenerationNextChunkLoadInstantEnabled: "Regenerator is configured to immediately regenerate unprotected chunks where possible the first time they load after installation. If the TPS of the server drops below minTpsRegen in global.yml the regeneration will queued to be completed later instead."
