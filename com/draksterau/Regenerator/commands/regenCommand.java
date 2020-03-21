@@ -41,7 +41,7 @@ public class regenCommand {
                 if (!requestEvent.isCancelled()) {
                     if (command.plugin.utils.canManuallyRegen(command.plugin.utils.getSenderPlayer(command.sender), rootChunk)) {
                         try {
-                            new ChunkTask(rChunk, true).runTaskAsynchronously(command.plugin);
+                            new ChunkTask(rChunk, true).runTask(command.plugin);
                         } catch (Exception e) {
                             command.plugin.utils.throwMessage(MsgType.SEVERE, "Failed to regenerate chunk : " + rChunk.getChunk().getX() + "," + rChunk.getChunk().getZ() + " on world: " + rChunk.getWorldName());
                             if (command.plugin.config.debugMode) e.printStackTrace();

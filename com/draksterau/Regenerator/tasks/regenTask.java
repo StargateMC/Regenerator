@@ -70,7 +70,7 @@ public class regenTask extends BukkitRunnable {
             plugin.utils.throwMessage(MsgType.INFO, String.format(plugin.lang.getForKey("messages.regenParseStart"), secsBetweenChunks, secsTotal));
             for (RChunk rChunk : chunksToRegenerate) {
                 try {
-                    new ChunkTask(rChunk, false).runTaskLaterAsynchronously(plugin, (long)offsetTicks);
+                    new ChunkTask(rChunk, false).runTaskLater(plugin, (long)offsetTicks);
                     offsetTicks = offsetTicks + (secsBetweenChunks * 20);
                     plugin.utils.throwMessage(MsgType.DEBUG, "Queueing regeneration of : " +  rChunk.chunkX + "," + rChunk.chunkZ + " on world: " + rChunk.getWorldName() + " in " + offsetTicks + " ticks (" + offsetTicks/20 + " seconds)");
                 } catch (Exception e) {

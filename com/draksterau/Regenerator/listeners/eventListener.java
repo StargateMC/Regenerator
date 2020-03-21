@@ -127,7 +127,7 @@ public class eventListener implements Listener {
             if (event.isImmediate() && RegeneratorPlugin.utils.isLagOK()) {
                 try {
                     RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Requesting regeneration of chunk: " + rChunk.chunkX + "," + rChunk.chunkZ + " on world: " + rChunk.worldName);
-                    new ChunkTask(rChunk, false).runTaskAsynchronously(RegeneratorPlugin);
+                    new ChunkTask(rChunk, false).runTask(RegeneratorPlugin);
                 } catch (Exception e) {
                     RegeneratorPlugin.utils.throwMessage(MsgType.SEVERE, "Failed to regenerate chunk : " + rChunk.getChunk().getX() + "," + rChunk.getChunk().getZ() + " on world: " + rChunk.getWorldName());
                     if (RegeneratorPlugin.config.debugMode) e.printStackTrace();
