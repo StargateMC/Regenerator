@@ -45,7 +45,6 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
     public eventListener listener = null;
     
     public boolean isParseActive = false;
-    public regenTask regenerationTask = null;
     
     public RLang getOrInitLang(String language) {
         if (this.lang == null) this.lang = new RLang(this, language);
@@ -54,10 +53,6 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
     public RConfig getOrInitConfig() {
         if (this.config == null) this.config = new RConfig(this);
         return this.config;
-    }
-    
-    public regenTask getTask() {
-        return this.regenerationTask;
     }
     
     @Override
@@ -110,9 +105,6 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
                     }
                 }
             }
-            if (config.regenerationNextChunkLoadInstant) {
-                utils.throwMessage(MsgType.WARNING, lang.getForKey("messages.regenerationNextChunkLoadInstantEnabled"));
-            }
             if (config.debugMode) utils.throwMessage(MsgType.INFO, lang.getForKey("messages.debugModeEnabled"));
             if (!config.debugMode) utils.throwMessage(MsgType.INFO, lang.getForKey("messages.debugModeDisabled"));
             
@@ -144,15 +136,14 @@ public class RegeneratorPlugin extends JavaPlugin implements Listener {
                 }
                 // This registers the regeneration task.
                 try {
-                    this.regenerationTask = new regenTask(this);
-                    this.getTask().runTaskTimerAsynchronously(this,1200, config.parseInterval * 20);
+                    new regenTask(this).runTaskTimerAsynchronously(this,100, config.parseInterval * 20);
                     utils.throwMessage(MsgType.INFO, "Successfully registered Regeneration Task!");
                 } catch (Exception e) {
                     utils.throwMessage(MsgType.SEVERE, "Failed to start regeneration task. Please report this (and the below error) to the developer!");
                     if (config.debugMode) e.printStackTrace();
                     this.disablePlugin();
                 }
-                utils.throwMessage(MsgType.INFO, String.format(this.lang.getForKey("messages.parseSchedule"), "30", String.valueOf(config.parseInterval)));
+                utils.throwMessage(MsgType.INFO, String.format(this.lang.getForKey("messages.parseSchedule"), "5", String.valueOf(config.parseInterval)));
                 utils.throwMessage(MsgType.INFO, String.format(this.lang.getForKey("messages.parseChunksPerMax"), config.numChunksPerParse, Math.floor((config.parseInterval / config.numChunksPerParse))));
 
             }

@@ -52,8 +52,8 @@ public class regenTask extends BukkitRunnable {
         }
         
         this.plugin.chunksToRegenCached = getNumChunksToRegen().size();
-        plugin.utils.throwMessage(MsgType.INFO, String.format(plugin.lang.getForKey("messages.totalChunksToRegen"),this.plugin.chunksToRegenCached, plugin.config.numChunksPerParse));
-        if (this.plugin.isBacklogged()) plugin.utils.throwMessage(MsgType.WARNING,"Regeneration queue is currently backlogged. It will catch up in approximately " + Math.floor(plugin.parseQueue() * plugin.config.parseInterval) + " seconds (" + Math.ceil(plugin.parseQueue()) + " executions of the Regeneration Task).");
+        if (this.plugin.chunksToRegenCached > 0) plugin.utils.throwMessage(MsgType.INFO, String.format(plugin.lang.getForKey("messages.totalChunksToRegen"),this.plugin.chunksToRegenCached));
+        if (this.plugin.isBacklogged()) plugin.utils.throwMessage(MsgType.WARNING,"Regeneration queue is currently backlogged. It will catch up in approximately " + plugin.utils.getEnglishTimeFromMs((long)Math.floor(plugin.parseQueue() * plugin.config.parseInterval)*1000) + " (" + Math.ceil(plugin.parseQueue()) + " executions of the Regeneration Task).");
 
         numWorlds = 0;
         chunksToRegenerate.clear();
@@ -73,12 +73,12 @@ public class regenTask extends BukkitRunnable {
             if (numChunks == 0) numChunks = 1;
             secsTotal = (plugin.config.parseInterval * plugin.config.percentIntervalRuntime);
             secsBetweenChunks = (secsTotal / numChunks);
-            plugin.utils.throwMessage(MsgType.INFO, String.format(plugin.lang.getForKey("messages.regenParseStart"), secsBetweenChunks, secsTotal));
+            plugin.utils.throwMessage(MsgType.INFO, String.format(plugin.lang.getForKey("messages.regenParseStart"), Math.ceil(secsBetweenChunks), secsTotal));
             for (RChunk rChunk : chunksToRegenerate) {
                 try {
                     new ChunkTask(rChunk, false).runTaskLater(plugin, (long)offsetTicks);
                     offsetTicks = offsetTicks + (secsBetweenChunks * 20);
-                    plugin.utils.throwMessage(MsgType.DEBUG, "Queueing regeneration of : " +  rChunk.chunkX + "," + rChunk.chunkZ + " on world: " + rChunk.getWorldName() + " in " + offsetTicks + " ticks (" + offsetTicks/20 + " seconds)");
+                    plugin.utils.throwMessage(MsgType.DEBUG, "Queueing regeneration of : " +  rChunk.chunkX + "," + rChunk.chunkZ + " on world: " + rChunk.getWorldName() + " in " + offsetTicks + " ticks (" + (plugin.utils.getEnglishTimeFromMs((long)(offsetTicks/20) * 1000)) + ")");
                 } catch (Exception e) {
                     plugin.utils.throwMessage(MsgType.SEVERE, String.format(plugin.lang.getForKey("messages.queueChunkTaskException"), rChunk.getChunk().getX(), rChunk.getChunk().getZ(), rChunk.getWorldName(), e.getMessage()));
                     if (plugin.config.debugMode) e.printStackTrace();

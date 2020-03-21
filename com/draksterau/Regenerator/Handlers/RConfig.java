@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
@@ -40,13 +41,14 @@ public final class RConfig extends RObject {
     
     public boolean debugMode = false;
     
-    // Enables regeneration of chunks on next chunk load, if they arent protected.
     
-    public boolean enableRegenerationNextChunkLoad = true;
+    // Radius, in chunks, that will be regenerated using nearPlayer functionality.
+    
+    public int regenerateUninitialisedChunksNearPlayersRadius = 1;
     
     // Instantly regenrates new chunks as they load
     
-    public boolean regenerationNextChunkLoadInstant = false;
+    public boolean regenerateUninitialisedChunksNearPlayersInstant = false;
     
     // UUID for fake player requests.
     
@@ -56,16 +58,16 @@ public final class RConfig extends RObject {
     public boolean cacheChunksOnLoad = true;
     
     // Interval between task parses on worlds.
-    public long parseInterval = 60;
+    public long parseInterval = 300;
     
     // How much of the interval in percent can be used for processing?
     public double percentIntervalRuntime = 0.9;
     
     // Maximum chunks per parse
-    public double numChunksPerParse = 9;
+    public double numChunksPerParse = 100;
     
     // Default regenInterval
-    public long defaultRegenInterval = 86400;
+    public long defaultRegenInterval = 3600;
     
     // Whether or not new worlds that are loaded should have manual regen enabled by default
     public boolean defaultManualRegen = false;
@@ -74,7 +76,7 @@ public final class RConfig extends RObject {
     public boolean defaultAutoRegen = true;
     
     // Minimum TPS for regenerator to continue running parses.
-    public int minTpsRegen = 18;
+    public int minTpsRegen = 15;
     
     // Should Regenerator run without grief prevention plugins enabled?
     public boolean noGriefRun = false;
@@ -93,15 +95,13 @@ public final class RConfig extends RObject {
     // Should this plugin clear the chunk of all entities? This includes dropped items, villagers, zombies and all!
     public boolean clearRegeneratedChunksOfEntities = false;
     
-    // Should this plugin not regenerate near WarpDrive ships?
-    public boolean warpDriveCompatibility = false;
-    
     // List of entity types that should be excluded from regenerating.
     public List<String> excludeEntityTypesFromRegeneration = new ArrayList<String>();
     
     public RConfig(RegeneratorPlugin plugin) {
         super(plugin);
         this.loadData();
+        if (!this.plugin.isEnabled()) return;
         this.validateConfig();
     }
 
@@ -129,9 +129,16 @@ public final class RConfig extends RObject {
         if (!config.isSet("configVersion")) {
             this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "configVersion", this.configFile.getName()));
         } else {
-            if (Integer.valueOf(config.getString("configVersion").replace(".","")) < 350) this.plugin.utils.throwMessage(MsgType.WARNING, "It is recommended to perform a fresh install when updating from versions prior to v3.5.0. Language and configuration files may not be updated properly.");
+            if (Integer.valueOf(config.getString("configVersion").replace(".","")) < 350) {
+                this.plugin.utils.throwMessage(MsgType.WARNING, "You must perform a fresh install when updating from versions prior to v3.5.0.");
+                this.plugin.utils.throwMessage(MsgType.WARNING, "Backup & then delete /plugins/Regenerator, then reconfigure Regenerator once it starts for the first time and configuration files are repopulated.");
+                this.plugin.disablePlugin();
+                Bukkit.getServer().shutdown();
+                return;
+            }
             if (!config.getString("configVersion").equals(this.plugin.getDescription().getVersion())) {
                 updateConfig();
+                if (!this.plugin.isEnabled()) return;
             } else {
                 this.configVersion = config.getString("configVersion");
             }
@@ -152,6 +159,16 @@ public final class RConfig extends RObject {
             this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "distanceNearbyMinimum", this.configFile.getName()));
         } else {
             this.distanceNearbyMinimum = config.getInt("distanceNearbyMinimum");
+        }
+        if (!config.isSet("regenerateUninitialisedChunksNearPlayersRadius")) {
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "regenerateUninitialisedChunksNearPlayersRadius", this.configFile.getName()));
+        } else {
+            this.regenerateUninitialisedChunksNearPlayersRadius = config.getInt("regenerateUninitialisedChunksNearPlayersRadius");
+        }
+        if (!config.isSet("regenerateUninitialisedChunksNearPlayersInstant")) {
+            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "regenerateUninitialisedChunksNearPlayersInstant", this.configFile.getName()));
+        } else {
+            this.regenerateUninitialisedChunksNearPlayersInstant = config.getBoolean("regenerateUninitialisedChunksNearPlayersInstant");
         }
         if (!config.isSet("targetLoadedChunks")) {
             this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "targetLoadedChunks", this.configFile.getName()));
@@ -193,25 +210,7 @@ public final class RConfig extends RObject {
         } else {
             this.excludeEntityTypesFromRegeneration = config.getStringList("excludeEntityTypesFromRegeneration");
         }
-        if (!config.isSet("warpDriveCompatibility")) {
-            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "warpDriveCompatibility", this.configFile.getName()));
-        } else {
-            this.warpDriveCompatibility = config.getBoolean("warpDriveCompatibility");
-        }
-        if (!config.isSet("enableRegenerationNextChunkLoad")) {
-            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "enableRegenerationNextChunkLoad", this.configFile.getName()));
-        } else {
-            this.enableRegenerationNextChunkLoad = config.getBoolean("enableRegenerationNextChunkLoad");
-            if (enableRegenerationNextChunkLoad && !cacheChunksOnLoad) {
-                this.plugin.utils.throwMessage(MsgType.INFO,String.format(this.plugin.lang.getForKey("messages.chunkCachingDisabledOnLoad")));
-                cacheChunksOnLoad = true;
-            }
-        }
-        if (!config.isSet("regenerationNextChunkLoadInstant")) {
-            this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "regenerationNextChunkLoadInstant", this.configFile.getName()));
-        } else {
-            this.regenerationNextChunkLoadInstant = config.getBoolean("regenerationNextChunkLoadInstant");
-        }
+
         if (!config.isSet("debugMode")) {
             this.plugin.utils.throwMessage(MsgType.NEW,String.format(this.plugin.lang.getForKey("messages.addingNewConfig"), "debugMode", this.configFile.getName()));
         } else {
@@ -256,6 +255,10 @@ public final class RConfig extends RObject {
             this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.distanceNearbyTooClose"), "16"));
             this.distanceNearbyMinimum = 16;
         }
+        if (this.regenerateUninitialisedChunksNearPlayersRadius <= -2 || this.regenerateUninitialisedChunksNearPlayersRadius > 4) {
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.regenerateUninitialisedChunksNearPlayersRadiusInvalid"), this.regenerateUninitialisedChunksNearPlayersRadius,"1"));
+            this.distanceNearbyMinimum = 1;
+        }
         if (this.distanceNearbyMinimum > 256) {
             this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.distanceNearbyTooFar"), "256"));
             this.distanceNearbyMinimum = 256;
@@ -281,9 +284,9 @@ public final class RConfig extends RObject {
             this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.runtimeInvalid"), "0.25"));
             this.percentIntervalRuntime = 0.25;
         }
-        if (this.numChunksPerParse > Math.floor((((this.parseInterval)) * this.percentIntervalRuntime)/5) || this.numChunksPerParse < 1) {
-            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.numChunksPerParseInvalid"), String.valueOf(Math.floor((((this.parseInterval)) * this.percentIntervalRuntime)/5))));
-            this.numChunksPerParse = (Math.floor((((this.parseInterval)) * this.percentIntervalRuntime)/5) >= 1 ? Math.floor((((this.parseInterval)) * this.percentIntervalRuntime)/5) : 1);
+        if (this.numChunksPerParse > Math.floor((((this.parseInterval)) * this.percentIntervalRuntime)/2) || this.numChunksPerParse < 1) {
+            this.plugin.utils.throwMessage(MsgType.WARNING, String.format(this.plugin.lang.getForKey("messages.numChunksPerParseInvalid"), String.valueOf(Math.floor((((this.parseInterval)) * this.percentIntervalRuntime)/2))));
+            this.numChunksPerParse = (Math.floor((((this.parseInterval)) * this.percentIntervalRuntime)/2) >= 1 ? Math.floor((((this.parseInterval)) * this.percentIntervalRuntime)/2) : 1);
         }
         this.saveData();
         this.loadData();
@@ -304,15 +307,14 @@ public final class RConfig extends RObject {
         config.set("regenerateChunksInUseByPlayers", this.regenerateChunksInUseByPlayers);
         config.set("clearRegeneratedChunksOfEntities", this.clearRegeneratedChunksOfEntities);
         config.set("excludeEntityTypesFromRegeneration", this.excludeEntityTypesFromRegeneration);
-        config.set("warpDriveCompatibility", this.warpDriveCompatibility);
         config.set("cacheChunksOnLoad", this.cacheChunksOnLoad);
         config.set("fakePlayerUUID", this.fakePlayerUUID.toString());
         config.set("enableUnknownProtectionDetection", this.enableUnknownProtectionDetection);
-        config.set("enableRegenerationNextChunkLoad", this.enableRegenerationNextChunkLoad);
         config.set("language", this.language);
         config.set("debugMode", this.debugMode);
         config.set("defaultRegenInterval", this.defaultRegenInterval);
-        config.set("regenerationNextChunkLoadInstant", this.regenerationNextChunkLoadInstant);
+        config.set("regenerateUninitialisedChunksNearPlayersRadius", this.regenerateUninitialisedChunksNearPlayersRadius);
+        config.set("regenerateUninitialisedChunksNearPlayersInstant", this.regenerateUninitialisedChunksNearPlayersInstant);
         try {
             config.save(configFile);
         } catch (IOException ex) {

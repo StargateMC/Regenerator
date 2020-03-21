@@ -46,7 +46,6 @@ messages:
     skippingRegenOfLoadedChunk: "Skipping regeneration of chunk at %s, %s on %s, due to chunk being loaded. This check can be disabled by setting targetLoadedChunks to true in global.yml"
     skippingRegenOfUnloadedChunk: "Skipping regeneration of chunk at %s, %s on %s, due to chunk being unloaded. This check can be disabled by setting targetUnloadedChunks to true in global.yml"
     skippingRegenOfChunkInUseByPlayers: "Skipping regeneration of chunk at %s, %s on %s, due to chunk being loaded by a players client. This check can be disabled by setting regenerateChunksInUseByPlayers to true in global.yml"
-    skippingRegenOfChunkNearWarpCore: "Skipping regeneration of chunk at %s, %s on %s, due to chunk being too close to a WarpDrive ship controller. This check can be disabled by setting warpDriveCompatibility to false in global.yml"
     skippingRegenOfChunkNearPlayers: "Skipping regeneration of chunk at %s, %s on %s, due to chunk being within %s blocks of a player. This checks's range can be changed by modifying distanceNearbyMinimum in global.yml."
     skippingRegenAutoRegenRequirementFail: "Skipping regeneration of chunk at %s, %s on %s, as automated regeneration criteria are no longer met by this chunk."
     skippingRegenTPSToLow: "Skipping regeneration of chunk at %s, %s on %s, as TPS is below %s. Minimum TPS for regeneration can be modified by editing minTpsRegen in global.yml."
@@ -78,9 +77,8 @@ messages:
     entitiesRemovedCount: "Removed %s entities from chunk at %s,%s on %s."
     unknownProtectionDetectionUnsupported: "Unknown Protection detection is not supported on your server version with this version of Regenerator. Required is: %s, found server: %s with bukkit api version: %s. Request support for your server version on Github!"
     loadingLanguageDefault: Invalid language in configuration file %s, defaulting back to %s.
-    chunkCachingDisabledOnLoad: Initial Regeneration of unprotected chunks (enableRegenerationNextChunkLoad) requires chunk caching be enabled. Setting cacheChunksOnLoad to true...
     fakePlayerUUIDInUse: "Fake player with UUID %s appears to be in use, please change this in Regenerators Global.yml"
     fakePlayerUUIDNotInUse: "Fake player with UUID %s does not appear to be in use!"
     parseChunksPerMax: "Regenerator will regenerate %s chunks per parse (1 chunk per %s second(s)) when a regeneration task is active"
-    totalChunksToRegen: "Parse task detected a total of %s chunks to regenerate. Selecting the first %s."
-    regenerationNextChunkLoadInstantEnabled: "Regenerator is configured to immediately regenerate unprotected chunks where possible the first time they load after installation. If the TPS of the server drops below minTpsRegen in global.yml the regeneration will queued to be completed later instead."
+    totalChunksToRegen: "Parse task detected a total of %s chunks to regenerate."
+    regenerateUninitialisedChunksNearPlayersRadiusInvalid: "Regnerator cannot regenerate or queue regeneration for %s uninitialised chunks around a moving player. Use -1 to disable if desired. Resetting to default of %s"

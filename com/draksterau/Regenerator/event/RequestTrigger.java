@@ -15,5 +15,6 @@ public enum RequestTrigger {
     Explosion,
     Command,
     ChunkLoad,
+    PlayerMovement,
     Unknown;
 }

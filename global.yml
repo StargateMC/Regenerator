@@ -36,5 +36,4 @@ regenerateChunksInUseByPlayers: false
 clearRegeneratedChunksOfEntities: false
 excludeEntityTypesFromRegeneration:
     - CUSTOMNPCS_CUSTOMNPC
-warpDriveCompatibility: false
 cacheChunksOnLoad: false

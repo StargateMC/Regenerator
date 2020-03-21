@@ -29,6 +29,9 @@ import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 
@@ -75,6 +78,33 @@ public class eventListener implements Listener {
     
     /// END WORLD EVENTS ///
     
+    // START PLAYER EVENTS //
+    
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (RegeneratorPlugin.config.regenerateUninitialisedChunksNearPlayersRadius == -1) return;
+        if (event.getTo().getChunk().equals(event.getFrom().getChunk())) return;
+        for (RChunk chunk : RegeneratorPlugin.utils.getRChunksNear(event.getTo(), RegeneratorPlugin.config.regenerateUninitialisedChunksNearPlayersRadius)) {
+            Location loc = new Location(event.getTo().getWorld(), chunk.getChunk().getX() * 16, 100, chunk.getChunk().getZ() * 16);
+            RegenerationRequestEvent requestEvent = new RegenerationRequestEvent(loc, event.getPlayer(), RequestTrigger.PlayerMovement, RegeneratorPlugin);
+            if (this.RegeneratorPlugin.config.regenerateUninitialisedChunksNearPlayersInstant) requestEvent.setIsImmediate(true);
+            Bukkit.getServer().getPluginManager().callEvent(requestEvent);
+        }
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
+        if (RegeneratorPlugin.config.regenerateUninitialisedChunksNearPlayersRadius == -1) return;
+        if (event.getTo().getChunk().equals(event.getFrom().getChunk())) return;
+        for (RChunk chunk : RegeneratorPlugin.utils.getRChunksNear(event.getTo(), RegeneratorPlugin.config.regenerateUninitialisedChunksNearPlayersRadius)) {
+            Location loc = new Location(event.getTo().getWorld(), chunk.getChunk().getX() * 16, 100, chunk.getChunk().getZ() * 16);
+            RegenerationRequestEvent requestEvent = new RegenerationRequestEvent(loc, event.getPlayer(), RequestTrigger.PlayerMovement, RegeneratorPlugin);
+            if (this.RegeneratorPlugin.config.regenerateUninitialisedChunksNearPlayersInstant) requestEvent.setIsImmediate(true);
+            Bukkit.getServer().getPluginManager().callEvent(requestEvent);
+        }
+    }
+    
+    // END PLAYER EVENTS //
     /// START CHUNK EVENTS ///
     
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -84,15 +114,12 @@ public class eventListener implements Listener {
             return;
         }
         if (RegeneratorPlugin.config.cacheChunksOnLoad) {
-            RChunk RChunk = new RChunk(RegeneratorPlugin, event.getChunk().getX(), event.getChunk().getZ(), event.getWorld().getName());
-            if (RegeneratorPlugin.config.enableRegenerationNextChunkLoad && RChunk.lastActivity == -1) {
-                Location loc = new Location(event.getWorld(), event.getChunk().getX() * 16, 100, event.getChunk().getZ() * 16);
-                RegenerationRequestEvent requestEvent = new RegenerationRequestEvent(loc, null, RequestTrigger.ChunkLoad, RegeneratorPlugin);
-                if (RegeneratorPlugin.config.regenerationNextChunkLoadInstant) requestEvent.setIsImmediate(true);
-                Bukkit.getServer().getPluginManager().callEvent(requestEvent);
-            } else {
-                RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Initialised " + (RChunk.lastActivity == -1 ? " new " : " existing ") + " chunk: " + event.getChunk().getX() + "," + event.getChunk().getZ() + " on world: " + event.getChunk().getWorld().getName());
+            if (!RegeneratorPlugin.utils.isLagOK()) {
+                RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Skipping " + event.getEventName() + " as TPS is too low. This means the chunk will not be cached until the chunk is modified by a player or the chunk is reloaded.");
+                return;
             }
+            RChunk RChunk = new RChunk(RegeneratorPlugin, event.getChunk().getX(), event.getChunk().getZ(), event.getWorld().getName());
+            RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Initialised " + (RChunk.lastActivity == -1 ? " new " : " existing ") + " chunk: " + event.getChunk().getX() + "," + event.getChunk().getZ() + " on world: " + event.getChunk().getWorld().getName());
         } else {
             RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Skipping " + event.getEventName() + " as cacheChunksOnLoad is disabled");
         }
@@ -135,6 +162,7 @@ public class eventListener implements Listener {
             } else {
                 if (event.isImmediate()) {
                     RegeneratorPlugin.utils.throwMessage(MsgType.WARNING, "Queueing regeneration of chunk: " + rChunk.chunkX + "," + rChunk.chunkZ + " on world: " + rChunk.worldName + " as immediate regeneration was not possible due to the current TPS of the server.");
+                    RegeneratorPlugin.utils.throwMessage(MsgType.WARNING, "You can disable this feature by setting 'regenerateUninitialisedChunksNearPlayersInstant' to false in global.yml");
                 }
                 if (RegeneratorPlugin.utils.autoRegenRequirementsMet(event.getBlock().getChunk())) {
                     RegeneratorPlugin.utils.throwMessage(MsgType.DEBUG, "Updating activity of chunk chunk: " + rChunk.chunkX + "," + rChunk.chunkZ + " on world: " + rChunk.worldName);

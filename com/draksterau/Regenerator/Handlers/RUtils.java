@@ -176,6 +176,51 @@ public class RUtils extends RObject {
         }
     }
     
+    public ArrayList<RChunk> getRChunksNear(Location loc, int radiusChunks) {
+        ArrayList<RChunk> chunks = new ArrayList<RChunk>();
+        int blockRadius = radiusChunks * 16;
+        for (int x = (int) ((loc.getX() - blockRadius)); x <= loc.getX() + blockRadius;x += 16) {
+            for (int z = (int)(loc.getZ() - blockRadius);z <= loc.getZ() + blockRadius;z += 16) {
+                Location location = new Location(loc.getWorld(),x,0,z);
+                RChunk RChunk = new RChunk(plugin, location.getChunk().getX(), location.getChunk().getZ(), location.getWorld().getName());
+                chunks.add(RChunk);
+            }
+        }
+        return chunks;
+    }
+    
+    public String getEnglishTimeFromMs(Long ms) {
+        if (ms < 1000) return "Now";
+        if (ms == null) return "Never";
+        Long seconds = ms / 1000;
+        int days = 0;
+        int hours = 0;
+        int minutes = 0;
+        while (seconds >= 86400) {
+            days += 1;
+            seconds -= 86400;
+        }
+        while (seconds >= 3600) {
+            hours += 1;
+            seconds -= 3600;
+        }
+        while (seconds >= 60) {
+            minutes += 1;
+            seconds -= 60;
+        }
+        String returnValue = "";
+        if (days > 0) {
+            returnValue += (days + " days, ");
+        }
+        if (hours > 0) {
+            returnValue += (hours + " hrs, ");            
+        }
+        if (minutes > 0) {
+            returnValue += (minutes + " mins, ");            
+        }
+        returnValue += (seconds + " seconds");
+        return returnValue;
+    }
     public void printErrorReport(String error) {
         throwMessage(MsgType.INFO, ChatColor.RED + "A Severe error has been encountered (" + error + "). Please consider submitting this on github at https://github.com/Bysokar/Regenerator/Issues" + ChatColor.RESET);
         throwMessage(MsgType.INFO, "Please be sure to include the following:");
@@ -270,19 +315,6 @@ public class RUtils extends RObject {
     public double distance(double sx, double sy, double sz, double dx, double dy, double dz) {
         double distance = Math.sqrt(Math.pow(sx-dx,2) + Math.pow(sx-dx,2) + Math.pow(sz-dz,2));
         return distance;
-    }
-    public Location isWarpCoreNearby(Chunk c) {
-        World world = c.getWorld();
-        for (Chunk ch : world.getLoadedChunks()) {
-            for (BlockState te : ch.getTileEntities()) {
-                if (te.getType().name().equals("WARPDRIVE_BLOCKSHIPCORE")) {
-                    if (distance(te.getLocation().getX(), 100.0, te.getLocation().getZ(),(c.getX()*16), 100.0,(c.getZ()*16)) < 182) {
-                        return te.getLocation();
-                    }
-                }
-            }
-        }
-        return null;
     }
     // Gets the count of online players in a chunk.
     public int onlinePlayersInChunk(Chunk chunk) {

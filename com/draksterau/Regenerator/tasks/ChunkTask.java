@@ -94,10 +94,6 @@ public class ChunkTask extends BukkitRunnable {
                     RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenOfChunkInUseByPlayers"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
                     return;
                 }
-                if (RChunk.plugin.config.warpDriveCompatibility && RChunk.plugin.utils.isWarpCoreNearby(RChunk.getChunk()) != null) {
-                    RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.skippingRegenOfChunkNearWarpCore"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
-                    return;
-                }
             }
             if (!RChunk.getChunk().isLoaded()) {
             RChunk.plugin.utils.throwMessage(MsgType.INFO, String.format(RChunk.plugin.lang.getForKey("messages.loadingToRegen"), RChunk.getChunk().getX(), RChunk.getChunk().getZ(), RChunk.getWorldName()));
