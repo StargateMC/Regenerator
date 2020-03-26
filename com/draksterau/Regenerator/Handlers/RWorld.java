@@ -97,7 +97,7 @@ public final class RWorld extends RObject {
         return message;
     }
     @Override
-    void loadData() {
+    public void loadData() {
         // Attempt to load the config file.
         if (worldConfigFile == null) worldConfigFile = new File(plugin.getDataFolder() + "/worlds/" + world.getName() + ".yml");
         // Attempt to read the config in the config file.

@@ -32,7 +32,10 @@ public class reloadCommand {
        command.sender.sendMessage(ChatColor.GRAY + "Unloading integrations...");
        command.plugin.availableIntergrations.clear();
        command.plugin.loadedIntegrations.clear();
-       command.plugin.loadedWorlds.clear();
+       for (RWorld world : command.plugin.loadedWorlds) {
+           world.loadData();
+           world.validateWorld();
+       }
        command.sender.sendMessage(ChatColor.GRAY + "Cancelling all regen tasks...");
         Bukkit.getScheduler().cancelTasks(command.plugin);
        command.plugin.config.loadData(); // Reinitialises configuration.
