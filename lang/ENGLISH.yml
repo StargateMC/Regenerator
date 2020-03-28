@@ -81,4 +81,5 @@ messages:
     fakePlayerUUIDNotInUse: "Fake player with UUID %s does not appear to be in use!"
     parseChunksPerMax: "Regenerator will regenerate %s chunks per parse (1 chunk per %s second(s)) when a regeneration task is active"
     totalChunksToRegen: "Parse task detected a total of %s chunks to regenerate."
+    AsyncWorldEditLoaded: "Loaded dependency FastAsyncWorldEdit v%s!"
     regenerateUninitialisedChunksNearPlayersRadiusInvalid: "Regnerator cannot regenerate or queue regeneration for %s uninitialised chunks around a moving player. Use -1 to disable if desired. Resetting to default of %s"
