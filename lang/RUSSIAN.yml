@@ -1,0 +1,82 @@
+messages:
+  pluginStarting: Начало регенерации v%s
+  pluginLoading: Загрузка регенерации v%s
+  loadingWorld: 'Загружаем Мир: %s'
+  loadedWorld: 'Мир: %s загружен'
+  oldConfigFileUpdating: Обнаружен старый файл конфигурации... обновление!
+  validatingConfig: Проверка конфигурации...
+  parseIntervalInsufficient: Интервал разбора ниже необходимого минимума %s секунд. Сброс значения конфигурации до значений по умолчанию.
+  parseIntervalNotFrequent: Интервал разбора выше максимально допустимого %s секунд. Сброс конфигурации до значения по умолчанию.
+  parseSchedule: Планирование следующего анализа на %s cекунд и анализ каждого %s секунд
+  tpsInvalid: Счетчик TPS должен иметь действительную настройку TPS, в диапазоне 1-20. Сброс этого по умолчанию %s.
+  runtimeInvalid: Время выполнения разбора должно быть от 0,1 до 0,9. Сброс этого до стандартных %s.
+  numChunksPerParseInvalid: numChunksPerParse является недействительным. Regenerator обработает максимум 1 чанк за 5 секунд. Сброс к %s.
+  cantSaveGlobalConfig: 'Невозможно сохранить глобальную конфигурацию в %s. (Исключение: %s)'
+  cantSaveWorldConfig: 'Невозможно сохранить конфигурацию мира в %s. (Исключение: %s)'
+  errorThrowingMessage: Неустранимый вызов метода throwMessage (). Допустимые типы - это информация, предупреждение, серьезное
+  detectedAndLoadingIntegration: 'Обнаружен плагин: %s v%s : Загрузка %s!'
+  detectedInvalidVersionForIntegration: 'Обнаружена несовместимая версия плагина: %s (v%s), требуемая версия: %s'
+  disableIntegration: Отключение %s модуля
+  integrationUnsupported: Не удалось загрузить интеграцию для плагина %s. Пожалуйста обратитесь за помощью к Bysokar!
+  integrationUnsupportedShouldBe: Не удалось загрузить интеграцию для плагина %s. Проверьте консольные журналы и сообщать о любых ошибках Bysokar!
+  regenIntervalTooFrequent: 'Мир: %s настроен на регенерацию быстрее, чем Regenerator проверяет неактивные чанки (parseInterval в global.yml)'
+  regenIntervalTooFrequentSuggestion: Рекомендуется увеличить мир regenInterval или уменьшить глобальный parseInterval
+  regenIntervalAboveMax: Интервал регенерации для %s слишком редок. Это должно быть менее %s дней. Сброс на максимум.
+  regenIntervalBelowMin: Интервал регенерации для %s слишком часто Это должно быть больше чем %s минут. Сброс до минимума.
+  distanceNearbyTooClose: Минимальное расстояние для игроков от события регенерации должно быть хотя бы 1 чанк, сбрасываемый на %s блоков.
+  distanceNearbyTooFar: Mтопор Минимальное расстояние для игроков от события регенерации должно быть не более 16 кусков, сбрасывается на %s блоков.
+  mustTargetSomething: Как выгруженные, так и загруженные чанки не предназначены для автоматическая регенерация. Этот плагин должен быть нацелен на что-то и позволяет targetUnloadedChunks.
+  addingNewConfig: 'Найден новый параметр конфигурации: %s. Добавление к %s!'
+  regenTaskCompleted: Задача восстановления завершена после обработки %s чанков %s мира/ов.
+  regenTaskCompletedNothingDone: Задача регенерации выполнена без регенерации чанков
+  queueChunkTaskException: Регенерация чанка в %s, %s на %s не удалось запланировать во время разбора с исключением - %s.
+  regenParseStart: Регенерация 1 чанка за %s секунд, в общей сложности %s секунд.
+  regenParseStarting: Задача Regeneration Parse начинается...
+  regenPausedTPSLow: Regenerator не начинает анализировать неактивные чанки для регенерации, так как TPS ниже %s, как настроено в global.yml.
+  unloadingChunkLoadedForRegen: Разгрузка чанка в %s, %s на %s, так как он был загружен только для регенерации.
+  regenFailed: Регенерация чанка в %s, %s на %s неудалась.
+  regenSuccess: Регенерация чанка в %s, %s на %s удалась.
+  regenClearEntities: Очистка объектов от чанка в %s, %s на %s как часть регенерации.
+  startingRegenChunk: Регенерация чанка в %s, %s на %s началась...
+  loadingToRegen: Загрузка чанка в %s, %s на %s для регенерации.
+  skippingRegenWithReason: Пропуск регенерации чанка в %s, %s на %s, из-за %s.
+  skippingRegenOfLoadedChunk: Пропуск регенерации чанка в %s, %s на %s, из-за загрузки чанка. Эту проверку можно отключить установив для targetLoadedChunks значение true в global.yml
+  skippingRegenOfUnloadedChunk: Пропуск регенерации чанка в %s, %s на %s, из-за выгрузки чанка. Эту проверку можно отключить, установив для targetUnloadedChunks значение true в global.yml
+  skippingRegenOfChunkInUseByPlayers: Пропуск регенерации чанка в %s, %s на %s, из-за загрузки чанка клиентским игроком. Эта проверка может быть отключена установкой для regenerateChunksInUseByPlayers значения true в global.yml
+  skippingRegenOfChunkNearPlayers: Пропуск регенерации чанка в %s, %s на %s, из-за того, что блок находится в %s блоках игрока. Диапазон этих проверок можно изменить, изменив distanceNearbyMinimum в global.yml.
+  skippingRegenAutoRegenRequirementFail: Пропуск регенерации чанка в %s, %s на %s, так как критерии автоматической регенерации больше не соответствуют этому чанку.
+  skippingRegenTPSToLow: Пропуск регенерации фрагмента на %s,%s на %s, так как TPS ниже %s. Минимальный TPS для регенерации можно изменить, отредактировав minTpsRegen в global.yml.
+  skippingRegenProtectedUnknownSource: Пропуск регенерации фрагмента на %s, %s на %s, так как он защищен неизвестным источником. Эту проверку можно отключить, установив enableUnknownProtectionDetection в false в global.yml.
+  skippingRegenDueToActionEventCancellation: Пропуск регенерации фрагмента на %s, %s на %s по следующей причине (причинам)
+  skippingRegenActionEventResult: пропустить причину %s - %s, предоставленную %s.
+  skippingRegenWorldUnloaded: 'Пропуск регенерации чанка на %s, %s как мир: %s в настоящее время выгружен / отсутствует. Regenerator будет обрабатывать регенерацию этого куска в следующий раз, когда обнаружится, что мир загружен. '
+  chunkDataSaveFail: не удалось сохранить данные чанка в %s, ошибка %s.
+  loadingLanguage: 'Язык загрузки: %s'
+  languageNotAvailable: 'Загрузка языка: %s не удалось, Regenerator в настоящее время не поддерживает его изначально, и нет файла YML, расположенного на %s. По умолчанию возвращается на ENGLISH.'
+  contributeLanguageNotice: Добавьте файл %s.yml в Regenerator, отправив его по адресу https://github.com/Bysokar/Regenerator, чтобы включить встроенную поддержку вашего языка. 
+  defaultLanguageFailure: Загрузка языка по умолчанию (ENGLISH) не удалось. Не задан действительный язык и язык по умолчанию ENGLISH недоступен ... Регенератор не может загрузить. Если загрузка плагина снова не устраняет это, свяжитесь с автором.
+  WorldEditLoaded: Загрузка зависимости WorldEdit v%s
+  WorldEditIncompatible: Загрузка зависимости WorldEdit v%s не удалась, v%s требуется!
+  WorldEditMissing: Regenerator v3.4.0 и выше зависит от WorldEdit для выполнения задач регенерации. Это связано с ограничениями в API Bukkit / Spigot. Пожалуйста, установите WorldEdit v%s, чтобы включить Regenerator на вашем сервере.
+  warningNoIntegrationsNoGriefRunEnabled: Поддерживаемые плагины для предотвращения горя не найдены, но noGriefRun включен. Ни одна земля не будет защищена от регенерации встроенными плагинами.
+  warningNoIntegrationsNoGriefRunDisabled: Поддерживаемые плагины для предотвращения горя не найдены, и noGriefRun отключен. Regenerator теперь будет отключен.
+  grationSupportMessage: Regenerator поддерживает следующие плагины
+  noGriefRunPrompt: Вы должны установить для noGriefRun значение true в global.yml, прежде чем Regenerator загрузится без каких-либо интеграций, чтобы подтвердить, что вам необходимо правильно настроить плагин, чтобы избежать регенерации ваших сборок.
+  unknownProtectionDetectionInactive: UnknownProtectionDetection неактивно. Вы можете установить для 'enableUnknownProtectionDetection' значение true в global.yml, если у вас есть плагин для предотвращения печали на основе чанков, который не интегрирован с Regenerator, чтобы гарантировать, что ваши сборки не будут регенерированы. Неизвестные плагины на основе региона в настоящее время не поддерживаются.
+  unknownProtectionDetectionActive: UnknownProtectionDetection активно. Regenerator подделает попытку разбить блоки на куски, прежде чем ставить их в очередь или восстанавливать их. Если это не удается, предполагается, что неизвестный плагин защиты предотвращает это.
+  integrationConflictFound: Интеграция с %s, в то время как обнаружение неизвестной защиты включено, не поддерживается. Обнаружение неизвестной защиты теперь будет отключено.
+  debugModeDisabled: Режим отладки выключен. Подробная регистрация и трассировка стека не будут отображаться, когда Regenerator выдает исключение. Убедитесь, что это включено, когда вы регистрируете журналы для устранения проблем и сообщения о них на Github.
+  debugModeEnabled: Режим отладки включен. Подробные журналы и трассировки стека будут отображаться в журналах сервера, когда Regenerator выдает исключение.
+  langMissingEntries: Загрузка значения по умолчанию для Lang Key %s, как это отсутствует в %s. Если это не помогло, отправьте вопрос по адресу https://github.com/Bysokar/Regenerator/issues.
+  langEntryUnsupported: Lang Key %s отсутствует в официальном файле для %s. Пожалуйста, сообщите об этом на https://github.com/Bysokar/Regenerator/issues.
+  cantSaveLang: Не удалось сохранить языковой файл в %s, ошибка - %s.
+  regenFailedWorldEdit: Не удалось восстановить чанк на %s, %s на %s, из-за следующей ошибки при вызове WorldEdits API - %s.
+  entityRemovedCount: Удалены сущности %s из чанка на %s, %s на %s.
+  unknownProtectionDetectionUnsupported: 'Обнаружение неизвестной защиты не поддерживается на вашей версии сервера с этой версией Regenerator. Требуется: %s, найден сервер: %s с версией Bukkit API: %s. Запросите поддержку вашей версии сервера на Github!'
+  loadingLanguageDefault: Неверный язык в файле конфигурации %s, по умолчанию возвращается к %s.
+  fakePlayerUUIDInUse: Поддельный проигрыватель с UUID %s, кажется, используется, пожалуйста, измените это в Regenerators Global.yml
+  fakePlayerUUIDNotInUse: Фальшивый проигрыватель с UUID %s, похоже, не используется!
+  parseChunksPerMax: Regenerator будет регенерировать куски %s за разбор (1 чанк за %s секунд), когда задача регенерации активна
+  totalChunksToRegen: задача анализа обнаружила в общей сложности %s чанков для восстановления.
+  AsyncWorldEditLoaded: загруженная зависимость FastAsyncWorldEdit v%s!
+  regenerateUninitialisedChunksNearPlayersRadiusInvalid: Regnerator не может регенерировать или ставить в очередь регенерацию для %s неинициализированных чанков вокруг движущегося игрока. Используйте -1, чтобы отключить при желании. Сброс до значения по умолчанию %s
